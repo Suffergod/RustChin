@@ -1,0 +1,95 @@
+{
+  "manifest_version": 3,
+  "name": "RustChin: Persian RTL & Vazirmatn Font",
+  "version": "1.0.0",
+  "description": "Fixes Persian text direction and font issues on AI chat platforms. Private, fast, and open-source.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "core/engine.js",
+        "sites/chatgpt.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://claude.ai/*"
+      ],
+      "js": [
+        "core/engine.js",
+        "sites/claude.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://gemini.google.com/*"
+      ],
+      "js": [
+        "core/engine.js",
+        "sites/gemini.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://chat.deepseek.com/*"
+      ],
+      "js": [
+        "core/engine.js",
+        "sites/deepseek.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://notebooklm.google.com/*"
+      ],
+      "js": [
+        "core/engine.js",
+        "sites/notebooklm.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "fonts/Vazirmatn-Variable.woff2"
+      ],
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://chat.deepseek.com/*",
+        "https://notebooklm.google.com/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/squareicon16.png",
+      "48": "icons/squareicon48.png",
+      "128": "icons/squareicon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/squareicon16.png",
+    "48": "icons/squareicon48.png",
+    "128": "icons/squareicon128.png"
+  }
+}

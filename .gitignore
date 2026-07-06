@@ -1,0 +1,17 @@
+# Build / packaging artifacts
+*.crx
+*.pem
+*.zip
+
+# Dependencies
+node_modules/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

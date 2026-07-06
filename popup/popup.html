@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RustChin</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="panel">
+
+    <!-- Header -->
+    <div class="header">
+      <img class="logo" id="brandLogo" src="icons/DarkCircleLogo.svg" alt="RustChin">
+      <div>
+        <h1 data-i18n="name">RustChin</h1>
+        <div class="subtitle" data-i18n="subtitle">RTL &amp; Vazirmatn for AI chat</div>
+      </div>
+      <span class="ver" id="versionBadge">v0.0</span>
+    </div>
+
+    <!-- Appearance + language -->
+    <div class="prefs">
+      <div class="seg" id="themeSeg" role="tablist" aria-label="Theme">
+        <button type="button" class="seg-btn" data-value="auto" title="Auto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+        </button>
+        <button type="button" class="seg-btn" data-value="light" title="Light">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+        </button>
+        <button type="button" class="seg-btn" data-value="dark" title="Dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+      </div>
+      <div class="seg seg-text" id="langSeg" role="tablist" aria-label="Language">
+        <button type="button" class="seg-btn" data-value="auto">Auto</button>
+        <button type="button" class="seg-btn" data-value="en">EN</button>
+        <button type="button" class="seg-btn" data-value="fa">فا</button>
+      </div>
+    </div>
+
+    <!-- Master toggle -->
+    <div class="master">
+      <div>
+        <div class="master-label" id="masterLabel" data-i18n="enable">Enabled</div>
+        <div class="master-status on" id="masterStatus">—</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="masterToggle" checked aria-label="Toggle RustChin globally">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Reload hint for pre-install / pre-update tabs -->
+    <div class="reload-hint" id="reloadHint" data-i18n="reloadHint"></div>
+
+    <!-- Sites -->
+    <div class="sites">
+      <div class="section-title" data-i18n="supported">Supported sites</div>
+      <div id="sitesList"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span class="zero-badge" title="RustChin never reads, stores, or transmits your conversations.">
+        <span class="shield">🛡</span>
+        <span data-i18n="zeroData">Zero data collected</span>
+      </span>
+      <span class="footer-links">
+        <a href="https://reymit.ir/suffergod" id="donateLink" title="Support" target="_blank" rel="noopener">❤️</a>
+        <a href="#" id="rateLink" data-i18n="rate" target="_blank" rel="noopener">Rate</a>
+        <a href="#" id="reportLink" data-i18n="report" target="_blank" rel="noopener">Report</a>
+      </span>
+    </div>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

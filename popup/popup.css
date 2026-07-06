@@ -1,0 +1,476 @@
+/* ============================================================
+   RustChin — Popup styles
+   Adaptive (system light/dark), frosted-glass panels, soft shadows.
+   Animations use only transform/opacity for GPU efficiency.
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Smoothly fade colors when switching theme / language, instead of snapping.
+   Kept off .seg-btn and .site-row because they have their own transitions. */
+html, body, .panel, .header, .master, .prefs, .footer,
+.master-label, .master-status, .site-name, .site-domain,
+.section-title, .zero-badge {
+  transition: background-color 0.3s ease, color 0.3s ease,
+              border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.18s ease;
+}
+
+/* Load Vazirmatn for the popup itself. Path climbs out of popup/ into fonts/.
+   unicode-range = only Persian/Arabic glyphs use it; Latin UI text falls through
+   to the system font in --rc-font, so the English UI keeps its crisp look. */
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../fonts/Vazirmatn-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+200C-200F;
+}
+
+:root {
+  --rc-font: "Vazirmatn", -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu,
+    Cantarell, Roboto, "Helvetica Neue", sans-serif;
+
+  /* Accent (brand) - RustChin Blue */
+  --accent: #2188ca;
+  --accent-soft: rgba(33, 136, 202, 0.12);
+
+  /* Light theme defaults */
+  --bg-ambient-1: #f8fafc;
+  --bg-ambient-2: #e2e8f0;
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-solid: #ffffff;
+  --panel-border: rgba(0, 0, 0, 0.05);
+  --hairline: rgba(0, 0, 0, 0.05);
+  --text-1: #0f172a; /* Slate 900 */
+  --text-2: #475569; /* Slate 600 */
+  --text-3: #94a3b8; /* Slate 400 */
+  --shadow-1: 0 4px 12px rgba(0, 0, 0, 0.03), 0 12px 32px rgba(15, 23, 42, 0.06);
+  --shadow-glow: 0 0 0 1px var(--row-accent, var(--accent)),
+    0 6px 22px -6px var(--row-accent, var(--accent));
+  /* Site logo shadow tuning:
+     - keep "none" to disable all chatbot-logo shadows
+     - switch to the drop-shadow value below to re-enable in one place */
+  --site-icon-filter: none;
+  --site-icon-filter-soft: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.18));
+  --toggle-off: #cbd5e1;
+  --toggle-on: var(--accent);
+}
+
+/* Dark palette. Applied automatically when the OS is dark AND the user
+   hasn't manually picked a theme (data-theme is missing/"auto"), OR
+   applied directly when the user explicitly picked "dark". Keeping both
+   selectors pointed at the same variables is what makes the manual
+   picker actually override the system setting -- the previous toggle
+   only flipped an attribute but nothing was ever gated on it. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --bg-ambient-1: #020617;
+    --bg-ambient-2: #0f172a;
+    --panel: rgba(30, 41, 59, 0.82);
+    --panel-solid: #1e293b;
+    --panel-border: rgba(255, 255, 255, 0.08);
+    --hairline: rgba(255, 255, 255, 0.08);
+    --text-1: #f8fafc;
+    --text-2: #cbd5e1;
+    --text-3: #64748b;
+    --shadow-1: 0 4px 14px rgba(0, 0, 0, 0.55), 0 18px 50px -12px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --accent-soft: rgba(33, 136, 202, 0.22);
+    --toggle-off: #334155;
+  }
+}
+:root[data-theme="dark"] {
+  --bg-ambient-1: #020617;
+  --bg-ambient-2: #0f172a;
+  --panel: rgba(30, 41, 59, 0.82);
+  --panel-solid: #1e293b;
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --hairline: rgba(255, 255, 255, 0.08);
+  --text-1: #f8fafc;
+  --text-2: #cbd5e1;
+  --text-3: #64748b;
+  --shadow-1: 0 4px 14px rgba(0, 0, 0, 0.55), 0 18px 50px -12px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --accent-soft: rgba(33, 136, 202, 0.22);
+  --toggle-off: #334155;
+}
+
+html, body {
+  font-family: var(--rc-font);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  width: 340px;
+  /* Ambient gradient sits behind the frosted panel. */
+  background:
+    radial-gradient(120% 80% at 0% 0%, var(--bg-ambient-2), transparent 60%),
+    radial-gradient(120% 80% at 100% 100%, var(--bg-ambient-2), transparent 60%),
+    var(--bg-ambient-1);
+  padding: 12px;
+}
+
+/* The floating frosted panel. */
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 16px 14px;
+  border-bottom: 1px solid var(--hairline);
+}
+.header .logo {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.22));
+}
+
+/* Chatbot-logo shadows are controlled by --site-icon-filter in :root. */
+.site-icon {
+  filter: var(--site-icon-filter);
+}
+
+/* ── Preferences row: theme + language segmented controls ── */
+.prefs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.seg {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--hairline);
+  border-radius: 9px;
+}
+.seg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.seg-btn svg { width: 14px; height: 14px; }
+.seg-btn:hover { color: var(--text-1); }
+.seg-btn.active {
+  background: var(--panel-solid);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+/* Dark mode: full inset ring (symmetric) + a shadow whose Y-offset matches
+   light mode (1px) so the active box renders at the SAME vertical position
+   in both themes. The earlier 2px Y-offset pushed it down optically. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .seg-btn.active {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 1px 6px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] .seg-btn.active {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.seg-text .seg-btn {
+  width: auto;
+  padding: 0 9px;
+  font-family: var(--rc-font);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.header h1 {
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.2px;
+  color: var(--text-1);
+}
+.header .subtitle {
+  font-size: 10.5px;
+  color: var(--text-3);
+  margin-top: 1px;
+}
+.header .ver {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-weight: 600;
+}
+
+/* ── Master toggle row ── */
+.master {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.master-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.master-status {
+  --enabled-ratio: 0%;
+  position: relative;
+  display: inline-block;
+  min-width: 92px;
+  padding-bottom: 5px;
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+.master-status::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: var(--enabled-ratio);
+  height: 2px;
+  border-radius: 100px;
+  background: currentColor;
+  opacity: 0.55;
+  transition: width 0.24s ease, background-color 0.3s ease, opacity 0.3s ease;
+}
+.master-status.on { color: #1f9d55; }
+.master-status.off { color: var(--text-3); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .master-status.on { color: #4ade80; }
+}
+:root[data-theme="dark"] .master-status.on { color: #4ade80; }
+
+/* ── Toggle switch (macOS-style) ── */
+.toggle { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle .slider {
+  position: absolute; inset: 0; cursor: pointer;
+  background: var(--toggle-off);
+  border-radius: 100px;
+  transition: background-color 0.22s ease, box-shadow 0.22s ease;
+}
+.toggle .slider::before {
+  content: ""; position: absolute;
+  width: 20px; height: 20px; left: 2px; top: 2px;
+  background: #fff; border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
+  will-change: transform;
+}
+.toggle input:checked + .slider { background: var(--toggle-on); }
+.toggle input:checked + .slider::before { transform: translate3d(18px, 0, 0); }
+.toggle input:focus-visible + .slider { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Dark mode: give the toggle knob a crisp shadow + a faint accent glow
+   when ON, so the per-site switches look as alive as the master one. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle .slider::before {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle input:checked + .slider {
+    box-shadow: 0 0 8px -2px var(--toggle-on);
+  }
+}
+:root[data-theme="dark"] .toggle .slider::before {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+:root[data-theme="dark"] .toggle input:checked + .slider {
+  box-shadow: 0 0 8px -2px var(--toggle-on);
+}
+
+/* ── Sites section ── */
+.sites { padding: 6px 0 8px; }
+.section-title {
+  padding: 8px 16px 4px;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-3);
+  font-weight: 700;
+}
+
+.site-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin: 2px 6px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease, color 0.3s ease;
+  contain: layout style paint;
+}
+.site-row:hover { background: var(--hairline); }
+
+.site-info {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.site-icon {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  flex-shrink: 0;
+  display: block;
+  transition: transform 0.2s ease;
+}
+.site-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.site-name {
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Persian names align naturally in RTL popup; English stays LTR. */
+  unicode-bidi: plaintext;
+}
+/* Domain is rendered as a clickable link. It stays LTR and isolated so the
+   URL never visually flips, while its block alignment follows the popup
+   direction (logical "start"), which removes the small right-side gap that
+   used to affect short hosts like chatgpt.com. */
+.site-domain {
+  font-size: 9.5px;
+  color: var(--text-3);
+  margin-top: 1px;
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+.site-domain:hover { color: var(--text-1); opacity: 1; }
+.site-domain:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.site-right { display: flex; align-items: center; gap: 8px; }
+
+/* Active site: glow + accent border + pulsing live dot. */
+.site-row.active {
+  --row-accent: var(--site-color, var(--accent));
+  background: color-mix(in srgb, var(--site-color, var(--accent)) 12%, transparent);
+  border-color: color-mix(in srgb, var(--site-color, var(--accent)) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--site-color, var(--accent)) 30%, transparent),
+              0 6px 20px -8px var(--site-color, var(--accent));
+}
+.site-row.active .site-icon { transform: scale(1.06); }
+
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--site-color, var(--accent));
+  box-shadow: 0 0 0 0 var(--site-color, var(--accent));
+  animation: pulse 1.8s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--site-color, var(--accent)) 70%, transparent); }
+  70%  { box-shadow: 0 0 0 6px color-mix(in srgb, var(--site-color, var(--accent)) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* Paused on this site: muted highlight. */
+.site-row.paused {
+  border-color: color-mix(in srgb, var(--site-color, var(--accent)) 25%, transparent);
+  background: color-mix(in srgb, var(--site-color, var(--accent)) 5%, transparent);
+}
+.site-row.paused .site-icon { opacity: 0.6; filter: saturate(0.6); }
+.paused-tag {
+  font-size: 9px; color: var(--text-3);
+  font-weight: 600; padding: 2px 6px; border-radius: 100px;
+  background: var(--hairline);
+}
+
+/* Disabled (master off or site off). */
+.site-row.dim { opacity: 0.45; }
+
+.disabled-msg {
+  padding: 22px 20px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* "Reload to activate" hint for pre-install tabs on a supported site. */
+.reload-hint {
+  margin: 4px 12px 6px;
+  padding: 8px 11px;
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--text-2);
+  background: var(--accent-soft);
+  border-radius: 9px;
+  display: none;
+}
+.reload-hint.show { display: block; }
+
+/* ── Footer ── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--hairline);
+}
+.zero-badge {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; color: var(--text-2);
+}
+.zero-badge .shield { font-size: 11px; }
+.footer-links { display: flex; gap: 4px; }
+.footer-links a {
+  font-size: 10px;
+  color: var(--text-3);
+  text-decoration: none;
+  padding: 4px 7px;
+  border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.footer-links a:hover { background: var(--hairline); color: var(--text-1); }
+
+/* Gentle hover motion on the theme icons: sun spins, moon tilts.
+   Keep it restrained and avoid overshoot so the SVG strokes do not shimmer. */
+.seg-btn[data-value="light"] svg,
+.seg-btn[data-value="dark"] svg {
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  backface-visibility: hidden;
+  transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+.seg-btn[data-value="light"]:hover svg { transform: translateZ(0) rotate(72deg); }
+.seg-btn[data-value="dark"]:hover svg  { transform: translateZ(0) rotate(-14deg); }
