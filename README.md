@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="popup/icons/DarkCircleLogo.svg" width="72" alt="RustChin">
+  <img src="icons/squareicon128.png" width="72" alt="RustChin">
 </p>
 
 <h1 align="center">RustChin</h1>
