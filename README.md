@@ -8,6 +8,7 @@
   <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="v1.0.0">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen" alt="Zero Data"></a>
+  <a href="https://www.linkedin.com/in/mahancn/"><img src="https://img.shields.io/badge/🎨_logo-MahanCN-blue?logo=linkedin&logoColor=white" alt="Logo by MahanCN"></a>
 </p>
 
 <p align="center">
@@ -168,6 +169,11 @@ RustChin.start({
 ## Trademarks
 
 ChatGPT, Claude, Gemini, DeepSeek, and NotebookLM are trademarks of their respective owners. RustChin is not affiliated with or endorsed by these services.
+
+## Credits
+
+- **Logo** designed by [MahanCN](https://www.linkedin.com/in/mahancn/)
+- **Font** — [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saeed Bahmanabad
 
 ## License
 

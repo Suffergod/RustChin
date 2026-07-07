@@ -82,3 +82,8 @@ the project's GitHub repository.
 To report a privacy concern or ask a question, please open an issue on the
 project's GitHub repository:
 https://github.com/suffergod/RustChin/issues
+
+## Credits
+
+- **Logo** designed by [MahanCN](https://www.linkedin.com/in/mahancn/)
+- **Font** — [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saeed Bahmanabad
