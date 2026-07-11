@@ -8,6 +8,7 @@
   <img src="https://img.shields.io/badge/version-1.1.0-blue" alt="v1.1.0">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen" alt="Zero Data"></a>
+  <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck"><img src="https://img.shields.io/badge/Chrome_Web_Store-Install-blue?logo=googlechrome&logoColor=white" alt="Chrome Web Store"></a>
   <a href="https://www.linkedin.com/in/mahancn/"><img src="https://img.shields.io/badge/🎨_logo-MahanCN-blue?logo=linkedin&logoColor=white" alt="Logo by MahanCN"></a>
 </p>
 
