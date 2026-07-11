@@ -164,7 +164,7 @@ RustChin.start({
 
 ## Performance
 
-- **Memoized scanning** each element analyzed once, re-analyzed only when text changes
+- **Memorized scanning** each element analyzed once, re-analyzed only when text changes
 - **Debatched mutations** DOM changes coalesced into one batch per microtask
 - **Frame-throttled typing** live input direction runs at most once per animation frame
 - **Non-blocking first paint** initial scan defers to `requestIdleCallback`
