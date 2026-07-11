@@ -1,8 +1,8 @@
 # Changelog
 
-## [1.0.0] — 2026-07-07
+## [1.1.0] — 2026-07-11
 
-Initial release.
+Published on Chrome Web Store!
 
 ### Features
 - Automatic RTL direction detection for Persian/Farsi text on AI chat sites.

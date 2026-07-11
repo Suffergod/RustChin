@@ -95,7 +95,9 @@ Persian text on AI chatbots renders wrong by default. RustChin fixes it.
 
 ## Install
 
-**From Chrome Web Store** (coming soon)
+**From Chrome Web Store**
+
+[👉 **Install RustChin from Chrome Web Store**](https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck)
 
 **From source**
 
