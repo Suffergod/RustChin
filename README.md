@@ -13,7 +13,7 @@
 
 <p align="center">
   <b>راست‌چین</b> &middot; Automatic RTL, Vazirmatn font, and Persian numbering<br>
-  for Persian text on AI chat platforms. Private, fast, open source.
+  for Persian text on AI chat platforms. Private, fast, open source
 </p>
 
 ## What it does
