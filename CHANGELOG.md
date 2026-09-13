@@ -2,16 +2,30 @@
 
 ## [1.2.0] — 2026-09-13
 
+### Added
+- **5 Bundled Variable Fonts**: Added `Estedad-Variable.woff2`, `Sahel-Variable.woff2`, `Arad-Variable.woff2`, and `Mikhak-Variable.woff2` alongside `Vazirmatn-Variable.woff2` (all 100–900 variable weight, under 380 KB total package footprint).
+- **Scalable Frosted Popover Font Picker**: Compact frosted pill selector in the extension popup that expands into an authentic typography menu with category badges and active checkmarks.
+- **Full Settings & Typography Studio Dashboard**: Dedicated options page (`options/options.html`) accessible via popup and Chrome context menu with interactive live preview sandbox, code/KaTeX isolation testing, site management grid, and theme controls.
+- **Tactile Drag Engine for Toggle Switches**: Implemented smooth pointer dragging and click support for all switch knobs with real-time 60fps tracking (`--drag-x`), 50% threshold snapping, and synthetic click suppression.
+- **Metrics Default Reset**: Added one-click "Default" button in Typography Metrics to restore default Font Scale (15px) and Line Height (1.8) across sliders, badges, and preview canvas.
+- **Solar Icon Integration**: Replaced raster/generic icons with clean SVG vector icons from the Solar icon set.
+- **Zero-Latency Dynamic Font Switching**: Powered by CSS custom properties (`--rc-font`) and dynamic `:root[data-rc-font="..."]` attributes, allowing instant cross-tab font switching without page reload.
+- **Enhanced Live Typing Engine**: Real-time Persian input handling with automatic RTL orientation for rich text editors and prompt boxes.
+
 ### Changed & Improved
-- **Extension Name**: Renamed to "RustChin: RTL & Persian Fonts" in preparation for multi-font support.
-- **Fixed ProseMirror / Canvas Freeze**: Fixed tab freeze when typing Persian into prompt boxes or opening Canvas/Writing blocks by completely guarding rich text editors against external DOM mutation, switching batching from microtasks to `requestAnimationFrame`, and styling editor surfaces cleanly via CSS.
-- **ChatGPT User Messages**: Added automatic RTL and Vazirmatn font for sent prompt messages (no longer skipped when inside plain `<div>`).
-- **ChatGPT Table & Canvas Support**: Tables inside Canvas / Writing Blocks (`ProseMirror`) now render strictly RTL with Vazirmatn font across all table headers and cells.
-- **Copy Table Button**: Fixed alignment for RTL tables to place the button on the natural start (left) side.
-- **Live Toggle Fix**: Revert contract now completely removes `dir` attributes from `<table>` and `<ol>` when the extension is toggled off (zero residual DOM state).
-- **Streaming Mutation Observer**: Fixed incremental scanner in `engine.js` to instantly process dynamically streamed tokens inserted into existing `.bidi-scope` containers.
-- **Cleaned Selectors**: Removed redundant `nav div` query from ChatGPT container list to boost DOM scanning performance.
-- **Popup UI**: Removed donation heart link; extension is 100% free forever. Connected official Chrome Web Store listing URL to the Rate button.
+- **Official Brand SVG Vectors via `thesvg`**: Standardized all 5 chatbot logos to canonical 24x24 single-path vectors with adaptive monochrome theme rendering.
+- **Brand-Colored Active Toggles**: Each platform toggle switch now illuminates in that service's authentic brand color (ChatGPT green, Claude terracotta, Gemini blue, NotebookLM azure, DeepSeek cobalt).
+- **Draggable Toggles in Popup & Options**: Implemented pointer capture drag tracking and Apple HIG spring bounce curves across both popup and dashboard toggles.
+- **Independent Font Title Preview**: Scoped unique font families directly to each font card title in the dashboard and each dropdown row in the popup, providing authentic previews independent of the active font.
+- **Google NotebookLM Domain Migration**: Added full support for Google's new `notebook.google.com` domain across content scripts, engine, and UI toggles.
+- **Refined Active Indicator**: Replaced noisy neon border glow on active site rows with a clean, calm pulsing status dot.
+- **Fluent Persian Documentation**: Completely rewrote `README.md` in natural, modern Persian tailored to the Iranian tech community.
+- **Dashboard Visual & Motion Refinement**: Removed redundant active font header badge in favor of clean font cards; added dynamic dual-color slider gradient track fills (`--slider-fill`).
+- **Extension Name & Subtitle**: Renamed to "RustChin: RTL & Persian Fonts" in manifest and popup UI ("RTL & Persian Fonts for AI chat").
+- **Fixed ProseMirror / Canvas Freeze**: Eliminated tab freezing when typing Persian or opening Canvas/Writing blocks by guarding editable DOM trees against external mutations and debatching via `requestAnimationFrame`.
+- **Eliminated Live Streaming Lag**: Observed `characterData` in `MutationObserver` to style incoming streaming tokens on the next animation frame (~16ms).
+- **Universal Multi-Font Engine**: Propagated dynamic font variable architecture across all supported sites (ChatGPT, Claude, Gemini, DeepSeek, NotebookLM).
+- **Zero Data & No Donations**: Completely removed donation heart link; affirmed 100% free and private architecture with zero data collection.
 
 ## [1.1.0] — 2026-07-11
 

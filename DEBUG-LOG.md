@@ -192,23 +192,84 @@ document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
 
 ---
 
+---
+
+### Issue 10: Toggle Switch Drag Support & Tactile Motion (Resolved)
+
+**Symptom:** In the Options dashboard, toggle switches only responded to clicks. Users attempting to drag the white circle knob across the track found it unresponsive, and spring physics in CSS occasionally overshot the track pill.
+
+**Root causes:**
+1. Default `<label class="toggle-switch">` elements with nested checkboxes rely on the browser's default click-toggling mechanism. No Pointer Events drag engine was implemented.
+2. An initial Pointer Events implementation bound listeners only to `toggleEl` and guarded on `toggleEl.hasPointerCapture()`, which dropped drag gestures if the pointer moved outside the 42px element bounds or if capture was not retained.
+3. Upon drag release, the browser fired a synthetic `click` event on the `<label>`, causing the checkbox state to invert back.
+
+**Fix:**
+1. Implemented `makeToggleDraggable(toggleEl)` using `pointerdown`, `window.pointermove`, `window.pointerup`, and `window.pointercancel`.
+2. Direct 60fps tracking using the CSS custom property `--drag-x` and `transform: translate3d(var(--drag-x, 0px), 0, 0) !important` with `transition: none !important`.
+3. Added real-time track color feedback (`.drag-on`) when passing the 50% midpoint (`TRAVEL / 2 = 9px`).
+4. Suppressed synthetic post-drag click events via a capturing-phase click interceptor (`ev.preventDefault(); ev.stopPropagation();`).
+5. Standardized switch dimensions to 42px×24px, 20px knob diameter, with tactile squash-and-stretch on click/press (`width: 24px`).
+6. Enforced `direction: ltr` on `.toggle-switch` to ensure physical coordinate stability in RTL mode.
+
+**Status:** ✅ Applied & Verified via live browser pointer simulation.
+
+---
+
+### Issue 11: Typography Metrics Default State Recovery (Resolved)
+
+**Symptom:** Sliders for Font Scale (12-24px) and Line Height (1.4-2.6) had no quick way to return to their recommended default settings (15px, 1.8).
+
+**Fix:**
+1. Added `<button type="button" class="btn-text-reset" id="resetMetricsBtn" data-i18n="resetDefaults">Default</button>` in the Typography Metrics header in `options/options.html`.
+2. Bound click handler in `options/options.js` to reset `fontSize = 15` and `lineHeight = 1.8`, updating CSS variables (`--preview-size`, `--preview-line-height`), numeric badges, slider values, `--slider-fill`, and storage sync.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
+### Issue 12: Dual-Color Dynamic Slider Track Fill (Resolved)
+
+**Symptom:** Range inputs in `options.css` lacked progress track coloring, making it difficult to discern slider progress at a glance.
+
+**Fix:**
+1. Bound `--slider-fill` custom property to slider `input` events in `options.js`.
+2. Applied a linear-gradient background fill in `options.css`:
+   ```css
+   background: linear-gradient(
+     to right,
+     var(--accent) 0%,
+     var(--accent) var(--slider-fill, 25%),
+     var(--slider-track-bg) var(--slider-fill, 25%),
+     var(--slider-track-bg) 100%
+   );
+   ```
+3. Set `direction: ltr;` on `.smooth-slider` so fill direction is independent of document text direction.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
 ## Summary of All Changes
 
 | File | Change | Status |
 |------|--------|--------|
-| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.0` | ✅ Applied |
+| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.0`, added `fonts/Estedad-Variable.woff2` to `web_accessible_resources` | ✅ Applied |
 | `README.md` | Version badge updated to `1.2.0` | ✅ Applied |
-| `popup/popup.html` | Removed ❤️ donate link | ✅ Applied |
-| `popup/popup.js` | Removed donate URL, connected official Web Store URL, `STORE_URL_KNOWN = true` | ✅ Applied |
-| `sites/chatgpt.js` | Removed `[dir="rtl"]` from Vazirmatn selectors | ✅ Applied |
-| `sites/chatgpt.js` | Added `extraSelector` for user messages & sidebar titles | ✅ Applied |
-| `sites/chatgpt.js` | Optimized `containers` (removed redundant `nav div`) | ✅ Applied |
-| `sites/chatgpt.js` | Added `.bidi-scope table[dir="rtl"]` explicit RTL rule | ✅ Applied |
-| `sites/chatgpt.js` | Copy-table button: `div:first-child` → `div:has(button)` + RTL override | ✅ Applied |
-| `sites/chatgpt.js` | Fixed backtick in comment breaking template literal | ✅ Applied |
-| `core/engine.js` | Added text-bearing child div scan in `processContainer()` (user messages) | ✅ Applied |
-| `core/engine.js` | Added table/ol `dir` cleanup in `stop()` | ✅ Applied |
-| `core/engine.js` | Added incremental mutation handling in `scanNodes()` for existing containers | ✅ Applied |
-| `sites/claude.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending next |
-| `sites/gemini.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending next |
-| `sites/deepseek.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending next |
+| `fonts/*.woff2` | Downloaded 5 authentic variable fonts: Vazirmatn, Estedad, Sahel, Arad, Mikhak | ✅ Applied |
+| `manifest.json` | Registered 5 variable fonts in `web_accessible_resources`, registered `options_ui` | ✅ Applied |
+| `popup/popup.html` | Frosted popover font picker + options dashboard shortcut | ✅ Applied |
+| `popup/popup.css` | Popover dropdown styling, GPU transforms, badge tags, 5-font preview typography | ✅ Applied |
+| `popup/popup.js` | Popover interaction state, bilingual font badges, options dashboard trigger | ✅ Applied |
+| `options/options.html` | Full Typography Studio & Settings Dashboard with live sandbox, Default metrics button, clean header | ✅ Applied |
+| `options/options.css` | Glassmorphic studio layout, font card grid, live preview styles, 42px tactile draggable toggles, gradient slider fills | ✅ Applied |
+| `options/options.js` | Dynamic font previewing, site toggles, theme/lang sync, XSS-safe DOM, Pointer Events drag engine | ✅ Applied |
+| `background.js` | Added `font: "vazirmatn"` default preference | ✅ Applied |
+| `core/engine.js` | Parallel 5-font Base64 loading; dynamic `:root[data-rc-font="..."]` switching; RAF batching | ✅ Applied |
+| `sites/*.js` | All 5 site configs updated with 5-font declarations and `--rc-font` variable theming | ✅ Applied |
+| `browser-harness` | Configured UTF-8 streams and added `type_persian()` Unicode typing helper | ✅ Applied |
+| `options/*` | Wide 1360px Dashboard with 5-font cards, live typography workbench, horizontal site grid, and restored Privacy & Security card with Solar shield | ✅ Applied |
+| `popup/*` | Restored 340px frosted glass panel with top-right settings gear, popover font picker (no checkmarks), no footer dashboard link, anti-slop compliance | ✅ Applied |
+| `icons/*.svg` | Added standalone SVG assets with explicit XML namespaces for ChatGPT, Claude, Gemini, DeepSeek, and NotebookLM | ✅ Applied |
+| `icons/solar/*` | Added clean Solar Icon Set vector assets for theme modes and security badges | ✅ Applied |
+
+

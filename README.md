@@ -1,191 +1,151 @@
 <p align="center">
-  <img src="icons/squareicon128.png" width="72" alt="RustChin">
+  <img src="icons/squareicon128.png" width="80" alt="راست‌چین — RustChin">
 </p>
 
-<h1 align="center">RustChin</h1>
+<h1 align="center">راست‌چین | RustChin</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.0-blue" alt="v1.2.0">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
-  <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen" alt="Zero Data"></a>
-  <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck"><img src="https://img.shields.io/badge/Chrome_Web_Store-Install-blue?logo=googlechrome&logoColor=white" alt="Chrome Web Store"></a>
-  <a href="https://www.linkedin.com/in/mahancn/"><img src="https://img.shields.io/badge/🎨_logo-MahanCN-blue?logo=linkedin&logoColor=white" alt="Logo by MahanCN"></a>
+  <b>راست‌چین‌سازی هوشمند، تایپوگرافی اصیل فارسی و شماره‌گذاری خودکار برای پلتفرم‌های هوش مصنوعی</b><br>
+  کاملاً متن‌باز، فوق‌العاده سبک، سریع و با حفظ ۱۰۰٪ حریم خصوصی بدون حتی یک خط ردیابی.
 </p>
 
 <p align="center">
-  <b>راست‌چین</b> &middot; Automatic RTL, Vazirmatn font, and Persian numbering<br>
-  for Persian text on AI chat platforms. Private, fast, open source
+  <img src="https://img.shields.io/badge/نسخه-1.2.0-blue?style=flat-square" alt="v1.2.0">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/مجوز-MIT-green?style=flat-square" alt="MIT License"></a>
+  <a href="PRIVACY.md"><img src="https://img.shields.io/badge/حریم_خصوصی-Zero_Data-brightgreen?style=flat-square" alt="Zero Data"></a>
+  <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck"><img src="https://img.shields.io/badge/نصب_از-Chrome_Web_Store-blue?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome Web Store"></a>
+  <a href="https://www.linkedin.com/in/mahancn/"><img src="https://img.shields.io/badge/🎨_طراح_لوگو-MahanCN-blue?style=flat-square&logo=linkedin&logoColor=white" alt="Logo by MahanCN"></a>
 </p>
 
-## What it does
+---
 
-Persian text on AI chatbots renders wrong by default. RustChin fixes it.
+## چرا راست‌چین؟
 
-<table>
-  <tr>
-    <td align="center"><b>Without RustChin</b></td>
-    <td align="center"><b>With RustChin</b></td>
-  </tr>
-  <tr>
-    <td><img src="screenshots/before.png" alt="Without RustChin" width="100%"></td>
-    <td><img src="screenshots/after.png" alt="With RustChin" width="100%"></td>
-  </tr>
-</table>
+متن‌های فارسی در اکثر چت‌بات‌های هوش مصنوعی مثل ChatGPT، Claude و Gemini به صورت پیش‌فرض با جهت چپ‌به‌راست (LTR)، فونت‌های سیستمی نامناسب، نقطه‌گذاری‌های جابجا و لیست‌های نامرتب نمایش داده می‌شن. اگر متنی ترکیب انگلیسی و فارسی باشه که اوضاع بدتر هم می‌شه.
 
-## Features
+**راست‌چین** این مشکل رو به شکل ریشه‌ای و بدون دستکاری یا تخریب ساختار پیام‌ها حل می‌کنه:
+- متن‌های فارسی به‌صورت خودکار و هوشمند راست‌چین می‌شن.
+- کدهای برنامه‌نویسی و فرمول‌های ریاضی دست‌نخورده و کاملاً چپ‌به‌راست (LTR) باقی می‌مونن.
+- ۵ فونت متغیر و مدرن فارسی بدون نیاز به نصب روی سیستم در اختیارتونه.
 
 <table>
   <tr>
-    <td align="center" width="50%">
-      <h3>🔤 Smart RTL</h3>
-      <p>Mixed Persian/English renders naturally.</p>
-    </td>
-    <td align="center" width="50%">
-      <h3>🔤 Vazirmatn Font</h3>
-      <p>Only on Persian glyphs. English keeps native font.</p>
-    </td>
+    <th align="center">بدون راست‌چین (پیش‌فرض سرویس‌ها)</th>
+    <th align="center">با راست‌چین (خوانا، تمیز و استاندارد)</th>
   </tr>
   <tr>
-    <td align="center" width="50%">
-      <h3>📝 Persian Lists</h3>
-      <p>Ordered lists show ۱. ۲. ۳.</p>
-    </td>
-    <td align="center" width="50%">
-      <h3>💻 Code Stays LTR</h3>
-      <p>Code and math never flipped.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <h3>⚡ Live Toggle</h3>
-      <p>No page reload needed.</p>
-    </td>
-    <td align="center" width="50%">
-      <h3>🎯 Active Site Glow</h3>
-      <p>Popup shows which site you're on.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <h3>🌗 Adaptive UI</h3>
-      <p>Follows system theme.</p>
-    </td>
-    <td align="center" width="50%">
-      <h3>🌐 Bilingual</h3>
-      <p>EN/FA auto-detected.</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <h3>🔒 Zero Data</h3>
-      <p>No analytics, no telemetry. Conversations stay local.</p>
-    </td>
-    <td></td>
+    <td align="center"><img src="screenshots/before.png" alt="Without RustChin" width="100%"></td>
+    <td align="center"><img src="screenshots/after.png" alt="With RustChin" width="100%"></td>
   </tr>
 </table>
 
-## Supported sites
+---
 
-| Site | Domain |
-|------|--------|
-| <img src="popup/icons/chatgpt.svg" width="16"> ChatGPT | `chatgpt.com` |
-| <img src="popup/icons/claude.svg" width="16"> Claude | `claude.ai` |
-| <img src="popup/icons/gemini.svg" width="16"> Gemini | `gemini.google.com` |
-| <img src="popup/icons/deepseek.svg" width="16"> DeepSeek | `chat.deepseek.com` |
-| <img src="popup/icons/notebooklm.svg" width="16"> NotebookLM | `notebooklm.google.com` |
+## امکانات اصلی
 
-## Install
+| قابلیت | توضیح |
+| :--- | :--- |
+| 🔤 **تشخیص هوشمند جهت (Smart RTL)** | بر اساس درصد کاراکترهای فارسی هر پاراگراف تصمیم می‌گیره تا متن‌های ترکیبی (فارسی و انگلیسی) درست چیده بشن. |
+| 🎨 **۵ فونت متغیر فارسی (Variable Fonts)** | امکان انتخاب بین ۵ قلم محبوب: **وزیرمتن**، **استعداد**، **ساحل**، **آراد** و **میخک**. |
+| 🔢 **شماره‌گذاری فارسی لیست‌ها** | لیست‌های ترتیبی به‌جای اعداد انگلیسی با اعداد زیبای فارسی (۱. ۲. ۳.) نمایش داده می‌شن. |
+| 💻 **ایزوله‌سازی کامل کد و فرمول‌ها** | بلوک‌های کد (`pre`, `code`) و روابط ریاضی (KaTeX / Math) هرگز راست‌چین نمی‌شن و ظاهر فنی‌شون حفظ می‌شه. |
+| 🛠️ **داشبورد و استودیو تنظیمات اختصاصی** | صفحه تنظیمات پیشرفته با امکان تغییر فونت، سایز، فاصله خطوط و تست زنده متون در محیط Sandbox. |
+| ⚡ **تغییرات آنی بدون نیاز به رفرش** | جابجایی بین فونت‌ها یا خاموش/روشن کردن افزونه به صورت درلحظه و بدون رفرش اعمال می‌شه. |
+| 🟢 **تاگل‌های لمسی با رنگ برند** | سوییچ‌های تعاملی با فیزیک فنری اپل (Apple HIG Spring Physics) که با رنگ اختصاصی هر چت‌بات روشن می‌شن. |
+| 🌗 **سازگار با تم تیره و روشن** | پوسته پاپ‌آپ و داشبورد به صورت خودکار با تم سیستم یا انتخاب دستی شما هماهنگ می‌شن. |
+| 🔒 **امنیت مطلق و بدون جمع‌آوری داده** | افزونه هیچ سرور خارجی، ابزار آمارگیری یا دسترسی مشکوکی نداره. پیام‌های شما فقط روی مرورگر خودتونه. |
 
-**From Chrome Web Store**
+---
 
-[👉 **Install RustChin from Chrome Web Store**](https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck)
+## سرویس‌های پشتیبانی‌شده
 
-**From source**
+| پلتفرم | دامنه | وضعیت سازگاری |
+| :--- | :--- | :---: |
+| <img src="icons/chatgpt.svg" width="18" align="center"> **ChatGPT** | `chatgpt.com` | سازگار کامل (شامل Canvas و ProseMirror) |
+| <img src="icons/claude.svg" width="18" align="center"> **Claude** | `claude.ai` | سازگار کامل (شامل پروژه‌ها و Artifacts) |
+| <img src="icons/gemini.svg" width="18" align="center"> **Google Gemini** | `gemini.google.com` | سازگار کامل (شامل ادیتور Quill) |
+| <img src="icons/notebooklm.svg" width="18" align="center"> **Google NotebookLM** | `notebook.google.com` & `notebooklm.google.com` | سازگار کامل (عبور از محدودیت‌های عرض لایه‌ها) |
+| <img src="icons/deepseek.svg" width="18" align="center"> **DeepSeek** | `chat.deepseek.com` | سازگار کامل |
 
-1. Download or clone this repo
-2. Open `chrome://extensions`
-3. Turn on **Developer mode**
-4. Click **Load unpacked** and select this folder
-5. Visit a supported site and start chatting in Persian
+---
 
-## Privacy
+## فونت‌های ارائه‌شده
 
-- **No network access.** The only `fetch` call loads the locally bundled font.
-- **Two permissions.** `storage` saves your toggles. `activeTab` lets the popup detect which site you are on.
-- **Open source (MIT).** Every line is public. See [PRIVACY.md](PRIVACY.md).
+تمام فونت‌ها به شکل بسته متغیر (Variable Font WOFF2) مستقیماً داخل افزونه قرار دارن و نیازی به دانلود اضافه از اینترنت یا نصب روی ویندوز/مک ندارن:
 
-## Architecture
+1. **وزیرمتن (Vazirmatn)** — اثر صابر راستی‌کردار (فونت استاندارد و پیش‌فرض وب فارسی)
+2. **استعداد (Estedad)** — اثر امین عابدی (مدرن، خوانا و مناسب مطالعه طولانی)
+3. **ساحل (Sahel)** — اثر صابر راستی‌کردار (کلاسیک، دلنشین با حس خوشنویسی روان)
+4. **آراد (Arad)** — اثر مصطفی درویشی (هندسی، منظم و مدرن)
+5. **میخک (Mikhak)** — اثر امین عابدی (صمیمی، پویا با فرم‌های چشم‌نواز)
 
-```
+---
+
+## روش‌های نصب
+
+### ۱. نصب مستقیم از کروم وب‌استور (پیشنهادی)
+ساده‌ترین روش نصب با آپدیت خودکار:  
+👉 [**صفحه افزونه راست‌چین در Chrome Web Store**](https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck)
+
+### ۲. نصب دستی از سورس‌کد (Developer Mode)
+اگر می‌خواین نسخه در حال توسعه رو امتحان کنید یا خودتون تغییری بدین:
+1. مخزن پروژه رو کلون یا دانلود کنید:
+   ```bash
+   git clone https://github.com/Suffergod/RustChin.git
+   ```
+2. وارد آدرس `chrome://extensions` در مرورگر بشید.
+3. گزینه **Developer mode** در بالا سمت راست رو فعال کنید.
+4. روی دکمه **Load unpacked** کلیک کنید و پوشه پروژه رو انتخاب کنید.
+5. وارد یکی از سرویس‌ها (مثلاً ChatGPT یا Claude) بشید و شروع به چت فارسی کنید!
+
+---
+
+## حریم خصوصی و امنیت
+
+ما باور داریم ابزاری که برای کار با چت‌های هوش مصنوعی استفاده می‌شه باید نهایت شفافیت و امنیت رو داشته باشه:
+- **دسترسی به اینترنت صفر:** افزونه هیچ ریکوئست شبکه‌ای خارجی ارسال نمی‌کنه.
+- **بدون ترکینگ و لاگ:** هیچ ابزار Analytics، Telemetry یا کوکی ردیابی وجود نداره.
+- **مجوزهای حداقلی:** تنها دو دسترسی `storage` (برای ذخیره محلی فونت انتخابی و وضعیت تاگل‌ها) و `activeTab` (برای تشخیص سایت فعلی در پاپ‌آپ) استفاده می‌شن.
+- متن کامل تعهدنامه ما در [PRIVACY.md](PRIVACY.md) در دسترسه.
+
+---
+
+## ساختار پروژه
+
+```text
 RustChin/
-├── core/engine.js              The shared engine
-├── sites/
-│   ├── chatgpt.js              ChatGPT config
-│   ├── claude.js               Claude config
-│   ├── gemini.js               Gemini config
-│   ├── deepseek.js             DeepSeek config
-│   └── notebooklm.js           NotebookLM config
-├── fonts/Vazirmatn-Variable.woff2
-├── popup/                      Extension popup UI
-├── background.js               State relay
-└── manifest.json
+├── core/
+│   └── engine.js              # موتور اصلی پردازش MutationObserver، تشخیص جهت و کش عملکرد
+├── sites/                     # کانفیگ‌های اختصاصی و مجزای هر چت‌بات
+│   ├── chatgpt.js
+│   ├── claude.js
+│   ├── gemini.js
+│   ├── notebooklm.js
+│   └── deepseek.js
+├── fonts/                     # فونت‌های متغیر باندل‌شده (WOFF2)
+├── icons/                     # آیکون‌های وکتور SVG رسمی و نمادها
+├── popup/                     # پاپ‌آپ جمع‌وجور و تعاملی
+├── options/                   # داشبورد کامل تنظیمات و استودیو تایپوگرافی
+├── background.js              # Service Worker برای همگام‌سازی تب‌ها و آیکون
+└── manifest.json              # مانیفست اکستنشن نسخه ۳ (Manifest V3)
 ```
 
-Each site config is a small, declarative file. Adding a new site is a ~90 line file, not a copy of a large script.
+---
 
-## Add a new chatbot
+## تقدیر و تشکر
 
-1. Create `sites/yoursite.js`:
+- **طراحی لوگو:** [ماهان چراغ‌نژاد (MahanCN)](https://www.linkedin.com/in/mahancn/)
+- **طراحان فونت:**
+  - زنده‌یاد **صابر راستی‌کردار** برای خلق آثاری ماندگار همچون وزیرمتن و ساحل
+  - **امین عابدی** برای خلق فونت‌های خلاقانه استعداد و میخک
+  - **مصطفی درویشی** برای طراحی فونت مدرن آراد
 
-```js
-RustChin.start({
-  siteId: "yoursite",
-  host: "yoursite.com",
-  containers: ".message, .markdown",
-  exclude: "pre, code, .katex, .math",
-  editableSelector: 'textarea, [contenteditable="true"]',
-  numberedLists: true,
-  css: `
-    @font-face {
-      font-family: 'Vazirmatn';
-      src: url({{FONT}}) format('woff2');
-      font-weight: 100 900; font-display: swap;
-      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF,
-        U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
-    }
-    .bidi-scope .rc-done { font-family: 'Vazirmatn', sans-serif !important; }
-    .bidi-scope ol[dir="rtl"] { list-style-type: persian !important; }
-    .bidi-scope p { unicode-bidi: isolate !important; text-align: start !important; }
-  `,
-});
-```
+---
 
-2. Register it in `manifest.json` and `popup/popup.js`.
+## لایسنس
 
-## Performance
-
-- **Memorized scanning** each element analyzed once, re-analyzed only when text changes
-- **Debatched mutations** DOM changes coalesced into one batch per microtask
-- **Frame-throttled typing** live input direction runs at most once per animation frame
-- **Non-blocking first paint** initial scan defers to `requestIdleCallback`
-
-## Trademarks
-
-ChatGPT, Claude, Gemini, DeepSeek, and NotebookLM are trademarks of their respective owners. RustChin is not affiliated with or endorsed by these services.
-
-## Credits
-
-- **Logo** designed by [MahanCN](https://www.linkedin.com/in/mahancn/)
-- **Font** — [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saeed Bahmanabad
-
-## License
-
-[MIT](LICENSE)
-
-## Contributing
-
-Issues and pull requests welcome. Test on all supported sites before submitting.
+این پروژه تحت مجوز [MIT](LICENSE) به صورت کاملاً آزاد و رایگان برای جامعه کاربران و توسعه‌دهندگان ایرانی منتشر شده است.
 
 <p align="center">
-  Made with ❤️ for the Persian AI community
+  ساخته شده با ❤️ برای کاربران فارسی‌زبان هوش مصنوعی
 </p>

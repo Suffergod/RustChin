@@ -11,6 +11,7 @@ const SUPPORTED_SITES = [
   "chatgpt.com",
   "claude.ai",
   "gemini.google.com",
+  "notebook.google.com",
   "notebooklm.google.com",
   "chat.deepseek.com"
 ];
@@ -31,7 +32,7 @@ const ICONS = {
 function defaultState() {
   const sites = {};
   SUPPORTED_SITES.forEach((host) => { sites[host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto" };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn" };
 }
 
 function isEnabled(state) {

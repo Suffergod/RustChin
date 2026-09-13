@@ -10,6 +10,10 @@
   "background": {
     "service_worker": "background.js"
   },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "content_scripts": [
     {
       "matches": [
@@ -53,7 +57,8 @@
     },
     {
       "matches": [
-        "https://notebooklm.google.com/*"
+        "https://notebooklm.google.com/*",
+        "https://notebook.google.com/*"
       ],
       "js": [
         "core/engine.js",
@@ -65,14 +70,19 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "fonts/Vazirmatn-Variable.woff2"
+        "fonts/Vazirmatn-Variable.woff2",
+        "fonts/Estedad-Variable.woff2",
+        "fonts/Sahel-Variable.woff2",
+        "fonts/Arad-Variable.woff2",
+        "fonts/Mikhak-Variable.woff2"
       ],
       "matches": [
         "https://chatgpt.com/*",
         "https://claude.ai/*",
         "https://gemini.google.com/*",
         "https://chat.deepseek.com/*",
-        "https://notebooklm.google.com/*"
+        "https://notebooklm.google.com/*",
+        "https://notebook.google.com/*"
       ]
     }
   ],

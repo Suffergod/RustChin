@@ -8,6 +8,7 @@
 RustChin.start({
   siteId: "notebooklm",
   host: "notebooklm.google.com",
+  altHost: "notebook.google.com",
   // NotebookLM has no clean message-root selector, so we scan the body.
   scanBody: true,
   scanSelector:
@@ -22,7 +23,7 @@ RustChin.start({
   css: `
     @font-face {
       font-family: 'Vazirmatn';
-      src: url({{FONT}}) format('woff2');
+      src: url({{VAZIR_FONT}}) format('woff2');
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
@@ -30,9 +31,65 @@ RustChin.start({
         U+FE70-FEFF, U+200C-200F;
     }
 
+    @font-face {
+      font-family: 'Estedad';
+      src: url({{ESTEDAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Sahel';
+      src: url({{SAHEL_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Arad';
+      src: url({{ARAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Mikhak';
+      src: url({{MIKHAK_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    :root {
+      --rc-font: 'Vazirmatn', 'Google Sans', 'IRANSans', sans-serif;
+    }
+    :root[data-rc-font="estedad"] {
+      --rc-font: 'Estedad', 'Google Sans', 'IRANSans', sans-serif;
+    }
+    :root[data-rc-font="sahel"] {
+      --rc-font: 'Sahel', 'Google Sans', 'IRANSans', sans-serif;
+    }
+    :root[data-rc-font="arad"] {
+      --rc-font: 'Arad', 'Google Sans', 'IRANSans', sans-serif;
+    }
+    :root[data-rc-font="mikhak"] {
+      --rc-font: 'Mikhak', 'Google Sans', 'IRANSans', sans-serif;
+    }
+
     /* Global font, excluding icons, code and math. */
     body *:not(mat-icon):not([class*="icon" i]):not([class*="symbol" i]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math) {
-      font-family: 'Vazirmatn', 'Google Sans', 'IRANSans', sans-serif !important;
+      font-family: var(--rc-font) !important;
     }
 
     pre, code, pre *, code * {

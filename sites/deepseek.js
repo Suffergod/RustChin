@@ -20,7 +20,7 @@ RustChin.start({
   css: `
     @font-face {
       font-family: 'Vazirmatn';
-      src: url({{FONT}}) format('woff2');
+      src: url({{VAZIR_FONT}}) format('woff2');
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
@@ -31,16 +31,72 @@ RustChin.start({
         U+FE70-FEFF, U+200C-200F;
     }
 
-    /* Apply Vazirmatn only to text that RustChin actually detected as RTL.
+    @font-face {
+      font-family: 'Estedad';
+      src: url({{ESTEDAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Sahel';
+      src: url({{SAHEL_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Arad';
+      src: url({{ARAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Mikhak';
+      src: url({{MIKHAK_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    :root {
+      --rc-font: 'Vazirmatn', system-ui, sans-serif;
+    }
+    :root[data-rc-font="estedad"] {
+      --rc-font: 'Estedad', system-ui, sans-serif;
+    }
+    :root[data-rc-font="sahel"] {
+      --rc-font: 'Sahel', system-ui, sans-serif;
+    }
+    :root[data-rc-font="arad"] {
+      --rc-font: 'Arad', system-ui, sans-serif;
+    }
+    :root[data-rc-font="mikhak"] {
+      --rc-font: 'Mikhak', system-ui, sans-serif;
+    }
+
+    /* Apply active font only to text that RustChin actually detected as RTL.
        This preserves DeepSeek's original Latin/UI typography. */
     .rc-done[dir="rtl"]:not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math),
     .rc-done[dir="rtl"] :not(svg):not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math) {
-      font-family: 'Vazirmatn', system-ui, sans-serif !important;
+      font-family: var(--rc-font) !important;
     }
     /* Prompt/textarea areas: the live-input handler marks these with .rc-input
-       instead of .rc-done, so a separate rule is needed for Vazirmatn. */
+       instead of .rc-done, so a separate rule is needed for active font. */
     .rc-input[dir="rtl"] {
-      font-family: 'Vazirmatn', system-ui, sans-serif !important;
+      font-family: var(--rc-font) !important;
     }
 
     /* Widen DeepSeek's chat frame (~50% larger). */

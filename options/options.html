@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RustChin — Settings &amp; Typography Studio</title>
+  <link rel="icon" type="image/png" href="../icons/circleicon48.png">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+
+    <!-- Top Header Bar -->
+    <header class="header-bar">
+      <div class="brand-group">
+        <img class="brand-logo" src="../icons/circleicon48.png" alt="RustChin">
+        <div class="brand-info">
+          <div class="brand-title-row">
+            <h1 class="brand-title" data-i18n="appName">RustChin</h1>
+            <span class="version-pill" id="versionBadge">v1.2.0</span>
+          </div>
+          <p class="brand-subtitle" data-i18n="studioSubtitle">RTL &amp; Persian Fonts Typography Studio</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Solar Theme Segment -->
+        <div class="segmented-control" id="themeSeg" role="tablist" aria-label="Theme">
+          <button type="button" class="seg-item" data-value="auto" title="Auto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 14V6C3 4.34315 4.34315 3 6 3H18C19.6569 3 21 4.34315 21 6V14C21 15.6569 19.6569 17 18 17H6C4.34315 17 3 15.6569 3 14Z"/><path d="M10 21H14M12 17V21" stroke-linecap="round"/></svg>
+          </button>
+          <button type="button" class="seg-item" data-value="light" title="Light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="5"/><path d="M12 2V4M12 20V22M4 12L2 12M22 12L20 12M19.778 4.222L17.556 6.254M4.222 4.222L6.444 6.254M6.444 17.556L4.222 19.778M19.778 19.778L17.556 17.556" stroke-linecap="round"/></svg>
+          </button>
+          <button type="button" class="seg-item" data-value="dark" title="Dark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 14.0784C20.3003 14.7189 18.9305 15.0821 17.4776 15.0821C12.7956 15.0821 9 11.2865 9 6.60453C9 5.15161 9.36321 3.78183 10.0037 2.58215C5.83547 3.39341 2.66666 7.07878 2.66666 11.5173C2.66666 16.5053 6.70776 20.5464 11.6958 20.5464C16.1343 20.5464 19.8197 17.3776 20.631 13.2094L21.5 14.0784Z"/></svg>
+          </button>
+        </div>
+
+        <!-- Language Segment -->
+        <div class="segmented-control seg-text" id="langSeg" role="tablist" aria-label="Language">
+          <button type="button" class="seg-item" data-value="auto">Auto</button>
+          <button type="button" class="seg-item" data-value="en">EN</button>
+          <button type="button" class="seg-item" data-value="fa">فا</button>
+        </div>
+
+        <!-- Store Link Button with Solar Compass/Store Icon -->
+        <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck" target="_blank" rel="noopener noreferrer" class="btn-store" id="storeLink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"/>
+          </svg>
+          <span data-i18n="storeLink">Web Store</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+
+      <!-- TIER 1: Wide Horizontal Font Gallery (5 Authentic Typefaces) -->
+      <section class="section-container">
+        <div class="section-title-row">
+          <div>
+            <h2 class="section-heading" data-i18n="typographyHeading">Persian Typography Suite</h2>
+            <p class="section-subheading" data-i18n="typographySub">Select the active Persian variable font. Changes apply instantly across all open AI chat sessions.</p>
+          </div>
+        </div>
+
+        <div class="font-gallery" id="fontGrid">
+          <!-- Card 1: Vazirmatn -->
+          <div class="font-card active" data-font="vazirmatn" role="button" tabindex="0">
+            <div class="font-card-top">
+              <span class="font-title-specimen font-vazir">وزیرمتن</span>
+              <span class="font-badge" data-i18n="badgeStandard">Standard</span>
+            </div>
+            <div class="font-card-meta">
+              <span class="font-en-name">Vazirmatn</span>
+              <span class="font-designer">Saber Rastikerdar</span>
+            </div>
+            <div class="font-card-actions">
+              <a href="https://github.com/rastikerdar/vazirmatn" target="_blank" rel="noopener noreferrer" class="font-github-link" title="GitHub Repository">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>GitHub Source</span>
+              </a>
+            </div>
+            <div class="font-card-footer">
+              <span class="font-spec-tag">Variable 100–900</span>
+              <span class="font-active-status" data-i18n="activeBadge">Active</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Estedad -->
+          <div class="font-card" data-font="estedad" role="button" tabindex="0">
+            <div class="font-card-top">
+              <span class="font-title-specimen font-estedad">استعداد</span>
+              <span class="font-badge" data-i18n="badgeModern">Modern</span>
+            </div>
+            <div class="font-card-meta">
+              <span class="font-en-name">Estedad</span>
+              <span class="font-designer">Amin Abedi</span>
+            </div>
+            <div class="font-card-actions">
+              <a href="https://github.com/aminabedi68/Estedad" target="_blank" rel="noopener noreferrer" class="font-github-link" title="GitHub Repository">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>GitHub Source</span>
+              </a>
+            </div>
+            <div class="font-card-footer">
+              <span class="font-spec-tag">Variable 100–900</span>
+              <span class="font-active-status" data-i18n="activeBadge">Active</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Sahel -->
+          <div class="font-card" data-font="sahel" role="button" tabindex="0">
+            <div class="font-card-top">
+              <span class="font-title-specimen font-sahel">ساحل</span>
+              <span class="font-badge" data-i18n="badgeClean">Clean</span>
+            </div>
+            <div class="font-card-meta">
+              <span class="font-en-name">Sahel</span>
+              <span class="font-designer">Saber Rastikerdar</span>
+            </div>
+            <div class="font-card-actions">
+              <a href="https://github.com/rastikerdar/sahel-font" target="_blank" rel="noopener noreferrer" class="font-github-link" title="GitHub Repository">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>GitHub Source</span>
+              </a>
+            </div>
+            <div class="font-card-footer">
+              <span class="font-spec-tag">Variable 100–900</span>
+              <span class="font-active-status" data-i18n="activeBadge">Active</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Arad -->
+          <div class="font-card" data-font="arad" role="button" tabindex="0">
+            <div class="font-card-top">
+              <span class="font-title-specimen font-arad">آراد</span>
+              <span class="font-badge" data-i18n="badgeGeometric">Geometric</span>
+            </div>
+            <div class="font-card-meta">
+              <span class="font-en-name">Arad</span>
+              <span class="font-designer">M. Darvishi</span>
+            </div>
+            <div class="font-card-actions">
+              <a href="https://github.com/MDarvishi5124/Arad" target="_blank" rel="noopener noreferrer" class="font-github-link" title="GitHub Repository">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>GitHub Source</span>
+              </a>
+            </div>
+            <div class="font-card-footer">
+              <span class="font-spec-tag">Variable 100–900</span>
+              <span class="font-active-status" data-i18n="activeBadge">Active</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Mikhak -->
+          <div class="font-card" data-font="mikhak" role="button" tabindex="0">
+            <div class="font-card-top">
+              <span class="font-title-specimen font-mikhak">میخک</span>
+              <span class="font-badge" data-i18n="badgeCasual">Casual</span>
+            </div>
+            <div class="font-card-meta">
+              <span class="font-en-name">Mikhak</span>
+              <span class="font-designer">Amin Abedi</span>
+            </div>
+            <div class="font-card-actions">
+              <a href="https://github.com/aminabedi68/Mikhak" target="_blank" rel="noopener noreferrer" class="font-github-link" title="GitHub Repository">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>GitHub Source</span>
+              </a>
+            </div>
+            <div class="font-card-footer">
+              <span class="font-spec-tag">Variable 100–900</span>
+              <span class="font-active-status" data-i18n="activeBadge">Active</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TIER 2: Live Workbench Split (Controls & Metrics vs Real-Time Canvas) -->
+      <section class="section-container">
+        <div class="workbench-layout">
+
+          <!-- Left Controls Column -->
+          <div class="workbench-sidebar">
+
+            <!-- Metrics Sliders -->
+            <div class="sidebar-box">
+              <div class="box-title-row">
+                <h3 class="box-title" data-i18n="metricsTitle">Typography Metrics</h3>
+                <button type="button" class="btn-text-reset" id="resetMetricsBtn" data-i18n="resetDefaults">Default</button>
+              </div>
+
+              <div class="slider-control">
+                <div class="slider-header">
+                  <span class="slider-title" data-i18n="fontSize">Font Scale</span>
+                  <span class="slider-value-badge" id="fontSizeVal">15px</span>
+                </div>
+                <input type="range" class="smooth-slider" id="fontSizeSlider" min="12" max="24" value="15" step="1">
+              </div>
+
+              <div class="slider-control">
+                <div class="slider-header">
+                  <span class="slider-title" data-i18n="lineHeight">Line Height</span>
+                  <span class="slider-value-badge" id="lineHeightVal">1.8</span>
+                </div>
+                <input type="range" class="smooth-slider" id="lineHeightSlider" min="1.4" max="2.6" value="1.8" step="0.05">
+              </div>
+            </div>
+
+            <!-- Custom Interactive Text Tester -->
+            <div class="sidebar-box">
+              <div class="box-title-row">
+                <h3 class="box-title" data-i18n="testerTitle">Interactive Text Tester</h3>
+                <button type="button" class="btn-text-reset" id="resetTextBtn" data-i18n="resetBtn">Reset</button>
+              </div>
+              <textarea id="liveInput" rows="3" dir="rtl" placeholder="اینجا متن دلخواه خود را بنویسید تا بلافاصله پیش‌نمایش آن را ببینید..."></textarea>
+            </div>
+
+          </div>
+
+          <!-- Right Live Render Showcase Canvas -->
+          <div class="workbench-canvas" id="sandboxView">
+            <div class="canvas-header">
+              <span class="canvas-title" data-i18n="workbenchHeading">Live Sandbox Preview</span>
+              <span class="canvas-subtitle" data-i18n="workbenchSub">Real-time bilingual typesetting &amp; code isolation</span>
+            </div>
+
+            <div class="specimen-content" dir="rtl">
+              <h3 class="specimen-headline" id="dynamicHeading">هوش مصنوعی و پردازش زبان فارسی در وب مدرن</h3>
+              <p class="specimen-paragraph" id="dynamicParagraph">
+                رندر صحیح زبان‌های راست‌چین مانند فارسی در بستر وب نیازمند رعایت چند اصل بنیادی است: محاسبه دقیق نسبت کاراکترهای راست‌به‌چپ، استفاده از فونت متغیر بهینه‌سازی‌شده برای صفحه نمایش و ایزولاسیون کامل کلمات لاتین مانند <code class="code-inline">async / await</code> یا متغیرهای فنی.
+              </p>
+            </div>
+
+            <!-- Monospace Code Box (LTR isolated) -->
+            <div class="code-block" dir="ltr">
+              <div class="code-header">
+                <span>Rust Code Block</span>
+                <span class="code-tag">LTR Monospace</span>
+              </div>
+              <pre><code>pub fn calculate_direction(text: &str) -> &'static str {
+    let rtl_chars = text.chars().filter(|c| is_persian_or_arabic(*c)).count();
+    let ltr_chars = text.chars().filter(|c| c.is_ascii_alphabetic()).count();
+    if rtl_chars >= ltr_chars { "rtl" } else { "ltr" }
+}</code></pre>
+            </div>
+
+            <!-- Persian Ordered List with Authentic Numbers -->
+            <ol class="specimen-ol" dir="rtl">
+              <li><strong>فونت‌های متغیر WOFF2:</strong> لود موازی بدون بلاک کردن رندرینگ مرورگر.</li>
+              <li><strong>محافظت از بلوک‌های کد:</strong> تفکیک بدون تداخل فونت و جهت متن.</li>
+              <li><strong>سازگاری کامل با ادیتورها:</strong> جلوگیری از بروز بن‌بست در ادیتورهای ProseMirror.</li>
+            </ol>
+
+            <!-- Compact Specimen Comparison Table -->
+            <table class="specimen-tbl" dir="rtl">
+              <thead>
+                <tr>
+                  <th>پلتفرم</th>
+                  <th>شناسایی جهت</th>
+                  <th>فونت فعال</th>
+                  <th>ایزولاسیون کد و لاتین</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ChatGPT</td>
+                  <td>پویا (بیدرنگ)</td>
+                  <td>فونت متغیر محلی</td>
+                  <td>LTR خودکار</td>
+                </tr>
+                <tr>
+                  <td>Claude</td>
+                  <td>پویا (بیدرنگ)</td>
+                  <td>فونت متغیر محلی</td>
+                  <td>LTR خودکار</td>
+                </tr>
+                <tr>
+                  <td>Gemini</td>
+                  <td>پویا (بیدرنگ)</td>
+                  <td>فونت متغیر محلی</td>
+                  <td>LTR خودکار</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TIER 3: Supported AI Platforms (Horizontal 5-Column Grid) -->
+      <section class="section-container">
+        <div class="section-title-row">
+          <div>
+            <h2 class="section-heading" data-i18n="platformsHeading">Supported AI Platforms</h2>
+            <p class="section-subheading" data-i18n="platformsSub">Enable or disable RustChin independently per platform or control all simultaneously.</p>
+          </div>
+          <div class="master-switch-box">
+            <span class="master-switch-status" id="masterStatusLabel">5/5 sites enabled</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="masterToggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="platforms-grid" id="sitesGrid">
+          <!-- Populated dynamically via options.js -->
+        </div>
+      </section>
+
+      <!-- TIER 4: Privacy & Security Guarantee Card -->
+      <section class="section-container privacy-banner">
+        <div class="privacy-inner">
+          <div class="shield-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L4 6V12.5C4 17.5 7.4 21.2 12 22C16.6 21.2 20 17.5 20 12.5V6L12 2Z"/>
+              <path d="M9 12L11 14L15 10"/>
+            </svg>
+          </div>
+          <div class="privacy-details">
+            <h3 class="privacy-heading" data-i18n="privacyTitle">100% Private, Secure &amp; Free Forever</h3>
+            <p class="privacy-body" data-i18n="privacyBody">RustChin operates strictly inside your local browser instance. It contains zero analytics, zero external network requests, zero telemetry, and zero tracking. Your conversations, prompts, and personal data are never read, stored, or transmitted anywhere.</p>
+            <div class="privacy-links">
+              <a href="https://github.com/Suffergod/RustChin" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+              <span class="sep">•</span>
+              <a href="https://github.com/Suffergod/RustChin/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+              <span class="sep">•</span>
+              <a href="https://github.com/Suffergod/RustChin/issues" target="_blank" rel="noopener noreferrer">Report Issue</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="dashboard-footer">
+      <span>RustChin • Open Source Persian Typography &amp; RTL Engine • Zero Telemetry</span>
+    </footer>
+
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,30 +1,39 @@
 /* ============================================================
    RustChin — Popup logic
-   • Mirrors background.js SUPPORTED_SITES (update both together).
+   • Mirrors background.js SUPPORTED_SITES.
    • Reads/writes state to chrome.storage.local.
-   • Pings the active tab to detect which site the user is on, so
-     that row can glow (no extra permissions needed for this).
-   • Bilingual UI: detects Persian locale → switches strings.
+   • Custom popover font selector for 5 variable typefaces.
+   • Bilingual UI with zero tracking.
    ============================================================ */
 
-// Single source of truth for the popup's view of supported sites.
-// Keep in sync with background.js SUPPORTED_SITES.
 const SITES = [
-  { host: "chatgpt.com",          name: "ChatGPT",    nameFa: "چت جی‌پی‌تی", color: "#10A37F", logo: "icons/chatgpt.svg",    siteId: "chatgpt" },
-  { host: "claude.ai",            name: "Claude",     nameFa: "کلاود",      color: "#D97757", logo: "icons/claude.svg",     siteId: "claude" },
-  { host: "gemini.google.com",    name: "Gemini",     nameFa: "جمنای",      color: "#4285F4", logo: "icons/gemini.svg",     siteId: "gemini" },
-  { host: "notebooklm.google.com", name: "NotebookLM", nameFa: "نوت‌بوک اِل اِم", color: "#b7b9bb", logo: "icons/notebooklm.svg", siteId: "notebooklm" },
-  { host: "chat.deepseek.com",    name: "DeepSeek",   nameFa: "دیپ سیک",    color: "#4D6BFE", logo: "icons/deepseek.svg",   siteId: "deepseek" },
+  { host: "chatgpt.com",           name: "ChatGPT",    nameFa: "چت جی‌پی‌تی", color: "#10A37F", logo: "../icons/chatgpt.svg",    siteId: "chatgpt" },
+  { host: "claude.ai",             name: "Claude",     nameFa: "کلاود",      color: "#D97757", logo: "../icons/claude.svg",     siteId: "claude" },
+  { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#4285F4", logo: "../icons/gemini.svg",     siteId: "gemini" },
+  { host: "notebook.google.com",   name: "NotebookLM", nameFa: "نوت‌بوک اِل اِم", color: "#3186FF", logo: "../icons/notebooklm.svg", siteId: "notebooklm", altHost: "notebooklm.google.com" },
+  { host: "chat.deepseek.com",     name: "DeepSeek",   nameFa: "دیپ سیک",    color: "#4D6BFE", logo: "../icons/deepseek.svg",   siteId: "deepseek" },
 ];
 
-// Single source of truth for the displayed version is manifest.json.
-// Avoids the popup drifting out of sync with the package version.
-const VERSION = chrome.runtime.getManifest().version || "0.0";
+const FONTS = {
+  vazirmatn: { nameFa: "وزیرمتن", cls: "font-vazir", family: "'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif" },
+  estedad:   { nameFa: "استعداد", cls: "font-estedad", family: "'Estedad', -apple-system, BlinkMacSystemFont, sans-serif" },
+  sahel:     { nameFa: "ساحل",    cls: "font-sahel", family: "'Sahel', -apple-system, BlinkMacSystemFont, sans-serif" },
+  arad:      { nameFa: "آراد",     cls: "font-arad", family: "'Arad', -apple-system, BlinkMacSystemFont, sans-serif" },
+  mikhak:    { nameFa: "میخک",    cls: "font-mikhak", family: "'Mikhak', -apple-system, BlinkMacSystemFont, sans-serif" },
+};
 
-// Bilingual strings. RTL the whole popup when Persian is active.
+const VERSION = chrome.runtime.getManifest()?.version || "1.2.0";
+
 const I18N = {
   en: {
-    name: "RustChin", subtitle: "RTL & Vazirmatn for AI chat",
+    name: "RustChin", subtitle: "RTL & Persian Fonts for AI chat",
+    font: "Font",
+    dashboard: "Dashboard",
+    badgeStandard: "Standard",
+    badgeModern: "Modern",
+    badgeClean: "Clean",
+    badgeGeometric: "Geometric",
+    badgeCasual: "Casual",
     enable: "Enabled",
     labelOn: "On",
     labelOff: "Off",
@@ -39,7 +48,14 @@ const I18N = {
     dir: "ltr",
   },
   fa: {
-    name: "RustChin", subtitle: "راست‌چین و فونت وزیرمتن برای هوش مصنوعی",
+    name: "RustChin", subtitle: "راست‌چین و فونت‌های فارسی برای هوش مصنوعی",
+    font: "فونت",
+    dashboard: "داشبورد",
+    badgeStandard: "استاندارد",
+    badgeModern: "مدرن",
+    badgeClean: "روان",
+    badgeGeometric: "هندسی",
+    badgeCasual: "صمیمی",
     enable: "فعال",
     labelOn: "روشن",
     labelOff: "خاموش",
@@ -55,8 +71,6 @@ const I18N = {
   },
 };
 
-// lang/t are resolved once state loads (they depend on the saved
-// preference, falling back to the browser locale when it's "auto").
 let lang = "en";
 let t = I18N.en;
 
@@ -65,40 +79,15 @@ function resolveLang(pref) {
   return (navigator.language || "en").toLowerCase().startsWith("fa") ? "fa" : "en";
 }
 
-// Chrome Web Store link.
 const STORE_URL = "https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck";
-const REPORT_URL = "https://github.com/suffergod/RustChin/issues";
-
-/* ---------- i18n ---------- */
-
-function applyI18n() {
-  document.documentElement.lang = lang;
-  document.documentElement.dir = t.dir;
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.dataset.i18n;
-    // The master label mirrors the live master toggle state (Enabled/Paused),
-    // set by updateStatus(). Letting i18n blindly write t.enable here would
-    // freeze it on "Enabled" until the next toggle. Let updateStatus re-sync
-    // it from the current state instead.
-    if (key === "enable" && el === masterLabel) return;
-    if (t[key] !== undefined) el.textContent = t[key];
-  });
-  // Re-sync the master label in the new language from the current state.
-  if (masterLabel && currentState) updateStatus(currentState);
-}
-
-/* ---------- State ---------- */
+const REPORT_URL = "https://github.com/Suffergod/RustChin/issues";
 
 function defaultState() {
   const sites = {};
   SITES.forEach((s) => { sites[s.host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto" };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn" };
 }
 
-// Single in-memory copy of the saved state. Every save reads from here and
-// writes back here, so an update to one field (e.g. a site toggle) never
-// clobbers another (e.g. the theme/language pick) that isn't part of the
-// UI currently being edited.
 let currentState = defaultState();
 
 function getStateFromUI() {
@@ -107,49 +96,54 @@ function getStateFromUI() {
     sites: {},
     theme: currentState.theme || "auto",
     lang: currentState.lang || "auto",
+    font: currentState.font || "vazirmatn",
   };
   sitesList.querySelectorAll("input[data-host]").forEach((cb) => {
     state.sites[cb.dataset.host] = cb.checked;
+    if (cb.dataset.altHost) {
+      state.sites[cb.dataset.altHost] = cb.checked;
+    }
   });
   return state;
-}
-
-function scheduleActiveDetect() {
-  detectActiveTab();
-  // The background relay to content scripts is async; re-ping once after
-  // the page script has had time to start/stop so stale paused/live UI clears.
-  setTimeout(detectActiveTab, 180);
 }
 
 function saveState(state, options = {}) {
   currentState = state;
   chrome.storage.local.set({ state }, () => {
-    // Broadcast so content scripts in open tabs update live.
     chrome.runtime.sendMessage({ type: "STATE_CHANGED", state });
     if (options.render === false) {
       updateStatus(state);
-      scheduleActiveDetect();
       return;
     }
     render(state);
-    setTimeout(detectActiveTab, 180);
   });
 }
 
 /* ---------- Rendering ---------- */
-
 const masterToggle = document.getElementById("masterToggle");
 const masterStatus = document.getElementById("masterStatus");
 const masterLabel = document.getElementById("masterLabel");
 const sitesList = document.getElementById("sitesList");
 const reloadHint = document.getElementById("reloadHint");
-const brandLogo = document.getElementById("brandLogo");
+const fontPicker = document.getElementById("fontPicker");
+const fontPickerBtn = document.getElementById("fontPickerBtn");
+const fontPickerCurrent = document.getElementById("fontPickerCurrent");
+const fontDropdown = document.getElementById("fontDropdown");
+const themeSeg = document.getElementById("themeSeg");
+const langSeg = document.getElementById("langSeg");
+const dashboardLink = document.getElementById("dashboardLink");
+const rateLink = document.getElementById("rateLink");
+const reportLink = document.getElementById("reportLink");
+const versionBadge = document.getElementById("versionBadge");
 
 function buildSites(state) {
-  sitesList.innerHTML = "";
+  sitesList.replaceChildren();
 
   if (!state.masterEnabled) {
-    sitesList.innerHTML = `<div class="disabled-msg">${t.enableMasterFirst}</div>`;
+    const msg = document.createElement("div");
+    msg.className = "disabled-msg";
+    msg.textContent = t.enableMasterFirst;
+    sitesList.appendChild(msg);
     return;
   }
 
@@ -161,25 +155,68 @@ function buildSites(state) {
     row.dataset.siteId = site.siteId;
     row.style.setProperty("--site-color", site.color);
 
-    row.innerHTML = `
-      <div class="site-info">
-        <img class="site-icon" src="${site.logo}" alt="${site.name}">
-        <div class="site-text">
-          <div class="site-name">${lang === "fa" && site.nameFa ? site.nameFa : site.name}</div>
-          <a class="site-domain" href="https://${site.host}/" target="_blank" rel="noopener noreferrer" dir="ltr">${site.host}</a>
-        </div>
-      </div>
-      <div class="site-right">
-        <span class="paused-tag" style="display:none">${t.pausedOnSite}</span>
-        <span class="live-dot" style="display:none"></span>
-        <label class="toggle">
-          <input type="checkbox" data-host="${site.host}" ${enabled ? "checked" : ""} aria-label="${site.name}">
-          <span class="slider"></span>
-        </label>
-      </div>
-    `;
+    const info = document.createElement("div");
+    info.className = "site-info";
 
-    row.querySelector('input[data-host]').addEventListener("change", () => {
+    const img = document.createElement("img");
+    img.className = "site-icon";
+    img.src = site.logo;
+    img.alt = site.name;
+
+    const text = document.createElement("div");
+    text.className = "site-text";
+
+    const name = document.createElement("div");
+    name.className = "site-name";
+    name.textContent = lang === "fa" && site.nameFa ? site.nameFa : site.name;
+
+    const domain = document.createElement("a");
+    domain.className = "site-domain";
+    domain.href = "https://" + site.host + "/";
+    domain.target = "_blank";
+    domain.rel = "noopener noreferrer";
+    domain.textContent = site.host;
+
+    text.appendChild(name);
+    text.appendChild(domain);
+    info.appendChild(img);
+    info.appendChild(text);
+
+    const right = document.createElement("div");
+    right.className = "site-right";
+
+    const tag = document.createElement("span");
+    tag.className = "paused-tag";
+    tag.style.display = "none";
+    tag.textContent = t.pausedOnSite;
+
+    const dot = document.createElement("span");
+    dot.className = "live-dot";
+    dot.style.display = "none";
+
+    const toggle = document.createElement("label");
+    toggle.className = "toggle";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.dataset.host = site.host;
+    if (site.altHost) input.dataset.altHost = site.altHost;
+    input.checked = enabled;
+
+    const slider = document.createElement("span");
+    slider.className = "slider";
+
+    toggle.appendChild(input);
+    toggle.appendChild(slider);
+    makeToggleDraggable(toggle);
+    right.appendChild(tag);
+    right.appendChild(dot);
+    right.appendChild(toggle);
+
+    row.appendChild(info);
+    row.appendChild(right);
+
+    input.addEventListener("change", () => {
       const nextState = getStateFromUI();
       clearActive();
       row.classList.toggle("dim", nextState.sites[site.host] === false);
@@ -195,9 +232,6 @@ function updateStatus(state) {
     masterStatus.textContent = t.disabled;
     masterStatus.className = "master-status off";
     masterStatus.style.setProperty("--enabled-ratio", "0%");
-    // The master label shows a short state pill (On/Off). The status bar
-    // below carries the detail (5/5 sites enabled / Paused). Setting the
-    // label from t.labelOn/labelOff keeps it localized.
     if (masterLabel) masterLabel.textContent = t.labelOff;
   } else {
     const n = SITES.filter((site) => state.sites[site.host] !== false).length;
@@ -208,43 +242,23 @@ function updateStatus(state) {
   }
 }
 
-function render(state) {
-  masterToggle.checked = state.masterEnabled;
-  buildSites(state);
-  updateStatus(state);
-  renderPrefs(state);
-  // Re-detect active tab after re-render so the glow persists.
-  detectActiveTab();
-}
-
-/* ---------- Theme + language ---------- */
-
-const themeSeg = document.getElementById("themeSeg");
-const langSeg = document.getElementById("langSeg");
-const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-function effectiveTheme(theme) {
-  if (theme === "light" || theme === "dark") return theme;
-  return systemDarkQuery.matches ? "dark" : "light";
-}
-
-function updateBrandLogo(theme) {
-  if (!brandLogo) return;
-  // Use the darker logo on light backgrounds and the lighter logo on dark backgrounds.
-  brandLogo.src = effectiveTheme(theme) === "dark"
-    ? "icons/LightCircleLogo.svg"
-    : "icons/DarkCircleLogo.svg";
-}
-
 function applyTheme(theme) {
-  // "auto" (or anything unrecognized) clears the attribute so the
-  // prefers-color-scheme media query in popup.css takes back over.
   if (theme === "light" || theme === "dark") {
     document.documentElement.dataset.theme = theme;
   } else {
     document.documentElement.removeAttribute("data-theme");
   }
-  updateBrandLogo(theme);
+}
+
+function applyI18n() {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = t.dir;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.dataset.i18n;
+    if (key === "enable" && el === masterLabel) return;
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  if (masterLabel && currentState) updateStatus(currentState);
 }
 
 function renderPrefs(state) {
@@ -256,49 +270,38 @@ function renderPrefs(state) {
   langSeg.querySelectorAll(".seg-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.value === langPref);
   });
+
+  const fontPref = state.font || "vazirmatn";
+  const fontData = FONTS[fontPref] || FONTS.vazirmatn;
+  document.documentElement.style.setProperty("--rc-font", fontData.family || "'Vazirmatn', sans-serif");
+  if (fontPickerCurrent) {
+    fontPickerCurrent.textContent = fontData.nameFa;
+    fontPickerCurrent.className = "font-picker-current " + fontData.cls;
+  }
+  if (fontDropdown) {
+    fontDropdown.querySelectorAll(".font-option").forEach((opt) => {
+      const isActive = opt.dataset.value === fontPref;
+      opt.classList.toggle("active", isActive);
+      opt.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+  }
 }
 
-function setupSeg(segEl, onPick) {
-  segEl.querySelectorAll(".seg-btn").forEach((btn) => {
-    btn.addEventListener("click", () => onPick(btn.dataset.value));
-  });
+function render(state) {
+  masterToggle.checked = state.masterEnabled !== false;
+  buildSites(state);
+  updateStatus(state);
+  renderPrefs(state);
+  detectActiveTab();
 }
 
-systemDarkQuery.addEventListener("change", () => {
-  if ((currentState.theme || "auto") === "auto") updateBrandLogo("auto");
-});
-
-setupSeg(themeSeg, (value) => {
-  applyTheme(value);
-  currentState.theme = value;
-  saveState(currentState);
-});
-
-setupSeg(langSeg, (value) => {
-  currentState.lang = value;
-  lang = resolveLang(value);
-  t = I18N[lang];
-  applyI18n();
-  saveState(currentState);
-});
-
-/* ---------- Active-site detection (permission-free ping) ---------- */
-
-/**
- * Pings the active tab. If a RustChin content script answers, we know:
- *   - which site the user is on (siteId), and
- *   - whether the engine is currently running there (active).
- * Used to glow the matching row. Uses NO extra permissions: querying the
- * active tab for its id needs none, and sendMessage to it is allowed.
- */
+/* ---------- Active Tab Detection & Glow ---------- */
 function detectActiveTab() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const tab = tabs && tabs[0];
     if (!tab) return;
     chrome.tabs.sendMessage(tab.id, { type: "RC_PING" }, (resp) => {
       if (chrome.runtime.lastError || !resp) {
-        // No content script answered — either not a supported site, or a
-        // pre-install/pre-update tab. Clear any glow.
         clearActive();
         return;
       }
@@ -315,7 +318,7 @@ function clearActive() {
     if (dot) dot.style.display = "none";
     if (tag) tag.style.display = "none";
   });
-  reloadHint.classList.remove("show");
+  if (reloadHint) reloadHint.classList.remove("show");
 }
 
 function highlightRow(siteId, engineActive) {
@@ -331,50 +334,195 @@ function highlightRow(siteId, engineActive) {
     const dot = row.querySelector(".live-dot");
     if (dot) dot.style.display = "inline-block";
   } else if (masterOn && siteOn) {
-    // Supported site, enabled, but engine reports inactive → likely a
-    // pre-install tab. Show the reload hint.
     row.classList.add("paused");
     const tag = row.querySelector(".paused-tag");
     if (tag) tag.style.display = "inline-block";
-    reloadHint.classList.add("show");
+    if (reloadHint) reloadHint.classList.add("show");
     return;
   }
-  reloadHint.classList.remove("show");
+  if (reloadHint) reloadHint.classList.remove("show");
 }
 
-/* ---------- Master toggle ---------- */
+/* ---------- Setup Controls ---------- */
+function setupSeg(segEl, onPick) {
+  if (!segEl) return;
+  segEl.querySelectorAll(".seg-btn").forEach((btn) => {
+    btn.addEventListener("click", () => onPick(btn.dataset.value));
+  });
+}
+
+setupSeg(themeSeg, (value) => {
+  applyTheme(value);
+  currentState.theme = value;
+  saveState(currentState);
+});
+
+setupSeg(langSeg, (value) => {
+  currentState.lang = value;
+  lang = resolveLang(value);
+  t = I18N[lang];
+  applyI18n();
+  saveState(currentState);
+});
+
+// Popover dropdown toggle
+if (fontPickerBtn && fontPicker) {
+  fontPickerBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isOpen = fontPicker.classList.toggle("open");
+    fontPickerBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (fontPicker.classList.contains("open") && !fontPicker.contains(e.target)) {
+      fontPicker.classList.remove("open");
+      fontPickerBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && fontPicker.classList.contains("open")) {
+      fontPicker.classList.remove("open");
+      fontPickerBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+if (fontDropdown) {
+  fontDropdown.querySelectorAll(".font-option").forEach((opt) => {
+    opt.addEventListener("click", () => {
+      const val = opt.dataset.value;
+      currentState.font = val;
+      if (fontPicker) {
+        fontPicker.classList.remove("open");
+        if (fontPickerBtn) fontPickerBtn.setAttribute("aria-expanded", "false");
+      }
+      saveState(currentState);
+    });
+  });
+}
+
+/* ---------- Draggable Toggle Switches (Pointer Drag & Tap Support) ---------- */
+function makeToggleDraggable(toggleEl) {
+  if (!toggleEl || toggleEl._draggableInit) return;
+  toggleEl._draggableInit = true;
+
+  const input = toggleEl.querySelector('input[type="checkbox"]');
+  if (!input) return;
+
+  const TRAVEL = 18; // 42px width - 20px knob - 4px horizontal padding (2px left + 2px right)
+  let isDown = false;
+  let isDragging = false;
+  let hasMoved = false;
+  let startX = 0;
+  let startChecked = false;
+  let currentOffset = 0;
+
+  const onPointerMove = (e) => {
+    if (!isDown) return;
+    const dx = e.clientX - startX;
+    if (!isDragging && Math.abs(dx) > 2) {
+      isDragging = true;
+      hasMoved = true;
+      toggleEl.classList.add("dragging");
+    }
+    if (isDragging) {
+      currentOffset = Math.max(0, Math.min(TRAVEL, (startChecked ? TRAVEL : 0) + dx));
+      toggleEl.style.setProperty("--drag-x", `${currentOffset.toFixed(1)}px`);
+      if (currentOffset >= TRAVEL / 2) {
+        toggleEl.classList.add("drag-on");
+      } else {
+        toggleEl.classList.remove("drag-on");
+      }
+    }
+  };
+
+  const onPointerUp = (e) => {
+    if (!isDown) return;
+    isDown = false;
+
+    window.removeEventListener("pointermove", onPointerMove, true);
+    window.removeEventListener("pointerup", onPointerUp, true);
+    window.removeEventListener("pointercancel", onPointerUp, true);
+
+    try {
+      if (toggleEl.hasPointerCapture(e.pointerId)) {
+        toggleEl.releasePointerCapture(e.pointerId);
+      }
+    } catch (_) {}
+
+    toggleEl.classList.remove("dragging");
+    toggleEl.classList.remove("drag-on");
+    toggleEl.style.removeProperty("--drag-x");
+
+    if (hasMoved) {
+      const finalState = currentOffset >= TRAVEL / 2;
+      if (finalState !== input.checked) {
+        input.checked = finalState;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      const suppressClick = (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+      };
+      toggleEl.addEventListener("click", suppressClick, { capture: true, once: true });
+      setTimeout(() => {
+        toggleEl.removeEventListener("click", suppressClick, { capture: true });
+      }, 150);
+    }
+  };
+
+  toggleEl.addEventListener("pointerdown", (e) => {
+    if (input.disabled || e.button !== 0) return;
+    isDown = true;
+    startX = e.clientX;
+    startChecked = input.checked;
+    currentOffset = startChecked ? TRAVEL : 0;
+    isDragging = false;
+    hasMoved = false;
+
+    try {
+      toggleEl.setPointerCapture(e.pointerId);
+    } catch (_) {}
+
+    window.addEventListener("pointermove", onPointerMove, true);
+    window.addEventListener("pointerup", onPointerUp, true);
+    window.addEventListener("pointercancel", onPointerUp, true);
+  });
+}
+
+const masterWrap = masterToggle ? masterToggle.closest(".toggle") : null;
+if (masterWrap) makeToggleDraggable(masterWrap);
 
 masterToggle.addEventListener("change", () => {
   saveState(getStateFromUI());
 });
 
-/* ---------- Footer links ---------- */
-
-// Report (GitHub issues) is always safe to ship.
-// Rate link: until the Chrome Web Store listing ID exists, the URL is
-// unknown, so we hide the Rate button for the initial release. After
-// publishing, set STORE_URL to the real listing URL and remove the
-// STORE_URL_KNOWN guard below to re-enable the Rate button in a follow-up.
-const STORE_URL_KNOWN = true;
-
-const rateLink = document.getElementById("rateLink");
-const reportLink = document.getElementById("reportLink");
-
-if (rateLink) {
-  if (STORE_URL_KNOWN) {
-    rateLink.href = STORE_URL;
+function openDashboard() {
+  if (chrome.runtime.openOptionsPage) {
+    chrome.runtime.openOptionsPage();
   } else {
-    rateLink.style.display = "none";
+    window.open(chrome.runtime.getURL("options/options.html"));
   }
 }
-if (reportLink) reportLink.href = REPORT_URL;
 
-// Keep the popup's version badge in sync with the manifest.
-const versionBadge = document.getElementById("versionBadge");
+const openDashboardBtn = document.getElementById("openDashboardBtn");
+if (openDashboardBtn) {
+  openDashboardBtn.addEventListener("click", openDashboard);
+}
+
+if (dashboardLink) {
+  dashboardLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    openDashboard();
+  });
+}
+
+if (rateLink) rateLink.href = STORE_URL;
+if (reportLink) reportLink.href = REPORT_URL;
 if (versionBadge) versionBadge.textContent = "v" + VERSION;
 
 /* ---------- Boot ---------- */
-
 chrome.storage.local.get("state", (data) => {
   currentState = data.state || defaultState();
   applyTheme(currentState.theme || "auto");
@@ -382,5 +530,4 @@ chrome.storage.local.get("state", (data) => {
   t = I18N[lang];
   applyI18n();
   render(currentState);
-  detectActiveTab();
 });

@@ -20,7 +20,7 @@ RustChin.start({
   css: `
     @font-face {
       font-family: 'Vazirmatn';
-      src: url({{FONT}}) format('woff2');
+      src: url({{VAZIR_FONT}}) format('woff2');
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
@@ -31,17 +31,73 @@ RustChin.start({
         U+FE70-FEFF, U+200C-200F;
     }
 
-    /* Vazirmatn only on RTL-detected text. English paragraphs, headings, UI
+    @font-face {
+      font-family: 'Estedad';
+      src: url({{ESTEDAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Sahel';
+      src: url({{SAHEL_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Arad';
+      src: url({{ARAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Mikhak';
+      src: url({{MIKHAK_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    :root {
+      --rc-font: 'Vazirmatn', 'Söhne', 'ui-sans-serif', system-ui, sans-serif;
+    }
+    :root[data-rc-font="estedad"] {
+      --rc-font: 'Estedad', 'Söhne', 'ui-sans-serif', system-ui, sans-serif;
+    }
+    :root[data-rc-font="sahel"] {
+      --rc-font: 'Sahel', 'Söhne', 'ui-sans-serif', system-ui, sans-serif;
+    }
+    :root[data-rc-font="arad"] {
+      --rc-font: 'Arad', 'Söhne', 'ui-sans-serif', system-ui, sans-serif;
+    }
+    :root[data-rc-font="mikhak"] {
+      --rc-font: 'Mikhak', 'Söhne', 'ui-sans-serif', system-ui, sans-serif;
+    }
+
+    /* Active font only on RTL-detected text. English paragraphs, headings, UI
        chrome, and sidebar titles keep Claude's native font ('Söhne' / system).
        Preserves Claude's icon font (Anthropicons), code, and math. */
     .rc-done[dir="rtl"]:not(svg):not(code):not(pre):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math),
     .rc-done[dir="rtl"] :not(svg):not(code):not(pre):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math) {
-      font-family: 'Vazirmatn', 'Söhne', 'ui-sans-serif', system-ui, sans-serif !important;
+      font-family: var(--rc-font) !important;
     }
     /* Prompt/textarea areas: the live-input handler marks these with .rc-input
-       instead of .rc-done, so a separate rule is needed for Vazirmatn. */
+       instead of .rc-done, so a separate rule is needed for active font. */
     .rc-input[dir="rtl"] {
-      font-family: 'Vazirmatn', 'Söhne', 'ui-sans-serif', system-ui, sans-serif !important;
+      font-family: var(--rc-font) !important;
     }
     [data-cds="Icon"], [data-cds="Icon"] * {
       font-family: var(--font-anthropicons, Anthropicons-Variable) !important;

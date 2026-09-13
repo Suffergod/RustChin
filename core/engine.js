@@ -264,22 +264,25 @@
     /* ---------- Live input direction (per keystroke) ---------- */
 
     function resolveEditable(target) {
+      if (!target) return null;
+      if (target.nodeType === 3) target = target.parentElement;
+      if (!target || target.nodeType !== 1) return null;
       var sel = config.editableSelector;
-      if (target.matches(sel)) return target;
-      return target.closest(sel);
+      if (target.matches && target.matches(sel)) return target;
+      if (target.closest) return target.closest(sel);
+      return null;
     }
 
     // [PERF] Throttle to one check per animation frame while typing.
     function handleDynamicInput(e) {
       if (!active) return;
       var target = e.target;
-      if (!target || target.nodeType !== 1) return;
       var inputEl = resolveEditable(target);
       if (!inputEl) return;
 
       if (rafQueued) return;
       rafQueued = true;
-      requestAnimationFrame(function () {
+      var update = function () {
         rafQueued = false;
         var text = inputEl.value || inputEl.innerText || inputEl.textContent || "";
         var dir = getDirection(text);
@@ -291,7 +294,12 @@
         if (!inputEl.classList.contains("rc-input")) {
           inputEl.classList.add("rc-input");
         }
-      });
+      };
+      if (global.requestAnimationFrame) {
+        requestAnimationFrame(update);
+      } else {
+        setTimeout(update, 16);
+      }
     }
 
     /* ---------- Observer (debatched) ---------- */
@@ -321,6 +329,11 @@
           for (var j = 0; j < m.addedNodes.length; j++) {
             batchNodes.push(m.addedNodes[j]);
           }
+        } else if (m.type === "characterData") {
+          var p = m.target.parentElement;
+          if (p && !p.isContentEditable) {
+            batchNodes.push(p);
+          }
         }
       }
       if (batchNodes.length) scheduleBatch();
@@ -346,12 +359,13 @@
 
       if (observer) observer.disconnect();
       observer = new MutationObserver(onMutation);
-      // subtree:true keeps coverage across SPA re-renders. characterData is
-      // NOT observed: direction is derived from element text, and a throttled
-      // safety-net scan below catches streaming token updates.
-      observer.observe(document.body, { childList: true, subtree: true });
+      // subtree:true keeps coverage across SPA re-renders. characterData:true
+      // catches streaming tokens in real time on the next animation frame.
+      observer.observe(document.body, { childList: true, characterData: true, subtree: true });
 
       document.addEventListener("input", handleDynamicInput, true);
+      document.addEventListener("keyup", handleDynamicInput, true);
+      document.addEventListener("compositionend", handleDynamicInput, true);
 
       // [PERF] Safety net: re-scan every 2s unconditionally. fixElement()
       // already memoizes per element (skips anything unchanged), so this is
@@ -383,6 +397,8 @@
         intervalId = null;
       }
       document.removeEventListener("input", handleDynamicInput, true);
+      document.removeEventListener("keyup", handleDynamicInput, true);
+      document.removeEventListener("compositionend", handleDynamicInput, true);
 
       // [PERF] Reset memoization so a later start() re-processes everything
       // fresh. Old WeakSet/WeakMap are GC'd; can't iterate them to clear.
@@ -426,14 +442,30 @@
       document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
         el.removeAttribute("dir");
       });
+
+      // 5. Remove font preference attribute from root.
+      document.documentElement.removeAttribute("data-rc-font");
     }
 
     /* ---------- Boot: load font, read state, maybe start ---------- */
 
     function applyState(state) {
-      var on =
-        state.masterEnabled !== false &&
-        state.sites[config.host] !== false;
+      var fontPref = (state && state.font) || "vazirmatn";
+      if (fontPref && fontPref !== "vazirmatn") {
+        document.documentElement.setAttribute("data-rc-font", fontPref);
+      } else {
+        document.documentElement.removeAttribute("data-rc-font");
+      }
+
+      var siteEnabled = true;
+      if (state && state.sites) {
+        if (state.sites[config.host] !== undefined) {
+          siteEnabled = state.sites[config.host] !== false;
+        } else if (config.altHost && state.sites[config.altHost] !== undefined) {
+          siteEnabled = state.sites[config.altHost] !== false;
+        }
+      }
+      var on = state && state.masterEnabled !== false && siteEnabled;
       if (on) start();
       else stop();
     }
@@ -475,8 +507,8 @@
   global.RustChin = {
     /**
      * Called by each sites/<x>.js with its config.
-     * Loads the bundled font as a base64 data URL (page CSP blocks external
-     * font URLs, so we embed it once and cache), then boots the engine.
+     * Loads the bundled fonts as base64 data URLs (page CSP blocks external
+     * font URLs, so we embed once and cache), then boots the engine.
      */
     start: function (config) {
       var engine = createEngine(config);
@@ -487,31 +519,77 @@
     },
   };
 
-  function loadFontAndStart(engine, config) {
-    var fontURL = chrome.runtime.getURL(
-      "fonts/Vazirmatn-Variable.woff2"
-    );
-    fetch(fontURL)
+  function readBlobAsDataURL(blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  function fetchFontAsDataURL(relativePath) {
+    var url = chrome.runtime.getURL(relativePath);
+    return fetch(url)
       .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status + " for " + relativePath);
         return r.blob();
       })
-      .then(function (blob) {
-        var reader = new FileReader();
-        reader.onloadend = function () {
-          var base64 = reader.result;
-          // Replace the {{FONT}} placeholder with the embedded font data URL.
-          var css = config.css.split("{{FONT}}").join(base64);
-          engine.setCSS(css);
-          engine.boot();
-        };
-        reader.readAsDataURL(blob);
+      .then(readBlobAsDataURL);
+  }
+
+  function loadFontAndStart(engine, config) {
+    Promise.all([
+      fetchFontAsDataURL("fonts/Vazirmatn-Variable.woff2"),
+      fetchFontAsDataURL("fonts/Estedad-Variable.woff2"),
+      fetchFontAsDataURL("fonts/Sahel-Variable.woff2"),
+      fetchFontAsDataURL("fonts/Arad-Variable.woff2"),
+      fetchFontAsDataURL("fonts/Mikhak-Variable.woff2"),
+    ])
+      .then(function (results) {
+        var vazirBase64 = results[0];
+        var estedadBase64 = results[1];
+        var sahelBase64 = results[2];
+        var aradBase64 = results[3];
+        var mikhakBase64 = results[4];
+        var css = config.css
+          .split("{{VAZIR_FONT}}").join(vazirBase64)
+          .split("{{ESTEDAD_FONT}}").join(estedadBase64)
+          .split("{{SAHEL_FONT}}").join(sahelBase64)
+          .split("{{ARAD_FONT}}").join(aradBase64)
+          .split("{{MIKHAK_FONT}}").join(mikhakBase64)
+          .split("{{FONT}}").join(vazirBase64);
+        engine.setCSS(css);
+        engine.boot();
       })
       .catch(function (e) {
-        console.error("[RustChin] font load failed:", e);
-        // Fall back to booting without the embedded font (CSS still applies,
-        // just without Vazirmatn). The direction fixes still work.
-        engine.setCSS(config.css.split("{{FONT}}").join(""));
-        engine.boot();
+        console.error("[RustChin] multi-font load failed, attempting fallback:", e);
+        fetchFontAsDataURL("fonts/Vazirmatn-Variable.woff2")
+          .then(function (vazirBase64) {
+            var css = config.css
+              .split("{{VAZIR_FONT}}").join(vazirBase64)
+              .split("{{ESTEDAD_FONT}}").join(vazirBase64)
+              .split("{{SAHEL_FONT}}").join(vazirBase64)
+              .split("{{ARAD_FONT}}").join(vazirBase64)
+              .split("{{MIKHAK_FONT}}").join(vazirBase64)
+              .split("{{FONT}}").join(vazirBase64);
+            engine.setCSS(css);
+            engine.boot();
+          })
+          .catch(function () {
+            engine.setCSS(
+              config.css
+                .split("{{VAZIR_FONT}}").join("")
+                .split("{{ESTEDAD_FONT}}").join("")
+                .split("{{SAHEL_FONT}}").join("")
+                .split("{{ARAD_FONT}}").join("")
+                .split("{{MIKHAK_FONT}}").join("")
+                .split("{{FONT}}").join("")
+            );
+            engine.boot();
+          });
       });
   }
 })(window);

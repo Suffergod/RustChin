@@ -8,19 +8,53 @@
 
 /* Smoothly fade colors when switching theme / language, instead of snapping.
    Kept off .seg-btn and .site-row because they have their own transitions. */
-html, body, .panel, .header, .master, .prefs, .footer,
-.master-label, .master-status, .site-name, .site-domain,
+html, body, .panel, .header, .master, .prefs, .font-row, .footer,
+.master-label, .master-status, .font-label, .site-name, .site-domain,
 .section-title, .zero-badge {
   transition: background-color 0.3s ease, color 0.3s ease,
               border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.18s ease;
 }
 
-/* Load Vazirmatn for the popup itself. Path climbs out of popup/ into fonts/.
-   unicode-range = only Persian/Arabic glyphs use it; Latin UI text falls through
-   to the system font in --rc-font, so the English UI keeps its crisp look. */
+/* Bundled Variable Fonts for Popup */
 @font-face {
   font-family: 'Vazirmatn';
   src: url('../fonts/Vazirmatn-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+200C-200F;
+}
+@font-face {
+  font-family: 'Estedad';
+  src: url('../fonts/Estedad-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+200C-200F;
+}
+@font-face {
+  font-family: 'Sahel';
+  src: url('../fonts/Sahel-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+200C-200F;
+}
+@font-face {
+  font-family: 'Arad';
+  src: url('../fonts/Arad-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+    U+FE70-FEFF, U+200C-200F;
+}
+@font-face {
+  font-family: 'Mikhak';
+  src: url('../fonts/Mikhak-Variable.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -49,21 +83,12 @@ html, body, .panel, .header, .master, .prefs, .footer,
   --shadow-1: 0 4px 12px rgba(0, 0, 0, 0.03), 0 12px 32px rgba(15, 23, 42, 0.06);
   --shadow-glow: 0 0 0 1px var(--row-accent, var(--accent)),
     0 6px 22px -6px var(--row-accent, var(--accent));
-  /* Site logo shadow tuning:
-     - keep "none" to disable all chatbot-logo shadows
-     - switch to the drop-shadow value below to re-enable in one place */
   --site-icon-filter: none;
   --site-icon-filter-soft: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.18));
   --toggle-off: #cbd5e1;
   --toggle-on: var(--accent);
 }
 
-/* Dark palette. Applied automatically when the OS is dark AND the user
-   hasn't manually picked a theme (data-theme is missing/"auto"), OR
-   applied directly when the user explicitly picked "dark". Keeping both
-   selectors pointed at the same variables is what makes the manual
-   picker actually override the system setting -- the previous toggle
-   only flipped an attribute but nothing was ever gated on it. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
     --bg-ambient-1: #020617;
@@ -106,7 +131,6 @@ html, body {
 
 body {
   width: 340px;
-  /* Ambient gradient sits behind the frosted panel. */
   background:
     radial-gradient(120% 80% at 0% 0%, var(--bg-ambient-2), transparent 60%),
     radial-gradient(120% 80% at 100% 100%, var(--bg-ambient-2), transparent 60%),
@@ -122,7 +146,7 @@ body {
   border: 1px solid var(--panel-border);
   border-radius: 16px;
   box-shadow: var(--shadow-1);
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* ── Header ── */
@@ -140,7 +164,6 @@ body {
   filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.22));
 }
 
-/* Chatbot-logo shadows are controlled by --site-icon-filter in :root. */
 .site-icon {
   filter: var(--site-icon-filter);
 }
@@ -181,9 +204,6 @@ body {
   color: var(--accent);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
-/* Dark mode: full inset ring (symmetric) + a shadow whose Y-offset matches
-   light mode (1px) so the active box renders at the SAME vertical position
-   in both themes. The earlier 2px Y-offset pushed it down optically. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) .seg-btn.active {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 1px 6px rgba(0, 0, 0, 0.5);
@@ -210,8 +230,44 @@ body {
   color: var(--text-3);
   margin-top: 1px;
 }
-.header .ver {
+.header .header-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+[dir="rtl"] .header .header-actions {
+  margin-left: 0;
+  margin-right: auto;
+}
+.header-actions .btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.header-actions .btn-icon svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+  will-change: transform;
+}
+.header-actions .btn-icon:hover {
+  background: var(--hairline);
+  color: var(--text-1);
+}
+.header-actions .btn-icon:hover svg {
+  transform: rotate(60deg);
+}
+.header .ver {
   font-size: 10px;
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
@@ -220,6 +276,183 @@ body {
   padding: 3px 8px;
   border-radius: 100px;
   font-weight: 600;
+}
+
+/* ── Font selection row & popover dropdown ── */
+.font-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--hairline);
+  z-index: 50;
+}
+.font-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.font-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.font-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.font-picker-wrapper {
+  position: relative;
+}
+.font-picker-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 25px;
+  padding: 0 10px;
+  background: var(--hairline);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-1);
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+}
+.font-picker-btn:hover {
+  background: var(--panel-solid);
+  border-color: var(--panel-border);
+}
+.font-picker-wrapper.open .font-picker-btn {
+  background: var(--panel-solid);
+  border-color: var(--accent);
+}
+.font-picker-current {
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.font-picker-arrow {
+  width: 11px;
+  height: 11px;
+  color: var(--text-3);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.font-picker-wrapper.open .font-picker-arrow {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+/* Floating frosted popover */
+.font-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 215px;
+  background: var(--panel-solid);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-1);
+  padding: 4px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px) scale(0.96);
+  transform-origin: top right;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  z-index: 100;
+}
+[dir="rtl"] .font-dropdown {
+  right: auto;
+  left: 0;
+  transform-origin: top left;
+}
+.font-picker-wrapper.open .font-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.font-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 9px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  user-select: none;
+}
+.font-option:hover {
+  background: var(--hairline);
+}
+.font-option.active {
+  background: var(--accent-soft);
+}
+.font-opt-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.font-opt-fa {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  line-height: 1.35;
+}
+.font-option.active .font-opt-fa {
+  color: var(--accent);
+}
+.font-opt-en {
+  font-size: 9.5px;
+  color: var(--text-3);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.font-opt-badge {
+  font-size: 8.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--hairline);
+  color: var(--text-3);
+  margin-inline-start: auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Font preview typefaces: strictly locked to each font's own typeface */
+.font-vazir,
+.font-option[data-value="vazirmatn"] .font-opt-fa {
+  font-family: 'Vazirmatn' !important;
+}
+
+.font-estedad,
+.font-option[data-value="estedad"] .font-opt-fa {
+  font-family: 'Estedad' !important;
+}
+
+.font-sahel,
+.font-option[data-value="sahel"] .font-opt-fa {
+  font-family: 'Sahel' !important;
+}
+
+.font-arad,
+.font-option[data-value="arad"] .font-opt-fa {
+  font-family: 'Arad' !important;
+}
+
+.font-mikhak,
+.font-option[data-value="mikhak"] .font-opt-fa {
+  font-family: 'Mikhak' !important;
 }
 
 /* ── Master toggle row ── */
@@ -264,29 +497,55 @@ body {
 }
 :root[data-theme="dark"] .master-status.on { color: #4ade80; }
 
-/* ── Toggle switch (macOS-style) ── */
+/* ── Toggle switch (macOS-style with tactile spring bounce) ── */
 .toggle { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
 .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
 .toggle .slider {
   position: absolute; inset: 0; cursor: pointer;
   background: var(--toggle-off);
   border-radius: 100px;
-  transition: background-color 0.22s ease, box-shadow 0.22s ease;
+  transition: background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .toggle .slider::before {
   content: ""; position: absolute;
   width: 20px; height: 20px; left: 2px; top: 2px;
   background: #fff; border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
-  will-change: transform;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25), 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s ease;
+  will-change: transform, width;
 }
+/* Tactile squash-and-stretch on click/press when not dragging */
+.toggle:active:not(.dragging) .slider::before {
+  width: 23px;
+  cursor: grabbing;
+}
+
+/* Active dragging state: direct 60fps tracking without transition delay */
+.toggle.dragging {
+  cursor: grabbing;
+}
+
+.toggle.dragging .slider::before {
+  transition: none !important;
+  transform: translate3d(var(--drag-x, 0px), 0, 0) !important;
+  width: 22px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  cursor: grabbing;
+}
+
+.toggle.dragging.drag-on .slider {
+  background: var(--toggle-on);
+}
+
+.site-row .toggle.dragging.drag-on .slider {
+  background: var(--site-color, var(--toggle-on));
+}
+
 .toggle input:checked + .slider { background: var(--toggle-on); }
+.site-row .toggle input:checked + .slider { background: var(--site-color, var(--toggle-on)); }
 .toggle input:checked + .slider::before { transform: translate3d(18px, 0, 0); }
 .toggle input:focus-visible + .slider { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Dark mode: give the toggle knob a crisp shadow + a faint accent glow
-   when ON, so the per-site switches look as alive as the master one. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle .slider::before {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -294,12 +553,18 @@ body {
   :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle input:checked + .slider {
     box-shadow: 0 0 8px -2px var(--toggle-on);
   }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-row .toggle input:checked + .slider {
+    box-shadow: 0 0 10px -2px var(--site-color, var(--toggle-on));
+  }
 }
 :root[data-theme="dark"] .toggle .slider::before {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 :root[data-theme="dark"] .toggle input:checked + .slider {
   box-shadow: 0 0 8px -2px var(--toggle-on);
+}
+:root[data-theme="dark"] .site-row .toggle input:checked + .slider {
+  box-shadow: 0 0 10px -2px var(--site-color, var(--toggle-on));
 }
 
 /* ── Sites section ── */
@@ -337,7 +602,27 @@ body {
   border-radius: 7px;
   flex-shrink: 0;
   display: block;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.22s ease, opacity 0.22s ease;
+  filter: brightness(0) opacity(0.85);
+}
+
+[data-theme="dark"] .site-icon {
+  filter: brightness(0) invert(1) opacity(0.92);
+}
+
+[data-theme="light"] .site-icon {
+  filter: brightness(0) opacity(0.85);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .site-icon {
+    filter: brightness(0) invert(1) opacity(0.92);
+  }
+}
+
+.site-row:hover .site-icon,
+.site-row.active .site-icon {
+  opacity: 1;
 }
 .site-text {
   min-width: 0;
@@ -352,13 +637,8 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  /* Persian names align naturally in RTL popup; English stays LTR. */
   unicode-bidi: plaintext;
 }
-/* Domain is rendered as a clickable link. It stays LTR and isolated so the
-   URL never visually flips, while its block alignment follows the popup
-   direction (logical "start"), which removes the small right-side gap that
-   used to affect short hosts like chatgpt.com. */
 .site-domain {
   font-size: 9.5px;
   color: var(--text-3);
@@ -371,23 +651,17 @@ body {
   transition: color 0.15s ease, opacity 0.15s ease;
 }
 .site-domain:hover { color: var(--text-1); opacity: 1; }
-.site-domain:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
 
 .site-right { display: flex; align-items: center; gap: 8px; }
 
-/* Active site: glow + accent border + pulsing live dot. */
+/* Active site: pulsing live-dot is the sole indicator; row border remains uniform */
 .site-row.active {
-  --row-accent: var(--site-color, var(--accent));
-  background: color-mix(in srgb, var(--site-color, var(--accent)) 12%, transparent);
-  border-color: color-mix(in srgb, var(--site-color, var(--accent)) 55%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--site-color, var(--accent)) 30%, transparent),
-              0 6px 20px -8px var(--site-color, var(--accent));
+  border-color: var(--panel-border);
+  box-shadow: none;
 }
-.site-row.active .site-icon { transform: scale(1.06); }
+.site-row.active .site-icon {
+  opacity: 1;
+}
 
 .live-dot {
   width: 6px; height: 6px; border-radius: 50%;
@@ -413,7 +687,6 @@ body {
   background: var(--hairline);
 }
 
-/* Disabled (master off or site off). */
 .site-row.dim { opacity: 0.45; }
 
 .disabled-msg {
@@ -424,7 +697,6 @@ body {
   line-height: 1.5;
 }
 
-/* "Reload to activate" hint for pre-install tabs on a supported site. */
 .reload-hint {
   margin: 4px 12px 6px;
   padding: 8px 11px;
@@ -462,15 +734,15 @@ body {
 }
 .footer-links a:hover { background: var(--hairline); color: var(--text-1); }
 
-/* Gentle hover motion on the theme icons: sun spins, moon tilts.
-   Keep it restrained and avoid overshoot so the SVG strokes do not shimmer. */
+/* Gentle hover motion on the Solar theme icons */
+.seg-btn[data-value="auto"] svg,
 .seg-btn[data-value="light"] svg,
 .seg-btn[data-value="dark"] svg {
-  transform-origin: 50% 50%;
-  transform-box: fill-box;
+  transform-origin: center;
   backface-visibility: hidden;
-  transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform;
 }
-.seg-btn[data-value="light"]:hover svg { transform: translateZ(0) rotate(72deg); }
-.seg-btn[data-value="dark"]:hover svg  { transform: translateZ(0) rotate(-14deg); }
+.seg-btn[data-value="auto"]:hover svg  { transform: scale(1.08); }
+.seg-btn[data-value="light"]:hover svg { transform: rotate(45deg); }
+.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-14deg) scale(1.05); }

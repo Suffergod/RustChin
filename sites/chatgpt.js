@@ -13,12 +13,12 @@ RustChin.start({
   exclude:
     "pre, code, .katex, .math, [class*='math' i], [contenteditable='true'], .ProseMirror",
   editableSelector:
-    'textarea, input, [contenteditable="true"]',
+    'textarea, input, [contenteditable="true"], [contenteditable=""], #prompt-textarea, .ProseMirror',
   numberedLists: true,
   css: `
     @font-face {
       font-family: 'Vazirmatn';
-      src: url({{FONT}}) format('woff2');
+      src: url({{VAZIR_FONT}}) format('woff2');
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
@@ -29,27 +29,91 @@ RustChin.start({
         U+FE70-FEFF, U+200C-200F;
     }
 
-    /* Persian text uses Vazirmatn; everything else falls through per-char.
+    @font-face {
+      font-family: 'Estedad';
+      src: url({{ESTEDAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Sahel';
+      src: url({{SAHEL_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Arad';
+      src: url({{ARAD_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    @font-face {
+      font-family: 'Mikhak';
+      src: url({{MIKHAK_FONT}}) format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
+        U+FE70-FEFF, U+200C-200F;
+    }
+
+    :root {
+      --rc-font: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    :root[data-rc-font="estedad"] {
+      --rc-font: 'Estedad', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    :root[data-rc-font="sahel"] {
+      --rc-font: 'Sahel', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    :root[data-rc-font="arad"] {
+      --rc-font: 'Arad', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    :root[data-rc-font="mikhak"] {
+      --rc-font: 'Mikhak', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    /* Persian text uses active font (--rc-font); everything else falls through per-char.
        Scoped to RTL-detected text only so English paragraphs, headings, and
-       the ✔ glyph keep ChatGPT's native font. Excludes pre/code (monospace,
+       the check glyph keep ChatGPT's native font. Excludes pre/code (monospace,
        including their descendants) and .katex/math (math symbols) so they
        keep their own fonts. */
     .bidi-scope .rc-done:not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math),
     .bidi-scope .rc-done :not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math) {
-      font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+      font-family: var(--rc-font) !important;
     }
 
     /* User sent messages */
     [data-message-author-role='user'] [class*='whitespace-pre-wrap'][dir="rtl"] {
-      font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+      font-family: var(--rc-font) !important;
     }
 
     /* Prompt/textarea and Canvas/ProseMirror: Pure CSS styling avoids mutating editor DOM */
     .rc-input[dir="rtl"],
+    .rc-input[dir="rtl"] *,
+    .ProseMirror[dir="rtl"],
+    .ProseMirror[dir="rtl"] *:not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math),
+    [contenteditable="true"][dir="rtl"],
+    [contenteditable="true"][dir="rtl"] *:not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math),
+    .writing-block-surface [dir="rtl"],
+    .writing-block-surface [dir="rtl"] *:not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math) {
+      font-family: var(--rc-font) !important;
+    }
     .ProseMirror[dir="rtl"],
     [contenteditable="true"][dir="rtl"],
     .writing-block-surface [dir="rtl"] {
-      font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
       direction: rtl !important;
       text-align: right !important;
     }
@@ -68,7 +132,7 @@ RustChin.start({
     .writing-block-surface table[dir="rtl"] td,
     .ProseMirror table[dir="rtl"] th,
     .ProseMirror table[dir="rtl"] td {
-      font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+      font-family: var(--rc-font) !important;
       text-align: right !important;
     }
     /* Code blocks + their descendants: keep ChatGPT's original monospace
