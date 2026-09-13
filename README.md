@@ -125,7 +125,7 @@
         </picture> <b>ChatGPT</b>
       </td>
       <td align="center"><code>chatgpt.com</code></td>
-      <td align="center"><img src="https://img.shields.io/badge/%20-000000?style=flat-square" alt="#000000"></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-E8E2D8?style=flat-square" alt="#E8E2D8"></td>
       <td align="center">✅ سازگار کامل (شامل Canvas، ProseMirror و جداول)</td>
     </tr>
     <tr>
@@ -137,7 +137,7 @@
     <tr>
       <td align="right"><img src="icons/gemini.svg" width="20" align="center"> <b>Google Gemini</b></td>
       <td align="center"><code>gemini.google.com</code></td>
-      <td align="center"><img src="https://img.shields.io/badge/%20-8E75B2?style=flat-square" alt="#8E75B2"></td>
+      <td align="center"><img src="https://img.shields.io/badge/Aurora-Gradient-8E75B2?style=flat-square" alt="Aurora Gradient"></td>
       <td align="center">✅ سازگار کامل (شامل ویرایشگر چندخطی Quill)</td>
     </tr>
     <tr>

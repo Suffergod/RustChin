@@ -360,6 +360,7 @@ function buildSitesList() {
     const enabled = isMasterOn && currentState.sites[site.host] !== false;
     const card = document.createElement("div");
     card.className = "platform-card" + (enabled ? " active" : " dim");
+    card.dataset.host = site.host;
     card.style.setProperty("--site-color", site.color);
 
     const info = document.createElement("div");
