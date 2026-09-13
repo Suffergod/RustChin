@@ -9,7 +9,7 @@
 const SITES = [
   { host: "chatgpt.com",           name: "ChatGPT",    nameFa: "چت جی‌پی‌تی", color: "#10A37F", logo: "../icons/chatgpt.svg",    siteId: "chatgpt" },
   { host: "claude.ai",             name: "Claude",     nameFa: "کلاود",      color: "#D97757", logo: "../icons/claude.svg",     siteId: "claude" },
-  { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#4285F4", logo: "../icons/gemini.svg",     siteId: "gemini" },
+  { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#8E75B2", logo: "../icons/gemini.svg",     siteId: "gemini" },
   { host: "notebook.google.com",   name: "Gemini Notebook", nameFa: "جمنای نوت‌بوک", color: "#3186FF", logo: "../icons/notebooklm.svg", siteId: "notebooklm", altHost: "notebooklm.google.com" },
   { host: "chat.deepseek.com",     name: "DeepSeek",   nameFa: "دیپ سیک",    color: "#4D6BFE", logo: "../icons/deepseek.svg",   siteId: "deepseek" },
 ];

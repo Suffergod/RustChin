@@ -6,7 +6,7 @@
 const SITES = [
   { host: "chatgpt.com",           name: "ChatGPT",    nameFa: "چت جی‌پی‌تی", color: "#10A37F", logo: "../icons/chatgpt.svg" },
   { host: "claude.ai",             name: "Claude",     nameFa: "کلاود",      color: "#D97757", logo: "../icons/claude.svg" },
-  { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#4285F4", logo: "../icons/gemini.svg" },
+  { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#8E75B2", logo: "../icons/gemini.svg" },
   { host: "notebook.google.com",   name: "Gemini Notebook", nameFa: "جمنای نوت‌بوک", color: "#3186FF", logo: "../icons/notebooklm.svg", altHost: "notebooklm.google.com" },
   { host: "chat.deepseek.com",     name: "DeepSeek",   nameFa: "دیپ سیک",    color: "#4D6BFE", logo: "../icons/deepseek.svg" },
 ];
