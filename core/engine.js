@@ -89,7 +89,10 @@
      * parity and the revert contract.
      */
     function fixElement(el) {
-      if (el.closest(config.exclude)) return;
+      // Never touch editable elements or their descendants (ProseMirror, textarea, input, contenteditable).
+      // Editable fields are handled exclusively at the root container level by handleDynamicInput.
+      if (el.isContentEditable || (el.matches && el.matches("input, textarea, select"))) return;
+      if (config.exclude && el.closest(config.exclude)) return;
 
       var text = el.textContent || "";
       if (!text.trim()) return;
@@ -156,6 +159,8 @@
     var LEAF_TAGS = "p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th";
 
     function processContainer(container) {
+      if (container.isContentEditable || (container.matches && container.matches("input, textarea, select"))) return;
+
       if (!container.classList.contains("bidi-scope")) {
         container.classList.add("bidi-scope");
       }
@@ -166,13 +171,6 @@
 
       // Text-bearing tags inside a message root.
       container.querySelectorAll(LEAF_TAGS).forEach(fixElement);
-
-      // Child text-bearing divs without leaf descendants (e.g., user prompt bubbles).
-      container.querySelectorAll("div").forEach(function (d) {
-        if (d.querySelector(LEAF_TAGS)) return;
-        var txt = d.textContent || "";
-        if (txt.trim()) fixElement(d);
-      });
 
       // Ordered lists: set their dir so Persian numbering applies.
       if (config.numberedLists !== false) {
@@ -190,7 +188,6 @@
         table.setAttribute("dir", getDirection(tableText));
         table.querySelectorAll("th, td").forEach(fixElement);
       });
-    
     }
 
     /* ---------- Scanning ---------- */
@@ -225,6 +222,10 @@
       if (!active) return;
       nodes.forEach(function (node) {
         if (node.nodeType !== 1) return; // elements only
+        // Skip anything inside an editable surface (ProseMirror, textarea, input)
+        if (node.isContentEditable || (node.matches && node.matches("input, textarea, select"))) return;
+        if (node.closest && node.closest('[contenteditable="true"], textarea, input')) return;
+
         // Treat the node itself as a potential message root or text tag.
         try {
           if (config.scanBody) {
@@ -280,12 +281,16 @@
       rafQueued = true;
       requestAnimationFrame(function () {
         rafQueued = false;
-        var text = inputEl.value || inputEl.textContent || "";
+        var text = inputEl.value || inputEl.innerText || inputEl.textContent || "";
         var dir = getDirection(text);
-        inputEl.setAttribute("dir", dir);
-        inputEl.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
-        inputEl.style.setProperty("direction", dir, "important");
-        inputEl.classList.add("rc-input");
+        if (inputEl.getAttribute("dir") !== dir) {
+          inputEl.setAttribute("dir", dir);
+          inputEl.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
+          inputEl.style.setProperty("direction", dir, "important");
+        }
+        if (!inputEl.classList.contains("rc-input")) {
+          inputEl.classList.add("rc-input");
+        }
       });
     }
 
@@ -297,14 +302,13 @@
     function scheduleBatch() {
       if (batchScheduled) return;
       batchScheduled = true;
-      // Coalesce all mutations in a microtask, then process once.
-      Promise.resolve().then(function () {
+      // Coalesce mutations in an animation frame instead of a microtask to
+      // prevent microtask starvation and allow smooth browser rendering.
+      requestAnimationFrame(function () {
         batchScheduled = false;
         var nodes = batchNodes;
         batchNodes = [];
-        if (!active) return;
-        // [PERF] Process only changed nodes. A full scanAll() runs on the
-        // throttled interval as a safety net so nothing is ever missed.
+        if (!active || !nodes.length) return;
         scanNodes(nodes);
       });
     }

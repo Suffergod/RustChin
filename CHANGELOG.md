@@ -4,6 +4,7 @@
 
 ### Changed & Improved
 - **Extension Name**: Renamed to "RustChin: RTL & Persian Fonts" in preparation for multi-font support.
+- **Fixed ProseMirror / Canvas Freeze**: Fixed tab freeze when typing Persian into prompt boxes or opening Canvas/Writing blocks by completely guarding rich text editors against external DOM mutation, switching batching from microtasks to `requestAnimationFrame`, and styling editor surfaces cleanly via CSS.
 - **ChatGPT User Messages**: Added automatic RTL and Vazirmatn font for sent prompt messages (no longer skipped when inside plain `<div>`).
 - **ChatGPT Table & Canvas Support**: Tables inside Canvas / Writing Blocks (`ProseMirror`) now render strictly RTL with Vazirmatn font across all table headers and cells.
 - **Copy Table Button**: Fixed alignment for RTL tables to place the button on the natural start (left) side.

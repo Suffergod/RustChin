@@ -7,10 +7,11 @@ RustChin.start({
   siteId: "chatgpt",
   host: "chatgpt.com",
   containers:
-    ".markdown, .message-content, [data-message-author-role='user'], #prompt-textarea, nav a, nav li, [data-testid^='history-item']",
+    ".markdown, .message-content, [data-message-author-role='user'], nav a, nav li, [data-testid^='history-item']",
   extraSelector:
     "[data-message-author-role='user'] [class*='whitespace-pre-wrap'], nav a span, [data-testid^='history-item'] span",
-  exclude: "pre, code, .katex, .math, [class*='math' i]",
+  exclude:
+    "pre, code, .katex, .math, [class*='math' i], [contenteditable='true'], .ProseMirror",
   editableSelector:
     'textarea, input, [contenteditable="true"]',
   numberedLists: true,
@@ -32,17 +33,43 @@ RustChin.start({
        Scoped to RTL-detected text only so English paragraphs, headings, and
        the ✔ glyph keep ChatGPT's native font. Excludes pre/code (monospace,
        including their descendants) and .katex/math (math symbols) so they
-       keep their own fonts. KaTeX needs its OWN CSS to pick the right size
-       variant per symbol (KaTeX_Main, KaTeX_Size1 for large operators like
-       ∫, etc.) — overriding it to one font breaks integrals. */
+       keep their own fonts. */
     .bidi-scope .rc-done:not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math),
     .bidi-scope .rc-done :not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math) {
       font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
     }
-    /* Prompt/textarea areas: the live-input handler marks these with .rc-input
-       instead of .rc-done, so a separate rule is needed for Vazirmatn. */
-    .rc-input[dir="rtl"] {
+
+    /* User sent messages */
+    [data-message-author-role='user'] [class*='whitespace-pre-wrap'][dir="rtl"] {
       font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+    }
+
+    /* Prompt/textarea and Canvas/ProseMirror: Pure CSS styling avoids mutating editor DOM */
+    .rc-input[dir="rtl"],
+    .ProseMirror[dir="rtl"],
+    [contenteditable="true"][dir="rtl"],
+    .writing-block-surface [dir="rtl"] {
+      font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+      direction: rtl !important;
+      text-align: right !important;
+    }
+
+    /* Ensure tables inside Canvas / ProseMirror render RTL without DOM fighting */
+    .writing-block-surface table,
+    .ProseMirror table {
+      margin-top: 0.5rem;
+    }
+    .writing-block-surface table[dir="rtl"],
+    .ProseMirror table[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
+    .writing-block-surface table[dir="rtl"] th,
+    .writing-block-surface table[dir="rtl"] td,
+    .ProseMirror table[dir="rtl"] th,
+    .ProseMirror table[dir="rtl"] td {
+      font-family: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+      text-align: right !important;
     }
     /* Code blocks + their descendants: keep ChatGPT's original monospace
        font and LTR direction. The :not(pre *)/:not(code *) guards above

@@ -163,6 +163,26 @@ document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
 
 ---
 
+### Issue 9: Tab freeze / JavaScript lock-up on typing Persian or opening Canvas conversations (Resolved)
+
+**Symptom:** The moment the user started typing Persian into ChatGPT's prompt box, or opened a conversation containing Canvas/Writing Blocks, the ChatGPT browser tab completely stopped responding (100% CPU lock-up).
+
+**Root causes:**
+1. **ProseMirror Mutation Deadlock**: `#prompt-textarea` (the prompt box) and Canvas (`writing-block-surface ProseMirror`) are ProseMirror rich-text editors. `#prompt-textarea` was erroneously included in `config.containers`, and `scanNodes()` modified child nodes inside existing containers. When Persian text was present/typed, `fixElement()` set `dir="rtl"`, `rc-done`, and inline styles on internal nodes inside ProseMirror. ProseMirror's internal `DOMObserver` detected these external attribute mutations, interpreted them as unsynced changes, and re-rendered/replaced the DOM nodes. This triggered another `childList` mutation in RustChin, which re-mutated the nodes, triggering ProseMirror again in an infinite loop.
+2. **Microtask Starvation**: `scheduleBatch()` scheduled mutations using `Promise.resolve().then(...)` (a microtask). In JavaScript, microtasks drain recursively before the browser can render, process input, or execute macro tasks. The cyclical mutation between RustChin and ProseMirror starved the browser event loop completely.
+3. **Broad `div` scanning in containers**: `processContainer()` scanned all `div` elements inside containers and ran subqueries, matching toolbars, SVG wrappers, and nested editor internals.
+
+**Fix:**
+1. **Editable & ProseMirror Exclusion**: Added an immediate `if (el.isContentEditable || (el.matches && el.matches('input, textarea, select')))` guard at the top of `fixElement()`, `processContainer()`, and `scanNodes()`. External scripts must NEVER mutate the internal DOM of active rich-text editors.
+2. **Removed `#prompt-textarea` from `containers`**: `#prompt-textarea` is an input element, handled exclusively at the root container level by `handleDynamicInput()` and `editableSelector`. Removed from `containers`.
+3. **Animation Frame Scheduling (`requestAnimationFrame`)**: Changed `scheduleBatch()` from `Promise.resolve().then(...)` to `requestAnimationFrame(...)`. This ties DOM updates to display frames, completely eliminating microtask starvation and ensuring the browser main thread remains responsive.
+4. **Pure CSS for Canvas & ProseMirror**: Styled `.ProseMirror[dir="rtl"]`, `[contenteditable="true"][dir="rtl"]`, and Canvas tables via CSS stylesheet rules rather than imperative JavaScript DOM manipulation. CSS does not trigger ProseMirror DOMObserver reconciliations.
+5. **Deduplicated input writes**: `handleDynamicInput()` now checks `if (inputEl.getAttribute("dir") !== dir)` before writing attributes, avoiding redundant DOM attribute mutations while typing.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
 ### Extension Metadata & UI Changes
 
 1. **Donation Link Removed:** Completely removed the heart icon and `reymit.ir` donation link from `popup/popup.html` and `popup/popup.js`. The extension is 100% free and private.
