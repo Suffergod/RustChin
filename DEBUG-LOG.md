@@ -1,10 +1,10 @@
-# RustChin — Debugging Log
+# RustChin: Debugging Log
 
 This document tracks debugging sessions, root causes, and fixes for future reference.
 
 ---
 
-## 2026-07-07 — Session 1: Vazirmatn Font, Copy Table Button
+## 2026-07-07 - Session 1: Vazirmatn Font, Copy Table Button
 
 ### Issue 1: Vazirmatn font not applied to mixed LTR+RTL content
 
@@ -52,7 +52,7 @@ The CSS rule was forcing `direction: ltr` on the toolbar for ALL tables, which m
 
 ---
 
-## 2026-07-07 — Session 2: Backtick Template Literal Bug (Critical)
+## 2026-07-07 - Session 2: Backtick Template Literal Bug (Critical)
 
 ### Issue 3: CSS comment backticks broke entire extension
 
@@ -92,13 +92,13 @@ The backticks (`) in the comment prematurely closed the JavaScript template lite
 
 ---
 
-## 2026-09-13 — Session 3: ChatGPT Comprehensive Overhaul, CWS Updates & Multi-Font Preparation
+## 2026-09-13 - Session 3: ChatGPT Comprehensive Overhaul, CWS Updates & Multi-Font Preparation
 
 ### Issue 4: Sent prompt text not getting Vazirmatn & RTL (Resolved)
 
 **Symptom:** User's own sent messages in ChatGPT had Persian text without Vazirmatn font and without RTL direction.
 
-**Root cause:** ChatGPT renders user sent messages with a plain `<div>` wrapper containing text directly (`.whitespace-pre-wrap`) — no `<p>`, `<h1>`, or other `LEAF_TAG` inside. The engine's `processContainer()` only scanned `LEAF_TAGS` (`p, h1-h6, li, blockquote, td, th`). The text-bearing `<div>` was completely skipped.
+**Root cause:** ChatGPT renders user sent messages with a plain `<div>` wrapper containing text directly (`.whitespace-pre-wrap`): no `<p>`, `<h1>`, or other `LEAF_TAG` inside. The engine's `processContainer()` only scanned `LEAF_TAGS` (`p, h1-h6, li, blockquote, td, th`). The text-bearing `<div>` was completely skipped.
 
 **Fix:**
 1. In `core/engine.js` `processContainer()`, added a scan for child text-bearing `<div>` elements that do not contain child leaf tags (`if (d.querySelector(LEAF_TAGS)) return;`). If text is non-empty, `fixElement(d)` is called.
@@ -249,27 +249,102 @@ document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
 
 ---
 
+### Issue 13: Theme-Responsive ChatGPT Monochromatic Toggle Switch (Resolved)
+
+**Symptom:** The previous beige/creamy toggle for ChatGPT had weak contrast and did not reflect OpenAI's authentic monochrome brand identity across light and dark modes.
+
+**Root cause:** Hardcoded static background colors clashed with dark or light backgrounds. Furthermore, an internal media query in `icons/chatgpt.svg` caused inverted rendering on dark OS themes.
+
+**Fix:**
+1. Stripped the internal media query from `icons/chatgpt.svg` to maintain a solid `#111111` base path and handled dark inversion exclusively via external CSS filters.
+2. In light mode: styled the active ChatGPT toggle with an Obsidian Black track (`#111111`) and snow-white knob (`#ffffff`).
+3. In dark mode: styled the active ChatGPT toggle with a Luminous Snow White track (`#ffffff`) with subtle diffuse glow and obsidian knob (`#111111`).
+4. Fully synchronized across `popup/popup.css` and `options/options.css`.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
+### Issue 14: Direction-Aware Toggle Squash-and-Stretch Physics (Resolved)
+
+**Symptom:** Active switch anticipation stretched to the right even when the user intended to flip the switch to the left (turning OFF).
+
+**Root cause:** The `:active:not(.dragging)` rule increased knob width from 20px to 23px without modifying its translation origin, forcing the width increase to expand rightward.
+
+**Fix:**
+1. Added `.toggle:active:not(.dragging) input:checked + .slider::before { transform: translate3d(15px, 0, 0) !important; }` in `popup/popup.css` and matching `.toggle-switch` rule in `options/options.css`.
+2. When OFF: knob starts at 2px and stretches 3px rightward to 25px in the direction of activation.
+3. When ON: knob right edge stays anchored at 40px while expanding 3px leftward to 17px in the direction of deactivation.
+4. Preserved physical coordinate predictability in both English (LTR) and Persian (RTL) via `direction: ltr;`.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
+### Issue 15: Eye-Pleasing Emerald Green for Global Master Switch (Resolved)
+
+**Symptom:** Global master switch used standard blue, creating visual ambiguity with site-specific blue toggles (Gemini Notebook, DeepSeek) and disconnecting from the active status indicator.
+
+**Fix:**
+1. Replaced blue with authentic Emerald Green (`#1f9d55` in light mode, `#22c55e` in dark mode) matching the active status badge ("5/5 sites enabled").
+2. Synchronized across `popup/popup.css` and `options/options.css`.
+3. Updated dynamic label lighting in `options/options.js`.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
+### Issue 16: Mathematical Vector Alignment for Icon Hover Rotations (Resolved)
+
+**Symptom:** Rotating SVG icons (theme selection and settings gear) jittered, shifted position, and multi-part icons (sun rays/circle, gear teeth/center) tore apart into each other.
+
+**Root cause:**
+1. `transform-box: fill-box` caused child `<circle>` and `<path>` elements to compute independent bounding boxes, resulting in diverging rotation centers.
+2. Odd dimensions (15px) caused fractional subpixel centers (7.5px), forcing the rasterizer to snap across pixels each frame.
+3. Lack of `overflow: visible` caused bounding box clipping on angled vectors.
+
+**Fix:**
+1. Standardized icon dimensions to integer `16px x 16px` with `display: block; overflow: visible;`.
+2. Switched from `fill-box` to `transform-box: view-box; transform-origin: center;`.
+3. Grouped all multi-part vector paths inside a single `<g>` element in `popup/popup.html` and `options/options.html`.
+4. Aligned rotation angles with radial symmetries: 45deg for 8-ray sun (`360 / 8`), 60deg for 6-lobe gear (`360 / 6`).
+5. Verified via browser harness that center drift during rotation is 0.0000px.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
+### Issue 17: Strict Zero Em Dash Policy Across Codebase (Resolved)
+
+**Symptom:** Em dashes were present in documentation, titles, code comments, and strings.
+
+**Fix:** Replaced every instance of em dashes with standard colons, pipes, or hyphens across HTML, CSS, JavaScript, and Markdown files.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
 ## Summary of All Changes
 
 | File | Change | Status |
 |------|--------|--------|
 | `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.0`, added `fonts/Estedad-Variable.woff2` to `web_accessible_resources` | ✅ Applied |
-| `README.md` | Version badge updated to `1.2.0` | ✅ Applied |
+| `README.md` | Version badge updated to `1.2.0`, full RTL Persian layout, zero em dashes | ✅ Applied |
 | `fonts/*.woff2` | Downloaded 5 authentic variable fonts: Vazirmatn, Estedad, Sahel, Arad, Mikhak | ✅ Applied |
 | `manifest.json` | Registered 5 variable fonts in `web_accessible_resources`, registered `options_ui` | ✅ Applied |
-| `popup/popup.html` | Frosted popover font picker + options dashboard shortcut | ✅ Applied |
-| `popup/popup.css` | Popover dropdown styling, GPU transforms, badge tags, 5-font preview typography | ✅ Applied |
-| `popup/popup.js` | Popover interaction state, bilingual font badges, options dashboard trigger | ✅ Applied |
-| `options/options.html` | Full Typography Studio & Settings Dashboard with live sandbox, Default metrics button, clean header | ✅ Applied |
-| `options/options.css` | Glassmorphic studio layout, font card grid, live preview styles, 42px tactile draggable toggles, gradient slider fills | ✅ Applied |
+| `popup/popup.html` | Frosted popover font picker, `<g>` grouped vector icons, zero em dashes | ✅ Applied |
+| `popup/popup.css` | Popover dropdown styling, emerald master toggle, responsive OpenAI toggle, directional stretch, view-box icon rotation | ✅ Applied |
+| `popup/popup.js` | Popover interaction state, bilingual font badges, options dashboard trigger, draggable switches | ✅ Applied |
+| `options/options.html` | Typography Studio with live sandbox, Default metrics button, `<g>` grouped icons, zero em dashes | ✅ Applied |
+| `options/options.css` | Studio layout, font card grid, emerald master toggle, responsive OpenAI toggle, directional stretch, view-box icon rotation | ✅ Applied |
 | `options/options.js` | Dynamic font previewing, site toggles, theme/lang sync, XSS-safe DOM, Pointer Events drag engine | ✅ Applied |
-| `background.js` | Added `font: "vazirmatn"` default preference | ✅ Applied |
-| `core/engine.js` | Parallel 5-font Base64 loading; dynamic `:root[data-rc-font="..."]` switching; RAF batching | ✅ Applied |
-| `sites/*.js` | All 5 site configs updated with 5-font declarations and `--rc-font` variable theming | ✅ Applied |
+| `background.js` | Added `font: "vazirmatn"` default preference, zero em dashes | ✅ Applied |
+| `core/engine.js` | Parallel 5-font Base64 loading; dynamic `:root[data-rc-font="..."]` switching; RAF batching; zero em dashes | ✅ Applied |
+| `sites/*.js` | All 5 site configs updated with 5-font declarations, `--rc-font` variable theming, zero em dashes | ✅ Applied |
 | `browser-harness` | Configured UTF-8 streams and added `type_persian()` Unicode typing helper | ✅ Applied |
-| `options/*` | Wide 1360px Dashboard with 5-font cards, live typography workbench, horizontal site grid, and restored Privacy & Security card with Solar shield | ✅ Applied |
-| `popup/*` | Restored 340px frosted glass panel with top-right settings gear, popover font picker (no checkmarks), no footer dashboard link, anti-slop compliance | ✅ Applied |
-| `icons/*.svg` | Added standalone SVG assets with explicit XML namespaces for ChatGPT, Claude, Gemini, DeepSeek, and NotebookLM | ✅ Applied |
+| `options/*` | Wide 1360px Dashboard with 5-font cards, live typography workbench, horizontal site grid, Solar shield | ✅ Applied |
+| `popup/*` | 340px frosted glass panel with top-right settings gear, popover font picker, zero em dashes | ✅ Applied |
+| `icons/*.svg` | Added standalone SVG assets with authentic brand colors and responsive OpenAI monochrome | ✅ Applied |
 | `icons/solar/*` | Added clean Solar Icon Set vector assets for theme modes and security badges | ✅ Applied |
 
 

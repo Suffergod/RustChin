@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck">
-    <img src="icons/squareicon128.png" width="88" alt="راست‌چین — RustChin">
+    <img src="icons/squareicon128.png" width="88" alt="راست‌چین | RustChin">
   </a>
 </p>
 
@@ -125,7 +125,7 @@
         </picture> <b>ChatGPT</b>
       </td>
       <td align="center"><code>chatgpt.com</code></td>
-      <td align="center"><img src="https://img.shields.io/badge/%20-E8E2D8?style=flat-square" alt="#E8E2D8"></td>
+      <td align="center"><img src="https://img.shields.io/badge/Mono-Responsive-111111?style=flat-square&logo=openai&logoColor=white" alt="Monochrome Responsive"></td>
       <td align="center">✅ سازگار کامل (شامل Canvas، ProseMirror و جداول)</td>
     </tr>
     <tr>

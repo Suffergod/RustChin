@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Settings & Typography Studio Logic
+   RustChin: Settings & Typography Studio Logic
    Multi-Font Calibration, Horizontal Site Controls, Live Sync
    ============================================================ */
 
@@ -427,6 +427,7 @@ function updateSitesCount() {
   const n = SITES.filter((s) => currentState.sites[s.host] !== false).length;
   if (masterStatusLabel) {
     masterStatusLabel.textContent = isMasterOn ? t.activeN(n, SITES.length) : (lang === "fa" ? "غیرفعال" : "Disabled");
+    masterStatusLabel.classList.toggle("on", isMasterOn);
   }
 }
 

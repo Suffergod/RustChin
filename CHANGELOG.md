@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.0] — 2026-09-13
+## [1.2.0] - 2026-09-13
 
 ### Added
 - **5 Bundled Variable Fonts**: Added `Estedad-Variable.woff2`, `Sahel-Variable.woff2`, `Arad-Variable.woff2`, and `Mikhak-Variable.woff2` alongside `Vazirmatn-Variable.woff2` (all 100–900 variable weight, under 380 KB total package footprint).
@@ -13,6 +13,11 @@
 - **Enhanced Live Typing Engine**: Real-time Persian input handling with automatic RTL orientation for rich text editors and prompt boxes.
 
 ### Changed & Improved
+- **Responsive Monochromatic ChatGPT Toggle**: Engineered an authentic OpenAI monochromatic design for ChatGPT toggles (Obsidian Black `#111111` with crisp white knob in light mode; Luminous Snow White `#ffffff` with diffuse glow and obsidian knob in dark mode), synchronized across popup and settings studio.
+- **Direction-Aware Squash-and-Stretch Toggle Physics**: Implemented responsive tactile deformation where the switch knob dynamically stretches 3px in its exact movement direction (3px leftward when turning OFF, 3px rightward when turning ON) with deterministic physical coordinates across both English (LTR) and Persian (RTL) locales.
+- **Eye-Pleasing Emerald Green Master Switch**: Updated the global master switch from blue to authentic emerald green (`#1f9d55` in light mode, `#22c55e` in dark mode) perfectly matched with the active status badge.
+- **Jitter-Free, Concentric Vector Icon Rotation**: Fixed rotation and motion bugs on theme selection buttons and settings gear; standardized dimensions to integer 16px, replaced `fill-box` with `view-box`, enabled `overflow: visible`, wrapped child elements in unified `<g>` containers, and aligned rotation angles with 8-fold and 6-fold radial symmetries (45deg for sun, 60deg for gear) to achieve zero subpixel shimmer and zero center drift.
+- **Strict Zero Em Dash Policy**: Standardized all project documentation, code comments, and metadata to eliminate em dashes, replacing them with standard colons, pipes, or hyphens.
 - **Full Brand Colors for Platform SVGs**: Updated all 5 AI platform vectors to render with their authentic brand colors (ChatGPT emerald `#10A37F`, Claude terracotta `#D97757`, Gemini Google Aurora gradient, Gemini Notebook multi-tone blue/lavender `#3186FF`/`#4FA0FF`/`#76BBFF`/`#A9A8FF`, and DeepSeek cobalt `#4D6BFE`), providing rich contrast and visibility in both dark and light modes.
 - **Gemini Notebook (formerly NotebookLM) Renaming**: Updated platform name and UI references across popup, options dashboard, site config, and repository documentation to match Google's official rebrand.
 - **Brand-Colored Active Toggles**: Each platform toggle switch illuminates in that service's authentic brand color (ChatGPT green, Claude terracotta, Gemini blue, Notebook azure, DeepSeek cobalt).
@@ -28,7 +33,7 @@
 - **Universal Multi-Font Engine**: Propagated dynamic font variable architecture across all supported sites (ChatGPT, Claude, Gemini, DeepSeek, NotebookLM).
 - **Zero Data & No Donations**: Completely removed donation heart link; affirmed 100% free and private architecture with zero data collection.
 
-## [1.1.0] — 2026-07-11
+## [1.1.0] - 2026-07-11
 
 Published on Chrome Web Store!
 

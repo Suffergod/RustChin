@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Settings & Typography Studio Styles
+   RustChin: Settings & Typography Studio Styles
    Wide Immersive Workbench (1440px), High Legibility, Anti-Slop
    ============================================================ */
 
@@ -219,14 +219,19 @@ body {
   color: var(--text-3);
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .seg-item svg {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 16px;
+  height: 16px;
+  display: block;
+  overflow: visible;
+  transform-box: view-box;
   transform-origin: center;
+  backface-visibility: hidden;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .seg-item:hover {
@@ -238,11 +243,11 @@ body {
 }
 
 .seg-item[data-value="dark"]:hover svg {
-  transform: rotate(-14deg) scale(1.06);
+  transform: rotate(-14deg) scale(1.08);
 }
 
 .seg-item[data-value="auto"]:hover svg {
-  transform: scale(1.08);
+  transform: scale(1.12);
 }
 
 .seg-item.active {
@@ -489,7 +494,7 @@ body {
   opacity: 1;
 }
 
-/* Font Families for Specimen — each title showcases strictly its own typeface */
+/* Font Families for Specimen: each title showcases strictly its own typeface */
 .font-vazir   { font-family: 'Vazirmatn' !important; }
 .font-estedad { font-family: 'Estedad' !important; }
 .font-sahel   { font-family: 'Sahel' !important; }
@@ -904,8 +909,8 @@ textarea#liveInput:focus {
   filter: brightness(0) invert(1) opacity(0.95) !important;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .platform-card[data-host="chatgpt.com"] .platform-logo {
-    filter: brightness(0) invert(1) opacity(0.95);
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .platform-card[data-host="chatgpt.com"] .platform-logo {
+    filter: brightness(0) invert(1) opacity(0.95) !important;
   }
 }
 
@@ -992,6 +997,9 @@ textarea#liveInput:focus {
   width: 23px;
   cursor: grabbing;
 }
+.toggle-switch:active:not(.dragging) input:checked + .switch-slider::before {
+  transform: translate3d(15px, 0, 0) !important;
+}
 
 .toggle-switch input:checked + .switch-slider {
   background: var(--toggle-on);
@@ -1001,16 +1009,76 @@ textarea#liveInput:focus {
   background: var(--site-color, var(--toggle-on));
 }
 
-/* ChatGPT: elegant creamy white toggle */
-.platform-card[data-host="chatgpt.com"] .toggle-switch input:checked + .switch-slider {
-  background: #E8E2D8 !important;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 0 10px -2px rgba(232, 226, 216, 0.6) !important;
+/* ── ChatGPT: Responsive High-Contrast Monochromatic Toggle (OpenAI Style) ── */
+.platform-card[data-host="chatgpt.com"] .toggle-switch .switch-slider::before {
+  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
+              width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.24s ease,
+              background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.platform-card[data-host="chatgpt.com"] .toggle-switch.dragging.drag-on .switch-slider {
-  background: #E8E2D8 !important;
+
+/* Light Mode: Obsidian Black Track with Crisp White Knob */
+.platform-card[data-host="chatgpt.com"] .toggle-switch input:checked + .switch-slider {
+  background: #111111 !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
 }
 .platform-card[data-host="chatgpt.com"] .toggle-switch input:checked + .switch-slider::before {
-  background: #222222 !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+}
+.platform-card[data-host="chatgpt.com"] .toggle-switch:hover input:checked + .switch-slider {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4), 0 2px 5px rgba(0, 0, 0, 0.18) !important;
+}
+.platform-card[data-host="chatgpt.com"] .toggle-switch.dragging.drag-on .switch-slider {
+  background: #111111 !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+}
+.platform-card[data-host="chatgpt.com"] .toggle-switch.dragging.drag-on .switch-slider::before {
+  background: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Dark Mode: Luminous Snow White Track with Deep Obsidian Knob */
+:root[data-theme="dark"] .platform-card[data-host="chatgpt.com"] .toggle-switch input:checked + .switch-slider {
+  background: #ffffff !important;
+  box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45), 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+}
+:root[data-theme="dark"] .platform-card[data-host="chatgpt.com"] .toggle-switch input:checked + .switch-slider::before {
+  background: #111111 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45), 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.15) !important;
+}
+:root[data-theme="dark"] .platform-card[data-host="chatgpt.com"] .toggle-switch:hover input:checked + .switch-slider {
+  box-shadow: 0 0 18px 0px rgba(255, 255, 255, 0.6), 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+}
+:root[data-theme="dark"] .platform-card[data-host="chatgpt.com"] .toggle-switch.dragging.drag-on .switch-slider {
+  background: #ffffff !important;
+  box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45) !important;
+}
+:root[data-theme="dark"] .platform-card[data-host="chatgpt.com"] .toggle-switch.dragging.drag-on .switch-slider::before {
+  background: #111111 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .platform-card[data-host="chatgpt.com"] .toggle-switch input:checked + .switch-slider {
+    background: #ffffff !important;
+    box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45), 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .platform-card[data-host="chatgpt.com"] .toggle-switch input:checked + .switch-slider::before {
+    background: #111111 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45), 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.15) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .platform-card[data-host="chatgpt.com"] .toggle-switch:hover input:checked + .switch-slider {
+    box-shadow: 0 0 18px 0px rgba(255, 255, 255, 0.6), 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .platform-card[data-host="chatgpt.com"] .toggle-switch.dragging.drag-on .switch-slider {
+    background: #ffffff !important;
+    box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .platform-card[data-host="chatgpt.com"] .toggle-switch.dragging.drag-on .switch-slider::before {
+    background: #111111 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  }
 }
 
 /* Gemini: signature aurora gradient toggle matching its icon */
@@ -1034,7 +1102,7 @@ textarea#liveInput:focus {
 .toggle-switch.dragging .switch-slider::before {
   transition: none !important;
   transform: translate3d(var(--drag-x, 0px), 0, 0) !important;
-  width: 22px;
+  width: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   cursor: grabbing;
 }
@@ -1050,6 +1118,45 @@ textarea#liveInput:focus {
 .toggle-switch input:focus-visible + .switch-slider {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Master / General Toggle: eye-pleasing emerald green matching 5/5 sites enabled */
+.master-switch-box .toggle-switch input:checked + .switch-slider {
+  background: #1f9d55 !important;
+  box-shadow: 0 0 12px -2px rgba(31, 157, 85, 0.45) !important;
+}
+:root[data-theme="dark"] .master-switch-box .toggle-switch input:checked + .switch-slider {
+  background: #22c55e !important;
+  box-shadow: 0 0 12px -2px rgba(34, 197, 94, 0.45) !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .master-switch-box .toggle-switch input:checked + .switch-slider {
+    background: #22c55e !important;
+    box-shadow: 0 0 12px -2px rgba(34, 197, 94, 0.45) !important;
+  }
+}
+.master-switch-box .toggle-switch.dragging.drag-on .switch-slider {
+  background: #1f9d55 !important;
+}
+:root[data-theme="dark"] .master-switch-box .toggle-switch.dragging.drag-on .switch-slider {
+  background: #22c55e !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .master-switch-box .toggle-switch.dragging.drag-on .switch-slider {
+    background: #22c55e !important;
+  }
+}
+
+.master-switch-status.on {
+  color: #1f9d55 !important;
+}
+:root[data-theme="dark"] .master-switch-status.on {
+  color: #4ade80 !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .master-switch-status.on {
+    color: #4ade80 !important;
+  }
 }
 
 .toggle-switch input:disabled + .switch-slider {

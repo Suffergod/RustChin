@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Claude site config
+   RustChin: Claude site config
    Applies Vazirmatn globally while protecting Claude's custom
    icon font (Anthropicons) and routing code to monospace.
    ============================================================ */
@@ -109,7 +109,7 @@ RustChin.start({
       direction: ltr !important;
     }
     /* Math (.katex/math) is already excluded above. Do NOT override its
-       font-family here — KaTeX picks its own size variants per symbol
+       font-family here: KaTeX picks its own size variants per symbol
        (KaTeX_Main, KaTeX_Size1 for large operators like ∫), and forcing
        one font breaks integrals. */
     .bidi-scope :not(pre) > code {

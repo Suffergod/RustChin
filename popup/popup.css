@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Popup styles
+   RustChin: Popup styles
    Adaptive (system light/dark), frosted-glass panels, soft shadows.
    Animations use only transform/opacity for GPU efficiency.
    ============================================================ */
@@ -254,10 +254,14 @@ body {
   transition: background 0.18s ease, color 0.18s ease;
 }
 .header-actions .btn-icon svg {
-  width: 15px;
-  height: 15px;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 16px;
+  height: 16px;
+  display: block;
+  overflow: visible;
+  transform-box: view-box;
   transform-origin: center;
+  backface-visibility: hidden;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 .header-actions .btn-icon:hover {
@@ -498,8 +502,24 @@ body {
 :root[data-theme="dark"] .master-status.on { color: #4ade80; }
 
 /* ── Toggle switch (macOS-style with tactile spring bounce) ── */
-.toggle { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
-.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  direction: ltr;
+}
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+  pointer-events: none;
+}
 .toggle .slider {
   position: absolute; inset: 0; cursor: pointer;
   background: var(--toggle-off);
@@ -514,10 +534,15 @@ body {
   transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s ease;
   will-change: transform, width;
 }
-/* Tactile squash-and-stretch on click/press when not dragging */
+/* Tactile squash-and-stretch on click/press when not dragging:
+   - When OFF (at left): stretches 3px towards the right (in motion direction).
+   - When ON (at right): stretches 3px towards the left (in motion direction). */
 .toggle:active:not(.dragging) .slider::before {
   width: 23px;
   cursor: grabbing;
+}
+.toggle:active:not(.dragging) input:checked + .slider::before {
+  transform: translate3d(15px, 0, 0) !important;
 }
 
 /* Active dragging state: direct 60fps tracking without transition delay */
@@ -528,7 +553,7 @@ body {
 .toggle.dragging .slider::before {
   transition: none !important;
   transform: translate3d(var(--drag-x, 0px), 0, 0) !important;
-  width: 22px;
+  width: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   cursor: grabbing;
 }
@@ -546,16 +571,103 @@ body {
 .toggle input:checked + .slider::before { transform: translate3d(18px, 0, 0); }
 .toggle input:focus-visible + .slider { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* ChatGPT: elegant creamy white toggle */
-.site-row[data-host="chatgpt.com"] .toggle input:checked + .slider {
-  background: #E8E2D8 !important;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 0 10px -2px rgba(232, 226, 216, 0.6) !important;
+/* Master / General toggle: eye-pleasing emerald green matching status (5/5 sites enabled) */
+.master .toggle input:checked + .slider {
+  background: #1f9d55 !important;
+  box-shadow: 0 0 12px -2px rgba(31, 157, 85, 0.45) !important;
 }
-.site-row[data-host="chatgpt.com"] .toggle.dragging.drag-on .slider {
-  background: #E8E2D8 !important;
+:root[data-theme="dark"] .master .toggle input:checked + .slider {
+  background: #22c55e !important;
+  box-shadow: 0 0 12px -2px rgba(34, 197, 94, 0.45) !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .master .toggle input:checked + .slider {
+    background: #22c55e !important;
+    box-shadow: 0 0 12px -2px rgba(34, 197, 94, 0.45) !important;
+  }
+}
+.master .toggle.dragging.drag-on .slider {
+  background: #1f9d55 !important;
+}
+:root[data-theme="dark"] .master .toggle.dragging.drag-on .slider {
+  background: #22c55e !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .master .toggle.dragging.drag-on .slider {
+    background: #22c55e !important;
+  }
+}
+
+/* ── ChatGPT: Responsive High-Contrast Monochromatic Toggle (OpenAI Style) ── */
+.site-row[data-host="chatgpt.com"] .toggle .slider::before {
+  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
+              width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.24s ease,
+              background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light Mode: Obsidian Black Track with Crisp White Knob */
+.site-row[data-host="chatgpt.com"] .toggle input:checked + .slider {
+  background: #111111 !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
 }
 .site-row[data-host="chatgpt.com"] .toggle input:checked + .slider::before {
-  background: #222222 !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+}
+.site-row[data-host="chatgpt.com"] .toggle:hover input:checked + .slider {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4), 0 2px 5px rgba(0, 0, 0, 0.18) !important;
+}
+.site-row[data-host="chatgpt.com"] .toggle.dragging.drag-on .slider {
+  background: #111111 !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+}
+.site-row[data-host="chatgpt.com"] .toggle.dragging.drag-on .slider::before {
+  background: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Dark Mode: Luminous Snow White Track with Deep Obsidian Knob */
+:root[data-theme="dark"] .site-row[data-host="chatgpt.com"] .toggle input:checked + .slider {
+  background: #ffffff !important;
+  box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45), 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+}
+:root[data-theme="dark"] .site-row[data-host="chatgpt.com"] .toggle input:checked + .slider::before {
+  background: #111111 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45), 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.15) !important;
+}
+:root[data-theme="dark"] .site-row[data-host="chatgpt.com"] .toggle:hover input:checked + .slider {
+  box-shadow: 0 0 18px 0px rgba(255, 255, 255, 0.6), 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+}
+:root[data-theme="dark"] .site-row[data-host="chatgpt.com"] .toggle.dragging.drag-on .slider {
+  background: #ffffff !important;
+  box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45) !important;
+}
+:root[data-theme="dark"] .site-row[data-host="chatgpt.com"] .toggle.dragging.drag-on .slider::before {
+  background: #111111 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-row[data-host="chatgpt.com"] .toggle input:checked + .slider {
+    background: #ffffff !important;
+    box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45), 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-row[data-host="chatgpt.com"] .toggle input:checked + .slider::before {
+    background: #111111 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45), 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.15) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-row[data-host="chatgpt.com"] .toggle:hover input:checked + .slider {
+    box-shadow: 0 0 18px 0px rgba(255, 255, 255, 0.6), 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-row[data-host="chatgpt.com"] .toggle.dragging.drag-on .slider {
+    background: #ffffff !important;
+    box-shadow: 0 0 14px -1px rgba(255, 255, 255, 0.45) !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-row[data-host="chatgpt.com"] .toggle.dragging.drag-on .slider::before {
+    background: #111111 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  }
 }
 
 /* Gemini: signature aurora gradient toggle matching its icon */
@@ -643,8 +755,8 @@ body {
   filter: brightness(0) invert(1) opacity(0.95) !important;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .site-row[data-host="chatgpt.com"] .site-icon {
-    filter: brightness(0) invert(1) opacity(0.95);
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-row[data-host="chatgpt.com"] .site-icon {
+    filter: brightness(0) invert(1) opacity(0.95) !important;
   }
 }
 .site-text {
@@ -757,15 +869,20 @@ body {
 }
 .footer-links a:hover { background: var(--hairline); color: var(--text-1); }
 
-/* Gentle hover motion on the Solar theme icons */
+/* Smooth, refined hover motion on the theme icons */
 .seg-btn[data-value="auto"] svg,
 .seg-btn[data-value="light"] svg,
 .seg-btn[data-value="dark"] svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  overflow: visible;
+  transform-box: view-box;
   transform-origin: center;
   backface-visibility: hidden;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
-.seg-btn[data-value="auto"]:hover svg  { transform: scale(1.08); }
+.seg-btn[data-value="auto"]:hover svg  { transform: scale(1.12); }
 .seg-btn[data-value="light"]:hover svg { transform: rotate(45deg); }
-.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-14deg) scale(1.05); }
+.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-14deg) scale(1.08); }

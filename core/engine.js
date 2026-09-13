@@ -1,17 +1,17 @@
 /* ============================================================
-   RustChin — Shared RTL Engine
+   RustChin: Shared RTL Engine
    ------------------------------------------------------------
    One engine, many sites. Each site ships a small config file
    (see sites/*.js) that calls RustChin.start({...}).
 
    Design contract (do not regress these):
-     1. Output parity — the direction-detection algorithm and the
+     1. Output parity: the direction-detection algorithm and the
         DOM mutations are identical to the original per-site scripts.
         Optimizations only change HOW OFTEN work runs, not the result.
-     2. Live toggle — start()/stop() must be perfectly reversible.
+     2. Live toggle: start()/stop() must be perfectly reversible.
         stop() reverts the page to its original state so toggling
         off never requires a reload.
-     3. Hot-path invariants — see the comments marked [PERF].
+     3. Hot-path invariants: see the comments marked [PERF].
    ============================================================ */
 
 (function (global) {
@@ -83,7 +83,7 @@
 
     /**
      * We keep inline `!important` styles (exactly as the original scripts did)
-     * so output is byte-identical — inline !important always beats page CSS.
+     * so output is byte-identical: inline !important always beats page CSS.
      * A marker class (.rc-done) lets stop() find and revert every mutation,
      * so toggling off is clean without a reload. This hybrid preserves both
      * parity and the revert contract.
@@ -113,7 +113,7 @@
 
       // NotebookLM-specific: expand ancestors so RTL content has width.
       // NOTE: we used to also force every RTL span to display:block + width:100%,
-      // but that fragment-inline breaks the sentence — each span lands on its
+      // but that fragment-inline breaks the sentence: each span lands on its
       // own line, and an inline bold word (<b>/<strong>) between two block
       // spans gets shoved onto its own line. The ancestor expansion above is
       // what actually breaks NotebookLM's RTL width walls; the span block
@@ -382,7 +382,7 @@
 
     /**
      * Revert contract: stop() removes EVERYTHING start()/fixElement() added,
-     * so toggling off returns the page to its original look — no reload needed.
+     * so toggling off returns the page to its original look: no reload needed.
      */
     function stop() {
       active = false;

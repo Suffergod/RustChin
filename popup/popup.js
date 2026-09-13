@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Popup logic
+   RustChin: Popup logic
    • Mirrors background.js SUPPORTED_SITES.
    • Reads/writes state to chrome.storage.local.
    • Custom popover font selector for 5 variable typefaces.

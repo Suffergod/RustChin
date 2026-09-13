@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — DeepSeek site config
+   RustChin: DeepSeek site config
    Widens the chat frame ~50% and applies Persian numbering.
    ============================================================ */
 
@@ -142,7 +142,7 @@ RustChin.start({
       unicode-bidi: isolate !important;
     }
     /* Math (.katex/math) is already excluded from the global rule above.
-       Do NOT override its font-family — KaTeX picks its own size variants
+       Do NOT override its font-family: KaTeX picks its own size variants
        per symbol; forcing one font breaks large operators like ∫. */
   `,
 });

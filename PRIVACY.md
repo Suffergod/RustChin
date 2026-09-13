@@ -1,10 +1,10 @@
-# RustChin — Privacy Policy
+# RustChin: Privacy Policy
 
 **Effective date: 2026**
 
 RustChin is built with one overriding principle: **your conversations never
 leave your device, and we never see them.** This page documents exactly what
-the extension does and does not touch, so you can verify it yourself — the
+the extension does and does not touch, so you can verify it yourself: the
 source code is open under the MIT license.
 
 ## Summary
@@ -15,10 +15,10 @@ source code is open under the MIT license.
   no telemetry, no "phone home", and no error reporting to any server. All
   processing happens locally in your browser.
 - **Two minimal permissions:**
-  - `storage` — remembers your on/off preferences locally on your device.
-  - `activeTab` — lets the popup detect which supported site you're currently
+  - `storage`: remembers your on/off preferences locally on your device.
+  - `activeTab`: lets the popup detect which supported site you're currently
     viewing, so it can show a live/paused status indicator. No conversation
-    content is read for this — it is a simple ping that checks whether the
+    content is read for this: it is a simple ping that checks whether the
     RustChin engine is running on that tab.
 - **Fully auditable.** Every line of code is public.
 
@@ -27,8 +27,8 @@ source code is open under the MIT license.
 RustChin fixes right-to-left (RTL) text rendering and applies the Vazirmatn
 font on supported AI chat websites. To do this it:
 
-1. **Reads the text of message elements in the page** — locally, in your
-   browser — to decide whether each paragraph should be right- or
+1. **Reads the text of message elements in the page** (locally, in your
+   browser) to decide whether each paragraph should be right- or
    left-aligned. This reading is done only to set a `dir` attribute; the text
    itself is never stored or sent anywhere.
 2. **Adds CSS and a few HTML attributes/classes** to make Persian/Farsi text
@@ -43,7 +43,7 @@ font on supported AI chat websites. To do this it:
 - ❌ Does **not** send any data to any server. There is no backend.
 - ❌ Does **not** use analytics, telemetry, or tracking of any kind.
 - ❌ Does **not** request permissions beyond `storage` and `activeTab`.
-- ❌ Does **not** sell, share, or transfer any data — because there is no data.
+- ❌ Does **not** sell, share, or transfer any data (because there is no data).
 
 ## Permissions
 
@@ -61,16 +61,16 @@ has no API access that would let it read or transmit your data.
 
 RustChin ships with the [Vazirmatn](https://github.com/rastikerdar/vazirmatn)
 font (an open-source Persian typeface). It is loaded locally from the
-extension package — never fetched over the network.
+extension package, never fetched over the network.
 
 ## Verifying it yourself
 
 Because the code is open source, you don't have to take our word for it:
 
 - Search the codebase for `fetch`, `XMLHttpRequest`, `navigator.sendBeacon`,
-  or `WebSocket` — you will find **none** used to contact any server. The only
+  or `WebSocket`; you will find **none** used to contact any server. The only
   `fetch` call retrieves the locally-bundled font file.
-- Review `manifest.json` — `permissions` contains only `["storage", "activeTab"]`.
+- Review `manifest.json`: `permissions` contains only `["storage", "activeTab"]`.
 
 ## Changes to this policy
 
@@ -86,4 +86,4 @@ https://github.com/suffergod/RustChin/issues
 ## Credits
 
 - **Logo** designed by [MahanCN](https://www.linkedin.com/in/mahancn/)
-- **Font** — [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saeed Bahmanabad
+- **Font**: [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saeed Bahmanabad

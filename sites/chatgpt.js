@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — ChatGPT site config
+   RustChin: ChatGPT site config
    Persian numbering for RTL ordered lists; code/math stay LTR.
    ============================================================ */
 

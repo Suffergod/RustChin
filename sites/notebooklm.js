@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Gemini Notebook (NotebookLM) site config
+   RustChin: Gemini Notebook (NotebookLM) site config
    Most layout-invasive target. Uses whole-body scanning and a
    "6-ancestor expansion" to break Gemini Notebook's RTL width walls,
    with a 12px sidebar gutter for RTL messages.
@@ -97,7 +97,7 @@ RustChin.start({
       direction: ltr !important;
     }
     /* Math (.katex/math) is already excluded from the global rule above.
-       Do NOT override its font-family — KaTeX picks its own size variants
+       Do NOT override its font-family: KaTeX picks its own size variants
        per symbol; forcing one font breaks large operators like ∫. */
 
     p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th {

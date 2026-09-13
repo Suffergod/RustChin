@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Gemini site config
+   RustChin: Gemini site config
    Gemini uses web components (custom elements). Layout-safe:
    we never flip the container itself, only its inner text tags.
    ============================================================ */
@@ -89,8 +89,8 @@ RustChin.start({
     }
 
     /* Apply active font only to text that RustChin actually detected as RTL.
-       This preserves Gemini's original Latin/UI typography — including
-       weight/optical rendering — so English text no longer looks bolder or
+       This preserves Gemini's original Latin/UI typography (including
+       weight/optical rendering) so English text no longer looks bolder or
        bigger after enabling. A second arm catches RTL-detected text outside
        any .bidi-scope (e.g. sidebar conversation titles), which the engine
        fixes via extraSelector and would otherwise keep Gemini's Latin font. */
@@ -122,7 +122,7 @@ RustChin.start({
       direction: ltr !important;
     }
     /* Math (.katex/math) is already excluded from the global rule above.
-       Do NOT override its font-family — KaTeX picks its own size variants
+       Do NOT override its font-family: KaTeX picks its own size variants
        per symbol; forcing one font breaks large operators like ∫. */
     .bidi-scope :not(pre) > code {
       unicode-bidi: isolate !important;

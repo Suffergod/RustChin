@@ -1,5 +1,5 @@
 /* ============================================================
-   RustChin — Background Service Worker
+   RustChin: Background Service Worker
    Owns the single source of truth for default state, seeds it on
    install, and relays toggle changes from the popup to content
    scripts running in every open tab.
