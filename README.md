@@ -136,7 +136,7 @@
       <td align="center">✅ سازگار کامل (شامل ویرایشگر چندخطی Quill)</td>
     </tr>
     <tr>
-      <td align="right"><img src="icons/notebooklm.svg" width="20" align="center"> <b>Google NotebookLM</b></td>
+      <td align="right"><img src="icons/notebooklm.svg" width="20" align="center"> <b>Gemini Notebook</b> (NotebookLM)</td>
       <td align="center"><code>notebook.google.com</code></td>
       <td align="center"><img src="https://img.shields.io/badge/%20-3186FF?style=flat-square" alt="#3186FF"></td>
       <td align="center">✅ سازگار کامل (شامل دامنه جدید و قدیم)</td>

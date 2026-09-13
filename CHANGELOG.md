@@ -13,8 +13,9 @@
 - **Enhanced Live Typing Engine**: Real-time Persian input handling with automatic RTL orientation for rich text editors and prompt boxes.
 
 ### Changed & Improved
-- **Official Brand SVG Vectors via `thesvg`**: Standardized all 5 chatbot logos to canonical 24x24 single-path vectors with adaptive monochrome theme rendering.
-- **Brand-Colored Active Toggles**: Each platform toggle switch now illuminates in that service's authentic brand color (ChatGPT green, Claude terracotta, Gemini blue, NotebookLM azure, DeepSeek cobalt).
+- **Full Brand Colors for Platform SVGs**: Updated all 5 AI platform vectors to render with their authentic brand colors (ChatGPT emerald `#10A37F`, Claude terracotta `#D97757`, Gemini Google Aurora gradient, Gemini Notebook multi-tone blue/lavender `#3186FF`/`#4FA0FF`/`#76BBFF`/`#A9A8FF`, and DeepSeek cobalt `#4D6BFE`), providing rich contrast and visibility in both dark and light modes.
+- **Gemini Notebook (formerly NotebookLM) Renaming**: Updated platform name and UI references across popup, options dashboard, site config, and repository documentation to match Google's official rebrand.
+- **Brand-Colored Active Toggles**: Each platform toggle switch illuminates in that service's authentic brand color (ChatGPT green, Claude terracotta, Gemini blue, Notebook azure, DeepSeek cobalt).
 - **Draggable Toggles in Popup & Options**: Implemented pointer capture drag tracking and Apple HIG spring bounce curves across both popup and dashboard toggles.
 - **Independent Font Title Preview**: Scoped unique font families directly to each font card title in the dashboard and each dropdown row in the popup, providing authentic previews independent of the active font.
 - **Google NotebookLM Domain Migration**: Added full support for Google's new `notebook.google.com` domain across content scripts, engine, and UI toggles.

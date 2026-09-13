@@ -1,7 +1,7 @@
 /* ============================================================
-   RustChin — NotebookLM site config
+   RustChin — Gemini Notebook (NotebookLM) site config
    Most layout-invasive target. Uses whole-body scanning and a
-   "6-ancestor expansion" to break NotebookLM's RTL width walls,
+   "6-ancestor expansion" to break Gemini Notebook's RTL width walls,
    with a 12px sidebar gutter for RTL messages.
    ============================================================ */
 
