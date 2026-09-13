@@ -65,9 +65,8 @@ function resolveLang(pref) {
   return (navigator.language || "en").toLowerCase().startsWith("fa") ? "fa" : "en";
 }
 
-// Chrome Web Store link (fill in the real listing ID after publishing).
-const STORE_URL = "https://chromewebstore.google.com/detail/RustChin";
-const DONATE_URL = "https://reymit.ir/suffergod";
+// Chrome Web Store link.
+const STORE_URL = "https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck";
 const REPORT_URL = "https://github.com/suffergod/RustChin/issues";
 
 /* ---------- i18n ---------- */
@@ -356,10 +355,9 @@ masterToggle.addEventListener("change", () => {
 // unknown, so we hide the Rate button for the initial release. After
 // publishing, set STORE_URL to the real listing URL and remove the
 // STORE_URL_KNOWN guard below to re-enable the Rate button in a follow-up.
-const STORE_URL_KNOWN = false;
+const STORE_URL_KNOWN = true;
 
 const rateLink = document.getElementById("rateLink");
-const donateLink = document.getElementById("donateLink");
 const reportLink = document.getElementById("reportLink");
 
 if (rateLink) {
@@ -369,7 +367,6 @@ if (rateLink) {
     rateLink.style.display = "none";
   }
 }
-if (donateLink) donateLink.href = DONATE_URL;
 if (reportLink) reportLink.href = REPORT_URL;
 
 // Keep the popup's version badge in sync with the manifest.
