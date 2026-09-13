@@ -13,5 +13,6 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.zcode/
 *.swp
 *.swo

@@ -167,6 +167,13 @@
       // Text-bearing tags inside a message root.
       container.querySelectorAll(LEAF_TAGS).forEach(fixElement);
 
+      // Child text-bearing divs without leaf descendants (e.g., user prompt bubbles).
+      container.querySelectorAll("div").forEach(function (d) {
+        if (d.querySelector(LEAF_TAGS)) return;
+        var txt = d.textContent || "";
+        if (txt.trim()) fixElement(d);
+      });
+
       // Ordered lists: set their dir so Persian numbering applies.
       if (config.numberedLists !== false) {
         container.querySelectorAll("ol").forEach(function (ol) {
@@ -175,14 +182,14 @@
         });
       }
 
-    // Tables: detect direction from their content. If Persian text is
-    // present, the table itself becomes RTL so the first column starts
-    // on the right. English/code tables stay safely LTR.
-    container.querySelectorAll("table").forEach(function (table) {
-      var tableText = table.textContent || "";
-      table.setAttribute("dir", getDirection(tableText));
-      table.querySelectorAll("th, td").forEach(fixElement);
-    });
+      // Tables: detect direction from their content. If Persian text is
+      // present, the table itself becomes RTL so the first column starts
+      // on the right. English/code tables stay safely LTR.
+      container.querySelectorAll("table").forEach(function (table) {
+        var tableText = table.textContent || "";
+        table.setAttribute("dir", getDirection(tableText));
+        table.querySelectorAll("th, td").forEach(fixElement);
+      });
     
     }
 
@@ -226,6 +233,15 @@
             processContainer(node);
           } else if (config.extraSelector && node.matches(config.extraSelector)) {
             fixElement(node);
+          } else if (node.closest(".bidi-scope") || (config.containers && node.closest(config.containers))) {
+            // Node was inserted into an existing message container
+            if (node.matches(LEAF_TAGS)) fixElement(node);
+            node.querySelectorAll(LEAF_TAGS).forEach(fixElement);
+            if (node.matches("table")) {
+              var tt = node.textContent || "";
+              node.setAttribute("dir", getDirection(tt));
+              node.querySelectorAll("th, td").forEach(fixElement);
+            }
           }
         } catch (e) {
           /* node may be detached; ignore */
@@ -400,6 +416,11 @@
         el.removeAttribute("dir");
         el.style.removeProperty("text-align");
         el.style.removeProperty("direction");
+      });
+
+      // 4. Revert tables and lists where dir was set.
+      document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
+        el.removeAttribute("dir");
       });
     }
 

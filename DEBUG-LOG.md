@@ -92,29 +92,83 @@ The backticks (`) in the comment prematurely closed the JavaScript template lite
 
 ---
 
-## 2026-07-07 — Pending Issues (Not Yet Fixed)
+## 2026-09-13 — Session 3: ChatGPT Comprehensive Overhaul, CWS Updates & Multi-Font Preparation
 
-### Issue 4: Sent prompt text not getting Vazirmatn/RTL
+### Issue 4: Sent prompt text not getting Vazirmatn & RTL (Resolved)
 
-**Symptom:** User's own sent messages in ChatGPT have Persian text without Vazirmatn font and without RTL direction.
+**Symptom:** User's own sent messages in ChatGPT had Persian text without Vazirmatn font and without RTL direction.
 
-**Root cause:** ChatGPT renders user sent messages with a plain `<div>` wrapper containing text directly — no `<p>`, `<h1>`, or other LEAF_TAG inside. The engine's `processContainer()` only processes LEAF_TAGS (`p, h1-h6, li, blockquote, td, th`). The text-bearing `<div>` is skipped.
+**Root cause:** ChatGPT renders user sent messages with a plain `<div>` wrapper containing text directly (`.whitespace-pre-wrap`) — no `<p>`, `<h1>`, or other `LEAF_TAG` inside. The engine's `processContainer()` only scanned `LEAF_TAGS` (`p, h1-h6, li, blockquote, td, th`). The text-bearing `<div>` was completely skipped.
 
-**Proposed fix:** Add a scan in `processContainer()` for direct child elements that contain text but have no LEAF_TAG descendants.
+**Fix:**
+1. In `core/engine.js` `processContainer()`, added a scan for child text-bearing `<div>` elements that do not contain child leaf tags (`if (d.querySelector(LEAF_TAGS)) return;`). If text is non-empty, `fixElement(d)` is called.
+2. In `sites/chatgpt.js`, added `extraSelector: "[data-message-author-role='user'] [class*='whitespace-pre-wrap'], nav a span, [data-testid^='history-item'] span"`.
 
-**Status:** NOT YET APPLIED.
+**Status:** ✅ Applied & Verified via live browser inspection.
 
 ---
 
-### Issue 5: RTL breaks after multiple toggles on/off
+### Issue 5: Revert contract broken on toggle OFF (Resolved)
 
-**Symptom:** After toggling the extension off and on a few times, RTL direction stops working.
+**Symptom:** After toggling the extension off and on, RTL direction and table styles were not cleanly reset.
 
-**Root cause (suspected):** `processContainer()` sets `dir` on `<table>` and `<ol>` elements, but `stop()` doesn't clean up these attributes (no marker class is added to them).
+**Root cause:** `processContainer()` sets `dir` on `<table>` and `<ol>` elements, but `stop()` only cleaned `.bidi-scope`, `.rc-done`, and `.rc-input` markers. `<table>` and `<ol>` `dir` attributes were left behind.
 
-**Proposed fix:** Add table/ol `dir` cleanup to `stop()`.
+**Fix:** Added table and list `dir` cleanup to `stop()` in `core/engine.js`:
+```javascript
+document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
+  el.removeAttribute("dir");
+});
+```
 
-**Status:** NOT YET APPLIED.
+**Status:** ✅ Applied.
+
+---
+
+### Issue 6: Table & Canvas / ProseMirror documents in ChatGPT (Resolved)
+
+**Symptom:** In ChatGPT's Canvas/Writing-block mode (`writing-block-surface ProseMirror markdown`), tables and cells (`th`, `td`) with inner `<span>` elements lacked RTL table alignment and Vazirmatn font.
+
+**Root cause:**
+1. Table direction was not explicitly set to `direction: rtl !important; text-align: right !important;` in the CSS stylesheet.
+2. In Canvas mode, cell text is wrapped in `<span>` tags. Cells need `.rc-done` so that `.bidi-scope .rc-done` cascades Vazirmatn to all non-code/math descendants.
+
+**Fix:**
+1. In `core/engine.js`, `processContainer()` now detects table direction and marks all `th, td` with `fixElement()`.
+2. Added `.bidi-scope table[dir="rtl"] { direction: rtl !important; text-align: right !important; }` to `sites/chatgpt.js`.
+
+**Status:** ✅ Applied & Verified via live screenshot inspection.
+
+---
+
+### Issue 7: Incremental mutation scanning for streamed content (Resolved)
+
+**Symptom:** When ChatGPT streams new tokens into an already existing `.markdown` or `.bidi-scope` container, newly inserted child nodes (`p`, `table`, etc.) were ignored by `scanNodes()`.
+
+**Root cause:** In `scanNodes()`, nodes were only processed if `node.matches(config.containers)` or `node.querySelectorAll(config.containers)`. When a `<p>` or `<table>` is appended into an *already existing* container, it does not match `config.containers`.
+
+**Fix:** In `core/engine.js` `scanNodes()`, added an `else if (node.closest(".bidi-scope") || (config.containers && node.closest(config.containers)))` branch to immediately process newly inserted leaf tags and tables.
+
+**Status:** ✅ Applied.
+
+---
+
+### Issue 8: Redundant container selector slowing down scan (Resolved)
+
+**Symptom:** `config.containers` in `sites/chatgpt.js` included `nav div`, which matched over 250 unnecessary `<div>` elements in the sidebar.
+
+**Fix:** Removed `nav div` from `config.containers`. Kept specific sidebar targets (`nav a`, `nav li`) and added `nav a span, [data-testid^='history-item'] span` to `extraSelector`.
+
+**Status:** ✅ Applied.
+
+---
+
+### Extension Metadata & UI Changes
+
+1. **Donation Link Removed:** Completely removed the heart icon and `reymit.ir` donation link from `popup/popup.html` and `popup/popup.js`. The extension is 100% free and private.
+2. **Chrome Web Store Link Connected:** Linked official store URL `https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck` to the "Rate" button (`STORE_URL_KNOWN = true`).
+3. **Version Bump:** Bumped version to `1.2.0` in `manifest.json` and `README.md`.
+4. **Extension Name Update:** Changed name in `manifest.json` to `"RustChin: RTL & Persian Fonts"` in preparation for multi-font support (Vazirmatn + Estedad).
 
 ---
 
@@ -122,52 +176,19 @@ The backticks (`) in the comment prematurely closed the JavaScript template lite
 
 | File | Change | Status |
 |------|--------|--------|
-| `popup/popup.html` | Added ❤️ donate link before Rate button | ✅ Applied |
-| `popup/popup.js` | Added DONATE_URL constant and wired donateLink element | ✅ Applied |
+| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.0` | ✅ Applied |
+| `README.md` | Version badge updated to `1.2.0` | ✅ Applied |
+| `popup/popup.html` | Removed ❤️ donate link | ✅ Applied |
+| `popup/popup.js` | Removed donate URL, connected official Web Store URL, `STORE_URL_KNOWN = true` | ✅ Applied |
 | `sites/chatgpt.js` | Removed `[dir="rtl"]` from Vazirmatn selectors | ✅ Applied |
+| `sites/chatgpt.js` | Added `extraSelector` for user messages & sidebar titles | ✅ Applied |
+| `sites/chatgpt.js` | Optimized `containers` (removed redundant `nav div`) | ✅ Applied |
+| `sites/chatgpt.js` | Added `.bidi-scope table[dir="rtl"]` explicit RTL rule | ✅ Applied |
 | `sites/chatgpt.js` | Copy-table button: `div:first-child` → `div:has(button)` + RTL override | ✅ Applied |
 | `sites/chatgpt.js` | Fixed backtick in comment breaking template literal | ✅ Applied |
-| `core/engine.js` | Add `:scope > *` scan in processContainer for text-bearing child divs | ⏳ Pending |
-| `core/engine.js` | Add table/ol `dir` cleanup in stop() | ⏳ Pending |
-| `sites/claude.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending |
-| `sites/gemini.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending |
-| `sites/deepseek.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending |
-
----
-
-## Key Architecture Notes
-
-### Engine flow
-1. `RustChin.start(config)` → creates engine → loads font as base64 data URL → replaces `{{FONT}}` in CSS → boots
-2. `boot()` reads state from `chrome.storage.local` → calls `start()` or `stop()`
-3. `start()` → injects CSS → defers `scanAll()` → creates MutationObserver → sets up 2s interval
-4. `processContainer(container)` → adds `.bidi-scope` → processes LEAF_TAGS → sets dir on `<ol>` and `<table>`
-5. `fixElement(el)` → counts RTL vs Latin chars → sets `dir` attribute → sets inline `text-align` → adds `.rc-done`
-
-### Direction detection
-- `getDirection(text)` counts RTL-script chars vs Latin chars
-- RTL wins unless Latin dominates by >1.5x ratio
-- Pure English → `"ltr"`, pure Persian → `"rtl"`, mixed → depends on ratio
-
-### CSS injection
-- `@font-face` with `unicode-range` ensures Vazirmatn only renders Persian/Arabic glyphs
-- Latin characters automatically fall through to the next font in the stack
-- Safe to apply Vazirmatn to all elements, not just RTL ones
-
-### Logical properties (important for positioning)
-- Tailwind's `end-0` maps to `inset-inline-end: 0` — a logical property
-- In `direction: ltr`: resolves to `right: 0` (element on right)
-- In `direction: rtl`: resolves to `left: 0` (element on left)
-- To move copy-table button to left for RTL tables: set `direction: rtl` on the toolbar container
-
-### stop() cleanup (current, incomplete)
-1. Removes `.bidi-scope`, `.bidi-rtl-message`, `.bidi-expanded-wrapper`, `.bidi-scope-list` classes + `dir`
-2. Removes `.rc-done` class + `dir` + inline styles from processed elements
-3. Removes `.rc-input` class + `dir` + inline styles from input elements
-4. **Missing:** `<table>` and `<ol>` `dir` attributes (no marker class)
-
-### CRITICAL: Template literal safety
-- NEVER use backticks (\`) inside JavaScript template literals (backtick strings)
-- This includes comments — backticks in comments still close the template
-- Use single quotes or double quotes in comments inside template literals
-- A broken template literal causes a JavaScript error that prevents ALL CSS injection
+| `core/engine.js` | Added text-bearing child div scan in `processContainer()` (user messages) | ✅ Applied |
+| `core/engine.js` | Added table/ol `dir` cleanup in `stop()` | ✅ Applied |
+| `core/engine.js` | Added incremental mutation handling in `scanNodes()` for existing containers | ✅ Applied |
+| `sites/claude.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending next |
+| `sites/gemini.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending next |
+| `sites/deepseek.js` | Remove `[dir="rtl"]` from Vazirmatn selectors | ⏳ Pending next |

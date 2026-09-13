@@ -6,7 +6,10 @@
 RustChin.start({
   siteId: "chatgpt",
   host: "chatgpt.com",
-  containers: ".markdown, .message-content, [data-message-author-role='user'], #prompt-textarea, nav a, nav li, nav div, [data-testid^='history-item']",
+  containers:
+    ".markdown, .message-content, [data-message-author-role='user'], #prompt-textarea, nav a, nav li, [data-testid^='history-item']",
+  extraSelector:
+    "[data-message-author-role='user'] [class*='whitespace-pre-wrap'], nav a span, [data-testid^='history-item'] span",
   exclude: "pre, code, .katex, .math, [class*='math' i]",
   editableSelector:
     'textarea, input, [contenteditable="true"]',
@@ -60,7 +63,7 @@ RustChin.start({
        JS (getDirection, based on actual character counts) decide the order.
        The previous "direction: auto" + "unicode-bidi: plaintext" combo
        re-detected direction from the FIRST character instead, so a sentence
-       starting with a bold English word ("HTML این ..." ) got misread as an
+       starting with a bold English word ('HTML این ...' ) got misread as an
        LTR paragraph and the English word was pushed to the end. */
     .bidi-scope p, .bidi-scope li, .bidi-scope blockquote {
       unicode-bidi: isolate !important;
@@ -85,6 +88,10 @@ RustChin.start({
     }
     .bidi-scope table {
       margin-top: 0.5rem;
+    }
+    .bidi-scope table[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
     }
     .bidi-scope button[aria-label="Copy table"] {
       position: relative !important;

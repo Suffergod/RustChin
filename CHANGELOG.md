@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0] — 2026-09-13
+
+### Changed & Improved
+- **Extension Name**: Renamed to "RustChin: RTL & Persian Fonts" in preparation for multi-font support.
+- **ChatGPT User Messages**: Added automatic RTL and Vazirmatn font for sent prompt messages (no longer skipped when inside plain `<div>`).
+- **ChatGPT Table & Canvas Support**: Tables inside Canvas / Writing Blocks (`ProseMirror`) now render strictly RTL with Vazirmatn font across all table headers and cells.
+- **Copy Table Button**: Fixed alignment for RTL tables to place the button on the natural start (left) side.
+- **Live Toggle Fix**: Revert contract now completely removes `dir` attributes from `<table>` and `<ol>` when the extension is toggled off (zero residual DOM state).
+- **Streaming Mutation Observer**: Fixed incremental scanner in `engine.js` to instantly process dynamically streamed tokens inserted into existing `.bidi-scope` containers.
+- **Cleaned Selectors**: Removed redundant `nav div` query from ChatGPT container list to boost DOM scanning performance.
+- **Popup UI**: Removed donation heart link; extension is 100% free forever. Connected official Chrome Web Store listing URL to the Rate button.
+
 ## [1.1.0] — 2026-07-11
 
 Published on Chrome Web Store!
