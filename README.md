@@ -118,7 +118,12 @@
   </thead>
   <tbody>
     <tr>
-      <td align="right"><img src="icons/chatgpt.svg" width="20" align="center"> <b>ChatGPT</b></td>
+      <td align="right">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="icons/chatgpt-dark.svg">
+          <img src="icons/chatgpt-light.svg" width="20" align="center" alt="ChatGPT">
+        </picture> <b>ChatGPT</b>
+      </td>
       <td align="center"><code>chatgpt.com</code></td>
       <td align="center"><img src="https://img.shields.io/badge/%20-000000?style=flat-square" alt="#000000"></td>
       <td align="center">✅ سازگار کامل (شامل Canvas، ProseMirror و جداول)</td>
