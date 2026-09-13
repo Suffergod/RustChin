@@ -1,19 +1,29 @@
+<div dir="rtl">
+
 <p align="center">
-  <img src="icons/squareicon128.png" width="80" alt="راست‌چین — RustChin">
+  <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck">
+    <img src="icons/squareicon128.png" width="88" alt="راست‌چین — RustChin">
+  </a>
 </p>
 
 <h1 align="center">راست‌چین | RustChin</h1>
 
 <p align="center">
-  <b>راست‌چین‌سازی هوشمند، تایپوگرافی اصیل فارسی و شماره‌گذاری خودکار برای پلتفرم‌های هوش مصنوعی</b><br>
-  کاملاً متن‌باز، فوق‌العاده سبک، سریع و با حفظ ۱۰۰٪ حریم خصوصی بدون حتی یک خط ردیابی.
+  <b>راست‌چین‌سازی هوشمند، ۵ فونت متغیر فارسی و شماره‌گذاری خودکار برای وب‌سایت‌های هوش مصنوعی</b><br>
+  سبک، پرسرعت، کاملاً متن‌باز و با امنیت ۱۰۰٪ بدون ارسال حتی یک بایت داده.
+</p>
+
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck">
+    <img src="https://img.shields.io/badge/نصب_از-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="نصب از Chrome Web Store">
+  </a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/نسخه-1.2.0-blue?style=flat-square" alt="v1.2.0">
+  <img src="https://img.shields.io/badge/مانیفست-MV3-orange?style=flat-square" alt="Manifest V3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/مجوز-MIT-green?style=flat-square" alt="MIT License"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/حریم_خصوصی-Zero_Data-brightgreen?style=flat-square" alt="Zero Data"></a>
-  <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck"><img src="https://img.shields.io/badge/نصب_از-Chrome_Web_Store-blue?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome Web Store"></a>
   <a href="https://www.linkedin.com/in/mahancn/"><img src="https://img.shields.io/badge/🎨_طراح_لوگو-MahanCN-blue?style=flat-square&logo=linkedin&logoColor=white" alt="Logo by MahanCN"></a>
 </p>
 
@@ -21,17 +31,17 @@
 
 ## چرا راست‌چین؟
 
-متن‌های فارسی در اکثر چت‌بات‌های هوش مصنوعی مثل ChatGPT، Claude و Gemini به صورت پیش‌فرض با جهت چپ‌به‌راست (LTR)، فونت‌های سیستمی نامناسب، نقطه‌گذاری‌های جابجا و لیست‌های نامرتب نمایش داده می‌شن. اگر متنی ترکیب انگلیسی و فارسی باشه که اوضاع بدتر هم می‌شه.
+متن‌های فارسی در چت‌بات‌های هوش مصنوعی به‌طور پیش‌فرض چپ‌به‌راست (LTR)، با فونت‌های نامناسب، نقطه‌گذاری‌های وارونه در انتهای جملات و لیست‌های نامرتب نمایش داده می‌شن. این وضعیت هنگام تایپ متن‌های ترکیبی (فارسی و انگلیسی) آزاردهنده‌تر هم می‌شه.
 
-**راست‌چین** این مشکل رو به شکل ریشه‌ای و بدون دستکاری یا تخریب ساختار پیام‌ها حل می‌کنه:
-- متن‌های فارسی به‌صورت خودکار و هوشمند راست‌چین می‌شن.
-- کدهای برنامه‌نویسی و فرمول‌های ریاضی دست‌نخورده و کاملاً چپ‌به‌راست (LTR) باقی می‌مونن.
-- ۵ فونت متغیر و مدرن فارسی بدون نیاز به نصب روی سیستم در اختیارتونه.
+**راست‌چین** این مشکلات رو بدون دستکاری یا شکستن ساختار صفحات برطرف می‌کنه:
+- **جهت‌دهی هوشمند:** هر پاراگراف یا پیام بر اساس محتوای خودش به‌طور دقیق راست‌چین می‌شه.
+- **ایزوله‌سازی کد و ریاضی:** بلوک‌های کد (`pre` و `code`) و فرمول‌های ریاضی (KaTeX و Math) دست‌نخورده و کاملاً چپ‌به‌راست (LTR) باقی می‌مونن.
+- **تایپوگرافی اصیل:** ۵ قلم متغیر فارسی مستقیماً درون افزونه قرار دارن تا متن‌ها با خوانایی بالا نمایش داده بشن.
 
 <table>
   <tr>
-    <th align="center">بدون راست‌چین (پیش‌فرض سرویس‌ها)</th>
-    <th align="center">با راست‌چین (خوانا، تمیز و استاندارد)</th>
+    <th align="center" width="50%">بدون راست‌چین (پیش‌فرض سرویس‌ها)</th>
+    <th align="center" width="50%">با راست‌چین (خوانا، استاندارد و مرتب)</th>
   </tr>
   <tr>
     <td align="center"><img src="screenshots/before.png" alt="Without RustChin" width="100%"></td>
@@ -41,111 +51,275 @@
 
 ---
 
-## امکانات اصلی
+## قابلیت‌های کلیدی
 
-| قابلیت | توضیح |
-| :--- | :--- |
-| 🔤 **تشخیص هوشمند جهت (Smart RTL)** | بر اساس درصد کاراکترهای فارسی هر پاراگراف تصمیم می‌گیره تا متن‌های ترکیبی (فارسی و انگلیسی) درست چیده بشن. |
-| 🎨 **۵ فونت متغیر فارسی (Variable Fonts)** | امکان انتخاب بین ۵ قلم محبوب: **وزیرمتن**، **استعداد**، **ساحل**، **آراد** و **میخک**. |
-| 🔢 **شماره‌گذاری فارسی لیست‌ها** | لیست‌های ترتیبی به‌جای اعداد انگلیسی با اعداد زیبای فارسی (۱. ۲. ۳.) نمایش داده می‌شن. |
-| 💻 **ایزوله‌سازی کامل کد و فرمول‌ها** | بلوک‌های کد (`pre`, `code`) و روابط ریاضی (KaTeX / Math) هرگز راست‌چین نمی‌شن و ظاهر فنی‌شون حفظ می‌شه. |
-| 🛠️ **داشبورد و استودیو تنظیمات اختصاصی** | صفحه تنظیمات پیشرفته با امکان تغییر فونت، سایز، فاصله خطوط و تست زنده متون در محیط Sandbox. |
-| ⚡ **تغییرات آنی بدون نیاز به رفرش** | جابجایی بین فونت‌ها یا خاموش/روشن کردن افزونه به صورت درلحظه و بدون رفرش اعمال می‌شه. |
-| 🟢 **تاگل‌های لمسی با رنگ برند** | سوییچ‌های تعاملی با فیزیک فنری اپل (Apple HIG Spring Physics) که با رنگ اختصاصی هر چت‌بات روشن می‌شن. |
-| 🌗 **سازگار با تم تیره و روشن** | پوسته پاپ‌آپ و داشبورد به صورت خودکار با تم سیستم یا انتخاب دستی شما هماهنگ می‌شن. |
-| 🔒 **امنیت مطلق و بدون جمع‌آوری داده** | افزونه هیچ سرور خارجی، ابزار آمارگیری یا دسترسی مشکوکی نداره. پیام‌های شما فقط روی مرورگر خودتونه. |
+<table>
+  <thead>
+    <tr>
+      <th align="right" width="40%">قابلیت</th>
+      <th align="right" width="60%">توضیحات عملکرد</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="right">🔤 <b>تشخیص هوشمند جهت (Smart RTL)</b></td>
+      <td align="right">بررسی لحظه‌ای نسبت حروف فارسی به انگلیسی؛ متن‌های ترکیبی و علائم نگارشی مثل نقطه و پرانتز در جای درست قرار می‌گیرند.</td>
+    </tr>
+    <tr>
+      <td align="right">🎨 <b>۵ فونت متغیر فارسی (Variable)</b></td>
+      <td align="right">پشتیبانی همزمان از ۵ قلم محبوب: <b>وزیرمتن</b>، <b>استعداد</b>، <b>ساحل</b>، <b>آراد</b> و <b>میخک</b> با تنظیم خودکار وزن از ۱۰۰ تا ۹۰۰.</td>
+    </tr>
+    <tr>
+      <td align="right">🔢 <b>شماره‌گذاری فارسی لیست‌ها</b></td>
+      <td align="right">تبدیل خودکار شماره لیست‌های ترتیبی در متن‌های فارسی به اعداد فارسی (۱. ۲. ۳.) بدون تغییر لیست‌های انگلیسی.</td>
+    </tr>
+    <tr>
+      <td align="right">💻 <b>ایزوله‌سازی کامل کد و فرمول‌ها</b></td>
+      <td align="right">تمام بلوک‌های کدنویسی، تکه‌کدهای درون‌خطی و فرمول‌های ریاضی از راست‌چین‌سازی مستثنی بوده و ساختار LTR را حفظ می‌کنند.</td>
+    </tr>
+    <tr>
+      <td align="right">🛠️ <b>استودیو و داشبورد تایپوگرافی</b></td>
+      <td align="right">محیط تنظیمات اختصاصی همراه با سندباکس تست زنده، تنظیم مقیاس اندازه قلم و ارتفاع خطوط با دکمه بازنشانی پیش‌فرض.</td>
+    </tr>
+    <tr>
+      <td align="right">⚡ <b>تغییر درلحظه بدون رفرش (Live Sync)</b></td>
+      <td align="right">تغییر فونت یا خاموش/روشن کردن افزونه فوراً و بدون نیاز به بازخوانی صفحه در تمام زبانه‌های باز اعمال می‌شود.</td>
+    </tr>
+    <tr>
+      <td align="right">🟢 <b>کلیدهای لمسی با فیزیک اپل</b></td>
+      <td align="right">سوییچ‌های قابل درگ با انیمیشن فنری Apple HIG که با رنگ اختصاصی هر چت‌بات (سبز، خاکی، آبی و نیلی) روشن می‌شوند.</td>
+    </tr>
+    <tr>
+      <td align="right">🌗 <b>هماهنگی با پوسته تیره و روشن</b></td>
+      <td align="right">تنظیم خودکار با تم سیستم‌عامل با امکان انتخاب دستی حالت تاریک یا روشن و آیکون‌های وکتور رسپانسیو.</td>
+    </tr>
+    <tr>
+      <td align="right">🔒 <b>امنیت مطلق و بدون جمع‌آوری داده</b></td>
+      <td align="right">فاقد هرگونه کد آمارگیری، سرور خارجی یا رهگیری اطلاعات؛ مکالمات شما به طور کامل روی رایانه خودتان باقی می‌ماند.</td>
+    </tr>
+  </tbody>
+</table>
+
+> [!TIP]
+> برای دسترسی به استودیو تایپوگرافی، کافیست روی آیکون تنظیمات در بالای پاپ‌آپ کلیک کنید یا در منوی راست‌کلیک روی آیکون افزونه گزینه **Options** را انتخاب نمایید.
 
 ---
 
 ## سرویس‌های پشتیبانی‌شده
 
-| پلتفرم | دامنه | وضعیت سازگاری |
-| :--- | :--- | :---: |
-| <img src="icons/chatgpt.svg" width="18" align="center"> **ChatGPT** | `chatgpt.com` | سازگار کامل (شامل Canvas و ProseMirror) |
-| <img src="icons/claude.svg" width="18" align="center"> **Claude** | `claude.ai` | سازگار کامل (شامل پروژه‌ها و Artifacts) |
-| <img src="icons/gemini.svg" width="18" align="center"> **Google Gemini** | `gemini.google.com` | سازگار کامل (شامل ادیتور Quill) |
-| <img src="icons/notebooklm.svg" width="18" align="center"> **Google NotebookLM** | `notebook.google.com` & `notebooklm.google.com` | سازگار کامل (عبور از محدودیت‌های عرض لایه‌ها) |
-| <img src="icons/deepseek.svg" width="18" align="center"> **DeepSeek** | `chat.deepseek.com` | سازگار کامل |
+<table>
+  <thead>
+    <tr>
+      <th align="right">پلتفرم</th>
+      <th align="center">دامنه</th>
+      <th align="center">رنگ تاگل اختصاصی</th>
+      <th align="center">وضعیت سازگاری</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="right"><img src="icons/chatgpt.svg" width="20" align="center"> <b>ChatGPT</b></td>
+      <td align="center"><code>chatgpt.com</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-10A37F?style=flat-square" alt="#10A37F"></td>
+      <td align="center">✅ سازگار کامل (شامل Canvas، ProseMirror و جداول)</td>
+    </tr>
+    <tr>
+      <td align="right"><img src="icons/claude.svg" width="20" align="center"> <b>Claude</b></td>
+      <td align="center"><code>claude.ai</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-D97757?style=flat-square" alt="#D97757"></td>
+      <td align="center">✅ سازگار کامل (شامل پروژه‌ها و پنل Artifacts)</td>
+    </tr>
+    <tr>
+      <td align="right"><img src="icons/gemini.svg" width="20" align="center"> <b>Google Gemini</b></td>
+      <td align="center"><code>gemini.google.com</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-4285F4?style=flat-square" alt="#4285F4"></td>
+      <td align="center">✅ سازگار کامل (شامل ویرایشگر چندخطی Quill)</td>
+    </tr>
+    <tr>
+      <td align="right"><img src="icons/notebooklm.svg" width="20" align="center"> <b>Google NotebookLM</b></td>
+      <td align="center"><code>notebook.google.com</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-3186FF?style=flat-square" alt="#3186FF"></td>
+      <td align="center">✅ سازگار کامل (شامل دامنه جدید و قدیم)</td>
+    </tr>
+    <tr>
+      <td align="right"><img src="icons/deepseek.svg" width="20" align="center"> <b>DeepSeek</b></td>
+      <td align="center"><code>chat.deepseek.com</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-4D6BFE?style=flat-square" alt="#4D6BFE"></td>
+      <td align="center">✅ سازگار کامل (شامل جعبه ورودی و فرمول‌ها)</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
 ## فونت‌های ارائه‌شده
 
-تمام فونت‌ها به شکل بسته متغیر (Variable Font WOFF2) مستقیماً داخل افزونه قرار دارن و نیازی به دانلود اضافه از اینترنت یا نصب روی ویندوز/مک ندارن:
+تمامی قلم‌ها به شکل بسته متغیر (Variable WOFF2 با وزن‌های ۱۰۰ تا ۹۰۰) در افزونه تعبیه شده‌اند و هیچ نیازی به دانلود اضافه یا نصب فونت روی سیستم‌عامل ندارند:
 
-1. **وزیرمتن (Vazirmatn)** — اثر صابر راستی‌کردار (فونت استاندارد و پیش‌فرض وب فارسی)
-2. **استعداد (Estedad)** — اثر امین عابدی (مدرن، خوانا و مناسب مطالعه طولانی)
-3. **ساحل (Sahel)** — اثر صابر راستی‌کردار (کلاسیک، دلنشین با حس خوشنویسی روان)
-4. **آراد (Arad)** — اثر مصطفی درویشی (هندسی، منظم و مدرن)
-5. **میخک (Mikhak)** — اثر امین عابدی (صمیمی، پویا با فرم‌های چشم‌نواز)
+<details open>
+<summary><b>نمایش مشخصات و طراحان ۵ قلم متغیر (کلیک کنید)</b></summary>
+<br>
+
+<table>
+  <thead>
+    <tr>
+      <th align="right">نام قلم</th>
+      <th align="right">طراح فونت</th>
+      <th align="right">ویژگی و کاربرد</th>
+      <th align="center">منبع متن‌باز</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="right"><b>وزیرمتن (Vazirmatn)</b></td>
+      <td align="right">زنده‌یاد صابر راستی‌کردار</td>
+      <td align="right">فونت استاندارد وب فارسی؛ خوانایی بی‌نقص در انواع ابعاد متن و گفتگوهای طولانی.</td>
+      <td align="center"><a href="https://github.com/rastikerdar/vazirmatn">گیت‌هاب</a></td>
+    </tr>
+    <tr>
+      <td align="right"><b>استعداد (Estedad)</b></td>
+      <td align="right">امین عابدی</td>
+      <td align="right">مدرن، پویا و صمیمی؛ انتخابی عالی برای مطالعه پیوسته و تحلیل متون فنی.</td>
+      <td align="center"><a href="https://github.com/aminabedi68/Estedad">گیت‌هاب</a></td>
+    </tr>
+    <tr>
+      <td align="right"><b>ساحل (Sahel)</b></td>
+      <td align="right">زنده‌یاد صابر راستی‌کردار</td>
+      <td align="right">کلاسیک، چشم‌نواز با ریشه‌های سنتی خط نسخ و حس نوشتاری دلنشین.</td>
+      <td align="center"><a href="https://github.com/rastikerdar/sahel-font">گیت‌هاب</a></td>
+    </tr>
+    <tr>
+      <td align="right"><b>آراد (Arad)</b></td>
+      <td align="right">مصطفی درویشی</td>
+      <td align="right">ساختار هندسی، جسورانه و نوگرا؛ مناسب رابط‌های کاربری مدرن و عنوان‌ها.</td>
+      <td align="center"><a href="https://github.com/MDarvishi5124/Arad">گیت‌هاب</a></td>
+    </tr>
+    <tr>
+      <td align="right"><b>میخک (Mikhak)</b></td>
+      <td align="right">امین عابدی</td>
+      <td align="right">فرم‌های نرم، روان و بدون زوایای خشک؛ حس محاوره‌ای و دوستانه.</td>
+      <td align="center"><a href="https://github.com/aminabedi68/Mikhak">گیت‌هاب</a></td>
+    </tr>
+  </tbody>
+</table>
+
+</details>
 
 ---
 
 ## روش‌های نصب
 
-### ۱. نصب مستقیم از کروم وب‌استور (پیشنهادی)
-ساده‌ترین روش نصب با آپدیت خودکار:  
-👉 [**صفحه افزونه راست‌چین در Chrome Web Store**](https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck)
+### روش اول: نصب مستقیم از کروم وب‌استور (پیشنهادی)
+ساده‌ترین روش با دریافت خودکار به‌روزرسانی‌ها:  
+👉 [**صفحه رسمی افزونه راست‌چین در Chrome Web Store**](https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck)
 
-### ۲. نصب دستی از سورس‌کد (Developer Mode)
-اگر می‌خواین نسخه در حال توسعه رو امتحان کنید یا خودتون تغییری بدین:
-1. مخزن پروژه رو کلون یا دانلود کنید:
-   ```bash
-   git clone https://github.com/Suffergod/RustChin.git
-   ```
-2. وارد آدرس `chrome://extensions` در مرورگر بشید.
-3. گزینه **Developer mode** در بالا سمت راست رو فعال کنید.
-4. روی دکمه **Load unpacked** کلیک کنید و پوشه پروژه رو انتخاب کنید.
-5. وارد یکی از سرویس‌ها (مثلاً ChatGPT یا Claude) بشید و شروع به چت فارسی کنید!
+### روش دوم: نصب دستی از سورس‌کد (حالت توسعه‌دهنده)
+
+<details>
+<summary><b>مشاهده مراحل نصب سورس‌کد (کلیک کنید)</b></summary>
+<br>
+
+<ol>
+  <li>مخزن پروژه را دریافت یا کلون کنید:</li>
+</ol>
+
+<div dir="ltr">
+
+```bash
+git clone https://github.com/Suffergod/RustChin.git
+```
+
+</div>
+
+<ol start="2">
+  <li>در مرورگر کروم یا مرورگرهای مبتنی بر کرومیوم (Edge, Brave, Arc) به نشانی زیر بروید:</li>
+</ol>
+
+<div dir="ltr">
+
+```text
+chrome://extensions
+```
+
+</div>
+
+<ol start="3">
+  <li>گزینه <b>Developer mode</b> را در گوشه بالای صفحه فعال کنید.</li>
+  <li>روی دکمه <b>Load unpacked</b> کلیک کرده و پوشه دانلود شده افزونه را انتخاب کنید.</li>
+  <li>وارد یکی از چت‌بات‌های پشتیبانی‌شده شوید و از تایپ فارسی لذت ببرید!</li>
+</ol>
+
+</details>
 
 ---
 
-## حریم خصوصی و امنیت
+## پرسش‌های متداول (FAQ)
 
-ما باور داریم ابزاری که برای کار با چت‌های هوش مصنوعی استفاده می‌شه باید نهایت شفافیت و امنیت رو داشته باشه:
-- **دسترسی به اینترنت صفر:** افزونه هیچ ریکوئست شبکه‌ای خارجی ارسال نمی‌کنه.
-- **بدون ترکینگ و لاگ:** هیچ ابزار Analytics، Telemetry یا کوکی ردیابی وجود نداره.
-- **مجوزهای حداقلی:** تنها دو دسترسی `storage` (برای ذخیره محلی فونت انتخابی و وضعیت تاگل‌ها) و `activeTab` (برای تشخیص سایت فعلی در پاپ‌آپ) استفاده می‌شن.
-- متن کامل تعهدنامه ما در [PRIVACY.md](PRIVACY.md) در دسترسه.
+<details>
+<summary><b>آیا این افزونه پیام‌های من را می‌خواند یا ذخیره می‌کند؟</b></summary>
+<p>
+خیر، به‌هیچ‌وجه. راست‌چین به صورت کاملاً مستقل و لوکال روی مرورگر شما اجرا می‌شود و هیچ ارتباط سروری یا ابزار تحلیلی ندارد. تنها دسترسی‌های افزونه شامل <code>storage</code> برای ذخیره محلی تنظیمات و <code>activeTab</code> برای تشخیص سایت باز شده است.
+</p>
+</details>
+
+<details>
+<summary><b>چگونه فونت یا اندازه متن را تغییر دهم؟</b></summary>
+<p>
+روی آیکون افزونه کلیک کنید و از منوی بازشونده فونت، قلم دلخواهتان را انتخاب کنید. همچنین با باز کردن داشبورد (آیکون چرخ‌دنده)، می‌توانید مقیاس فونت و فاصله خطوط را مطابق سلیقه خود شخصی‌سازی کنید.
+</p>
+</details>
+
+<details>
+<summary><b>آیا کدهای برنامه‌نویسی راست‌چین می‌شوند؟</b></summary>
+<p>
+خیر. تمام تگ‌های <code>pre</code>، <code>code</code> و فرمول‌های KaTeX با قوانین سخت‌گیرانه ایزوله شده‌اند و همیشه با فونت اختصاصی مونو و جهت چپ‌به‌راست نمایش داده می‌شوند.
+</p>
+</details>
 
 ---
 
 ## ساختار پروژه
 
+<div dir="ltr">
+
 ```text
 RustChin/
 ├── core/
-│   └── engine.js              # موتور اصلی پردازش MutationObserver، تشخیص جهت و کش عملکرد
-├── sites/                     # کانفیگ‌های اختصاصی و مجزای هر چت‌بات
+│   └── engine.js              # MutationObserver engine, direction detection, DOM isolation
+├── sites/                     # Declarative chatbot targets
 │   ├── chatgpt.js
 │   ├── claude.js
 │   ├── gemini.js
 │   ├── notebooklm.js
 │   └── deepseek.js
-├── fonts/                     # فونت‌های متغیر باندل‌شده (WOFF2)
-├── icons/                     # آیکون‌های وکتور SVG رسمی و نمادها
-├── popup/                     # پاپ‌آپ جمع‌وجور و تعاملی
-├── options/                   # داشبورد کامل تنظیمات و استودیو تایپوگرافی
-├── background.js              # Service Worker برای همگام‌سازی تب‌ها و آیکون
-└── manifest.json              # مانیفست اکستنشن نسخه ۳ (Manifest V3)
+├── fonts/                     # Bundled variable font assets (WOFF2)
+├── icons/                     # Brand SVG vectors & Solar UI icons
+├── popup/                     # Quick action popover with drag-toggles
+├── options/                   # Full settings studio & typography sandbox
+├── background.js              # Extension service worker (MV3)
+└── manifest.json              # Extension manifest specifications
 ```
+
+</div>
 
 ---
 
 ## تقدیر و تشکر
 
-- **طراحی لوگو:** [ماهان چراغ‌نژاد (MahanCN)](https://www.linkedin.com/in/mahancn/)
-- **طراحان فونت:**
-  - زنده‌یاد **صابر راستی‌کردار** برای خلق آثاری ماندگار همچون وزیرمتن و ساحل
-  - **امین عابدی** برای خلق فونت‌های خلاقانه استعداد و میخک
+- **طراحی نماد و آیکون:** [ماهان چراغ‌نژاد (MahanCN)](https://www.linkedin.com/in/mahancn/)
+- **طراحان تایپ‌فیس‌های فارسی:**
+  - زنده‌یاد **صابر راستی‌کردار** برای آفرینش ماندگار وزیرمتن و ساحل
+  - **امین عابدی** برای خلق قلم‌های نوآورانه استعداد و میخک
   - **مصطفی درویشی** برای طراحی فونت مدرن آراد
 
 ---
 
-## لایسنس
+## مجوز
 
-این پروژه تحت مجوز [MIT](LICENSE) به صورت کاملاً آزاد و رایگان برای جامعه کاربران و توسعه‌دهندگان ایرانی منتشر شده است.
+این پروژه تحت پروانه [MIT](LICENSE) به‌صورت آزاد و رایگان در دسترس است.
 
 <p align="center">
-  ساخته شده با ❤️ برای کاربران فارسی‌زبان هوش مصنوعی
+  توسعه داده شده با ❤️ برای کاربران فارسی‌زبان هوش مصنوعی
 </p>
+
+</div>
