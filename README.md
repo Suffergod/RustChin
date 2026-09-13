@@ -15,16 +15,16 @@
 
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck">
-    <img src="https://img.shields.io/badge/نصب_از-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="نصب از Chrome Web Store">
+    <img src="https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Install from Chrome Web Store">
   </a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/نسخه-1.2.0-blue?style=flat-square" alt="v1.2.0">
-  <img src="https://img.shields.io/badge/مانیفست-MV3-orange?style=flat-square" alt="Manifest V3">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/مجوز-MIT-green?style=flat-square" alt="MIT License"></a>
-  <a href="PRIVACY.md"><img src="https://img.shields.io/badge/حریم_خصوصی-Zero_Data-brightgreen?style=flat-square" alt="Zero Data"></a>
-  <a href="https://www.linkedin.com/in/mahancn/"><img src="https://img.shields.io/badge/🎨_طراح_لوگو-MahanCN-blue?style=flat-square&logo=linkedin&logoColor=white" alt="Logo by MahanCN"></a>
+  <img src="https://img.shields.io/badge/version-1.2.0-blue?style=flat-square" alt="Version 1.2.0">
+  <img src="https://img.shields.io/badge/manifest-v3-orange?style=flat-square" alt="Manifest V3">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>
+  <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen?style=flat-square" alt="Zero Data"></a>
+  <a href="https://www.linkedin.com/in/mahancn/"><img src="https://img.shields.io/badge/🎨_logo-MahanCN-blue?style=flat-square&logo=linkedin&logoColor=white" alt="Logo by MahanCN"></a>
 </p>
 
 ---
@@ -306,7 +306,7 @@ RustChin/
 
 ## تقدیر و تشکر
 
-- **طراحی نماد و آیکون:** [ماهان چراغ‌نژاد (MahanCN)](https://www.linkedin.com/in/mahancn/)
+- **طراحی نماد و لوگو:** [ماهان دولت‌آبادی (MahanCN)](https://www.linkedin.com/in/mahancn/)
 - **طراحان تایپ‌فیس‌های فارسی:**
   - زنده‌یاد **صابر راستی‌کردار** برای آفرینش ماندگار وزیرمتن و ساحل
   - **امین عابدی** برای خلق قلم‌های نوآورانه استعداد و میخک
