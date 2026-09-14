@@ -43,6 +43,8 @@ const I18N = {
     enableMasterFirst: "Enable RustChin to manage individual sites",
     zeroData: "Zero data collected",
     rate: "Rate", report: "Report",
+    rateTitle: "Rate on Chrome Web Store",
+    reportTitle: "Report Issue on GitHub",
     reloadHint: "Reload this tab to activate RustChin on it.",
     pausedOnSite: "Paused here",
     dir: "ltr",
@@ -65,6 +67,8 @@ const I18N = {
     enableMasterFirst: "برای مدیریت سایت‌ها، راست‌چین را فعال کنید",
     zeroData: "هیچ داده‌ای جمع‌آوری نمی‌شود",
     rate: "امتیاز", report: "گزارش",
+    rateTitle: "ثبت امتیاز در فروشگاه کروم",
+    reportTitle: "گزارش مشکل در گیت‌هاب",
     reloadHint: "برای فعال‌سازی راست‌چین، این زبانه را بازخوانی کنید.",
     pausedOnSite: "متوقف در این سایت",
     dir: "rtl",
@@ -258,6 +262,14 @@ function applyI18n() {
     if (key === "enable" && el === masterLabel) return;
     if (t[key] !== undefined) el.textContent = t[key];
   });
+  if (rateLink) {
+    rateLink.setAttribute("title", t.rateTitle || t.rate);
+    rateLink.setAttribute("aria-label", t.rateTitle || t.rate);
+  }
+  if (reportLink) {
+    reportLink.setAttribute("title", t.reportTitle || t.report);
+    reportLink.setAttribute("aria-label", t.reportTitle || t.report);
+  }
   if (masterLabel && currentState) updateStatus(currentState);
 }
 

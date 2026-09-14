@@ -227,10 +227,11 @@ body {
   height: 16px;
   display: block;
   overflow: visible;
+  pointer-events: none;
   transform-box: view-box;
   transform-origin: center;
   backface-visibility: hidden;
-  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
@@ -243,11 +244,11 @@ body {
 }
 
 .seg-item[data-value="dark"]:hover svg {
-  transform: rotate(-14deg) scale(1.08);
+  transform: rotate(-30deg);
 }
 
 .seg-item[data-value="auto"]:hover svg {
-  transform: scale(1.12);
+  transform: rotate(-8deg);
 }
 
 .seg-item.active {

@@ -197,7 +197,6 @@ body {
   cursor: pointer;
   transition: background 0.15s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
-.seg-btn svg { width: 14px; height: 14px; }
 .seg-btn:hover { color: var(--text-1); }
 .seg-btn.active {
   background: var(--panel-solid);
@@ -258,6 +257,7 @@ body {
   height: 16px;
   display: block;
   overflow: visible;
+  pointer-events: none;
   transform-box: view-box;
   transform-origin: center;
   backface-visibility: hidden;
@@ -850,26 +850,76 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 8px 14px 8px 16px;
   border-top: 1px solid var(--hairline);
 }
 .zero-badge {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 10px; font-weight: 600; color: var(--text-2);
-}
-.zero-badge .shield { font-size: 11px; }
-.footer-links { display: flex; gap: 4px; }
-.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 10px;
+  font-weight: 600;
+  color: var(--text-2);
+  line-height: 1;
+  user-select: none;
+}
+.zero-badge .zero-shield {
+  width: 13px;
+  height: 13px;
+  color: var(--accent);
+  flex-shrink: 0;
+  display: block;
+}
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.footer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   color: var(--text-3);
   text-decoration: none;
-  padding: 4px 7px;
-  border-radius: 6px;
-  transition: background 0.15s ease, color 0.15s ease;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
 }
-.footer-links a:hover { background: var(--hairline); color: var(--text-1); }
+.footer-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+  transform-box: view-box;
+  transform-origin: center;
+  backface-visibility: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.footer-btn:hover {
+  background: var(--hairline);
+}
+/* Rate Button Hover: Golden Amber Star (Pure 72deg Rotation, No Scale) */
+#rateLink:hover {
+  color: #f59e0b;
+}
+#rateLink:hover svg {
+  transform: rotate(72deg);
+}
 
-/* Smooth, refined hover motion on the theme icons */
+/* Report Button Hover: Rose/Ruby Bug (Pure -15deg Rotation, No Scale) */
+#reportLink:hover {
+  color: #f43f5e;
+}
+#reportLink:hover svg {
+  transform: rotate(-15deg);
+}
+
+/* Smooth, refined hover motion on the theme icons (Pure Rotation, Zero Scale) */
 .seg-btn[data-value="auto"] svg,
 .seg-btn[data-value="light"] svg,
 .seg-btn[data-value="dark"] svg {
@@ -877,12 +927,14 @@ body {
   height: 16px;
   display: block;
   overflow: visible;
+  pointer-events: none;
   transform-box: view-box;
   transform-origin: center;
   backface-visibility: hidden;
-  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
-.seg-btn[data-value="auto"]:hover svg  { transform: scale(1.12); }
+.seg-btn[data-value="auto"]:hover svg  { transform: rotate(-8deg); }
 .seg-btn[data-value="light"]:hover svg { transform: rotate(45deg); }
-.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-14deg) scale(1.08); }
+.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-30deg); }
+.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-30deg); }

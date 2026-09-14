@@ -33,7 +33,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><g><circle cx="12" cy="12" r="5"/><path d="M12 2V4M12 20V22M4 12L2 12M22 12L20 12M19.778 4.222L17.556 6.254M4.222 4.222L6.444 6.254M6.444 17.556L4.222 19.778M19.778 19.778L17.556 17.556" stroke-linecap="round"/></g></svg>
         </button>
         <button type="button" class="seg-btn" data-value="dark" title="Dark">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g><path d="M21.5 14.0784C20.3003 14.7189 18.9305 15.0821 17.4776 15.0821C12.7956 15.0821 9 11.2865 9 6.60453C9 5.15161 9.36321 3.78183 10.0037 2.58215C5.83547 3.39341 2.66666 7.07878 2.66666 11.5173C2.66666 16.5053 6.70776 20.5464 11.6958 20.5464C16.1343 20.5464 19.8197 17.3776 20.631 13.2094L21.5 14.0784Z"/></g></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></g></svg>
         </button>
       </div>
       <div class="seg seg-text" id="langSeg" role="tablist" aria-label="Language">
@@ -118,13 +118,35 @@
     <!-- Footer -->
     <div class="footer">
       <span class="zero-badge" title="RustChin never reads, stores, or transmits your conversations.">
-        <span class="shield">🛡</span>
+        <svg class="zero-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2L4 6V12.5C4 17.5 7.4 21.2 12 22C16.6 21.2 20 17.5 20 12.5V6L12 2Z"/>
+          <path d="M9 12L11 14L15 10"/>
+        </svg>
         <span data-i18n="zeroData">Zero data collected</span>
       </span>
-      <span class="footer-links">
-        <a href="#" id="rateLink" data-i18n="rate" target="_blank" rel="noopener">Rate</a>
-        <a href="#" id="reportLink" data-i18n="report" target="_blank" rel="noopener">Report</a>
-      </span>
+      <div class="footer-actions">
+        <a href="#" id="rateLink" class="footer-btn" title="Rate on Chrome Web Store" aria-label="Rate" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <g>
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </g>
+          </svg>
+        </a>
+        <a href="#" id="reportLink" class="footer-btn" title="Report Issue" aria-label="Report" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <g>
+              <path d="M9 9V7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7V9"/>
+              <path d="M6 13C6 9.68629 8.68629 7 12 7C15.3137 7 18 9.68629 18 13V15C18 18.3137 15.3137 21 12 21C8.68629 21 6 18.3137 6 15V13Z"/>
+              <path d="M4 8L7 10"/>
+              <path d="M4 14H7"/>
+              <path d="M4 20L7 18"/>
+              <path d="M20 8L17 10"/>
+              <path d="M20 14H17"/>
+              <path d="M20 20L17 18"/>
+            </g>
+          </svg>
+        </a>
+      </div>
     </div>
 
   </div>
