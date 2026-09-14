@@ -258,17 +258,16 @@ body {
   display: block;
   overflow: visible;
   pointer-events: none;
-  transform-box: view-box;
-  transform-origin: center;
-  backface-visibility: hidden;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
+}
+.header-actions .btn-icon svg g {
+  transform-origin: 12px 12px;
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 .header-actions .btn-icon:hover {
   background: var(--hairline);
   color: var(--text-1);
 }
-.header-actions .btn-icon:hover svg {
+.header-actions .btn-icon:hover svg g {
   transform: rotate(60deg);
 }
 .header .ver {
@@ -894,11 +893,10 @@ body {
   display: block;
   overflow: visible;
   pointer-events: none;
-  transform-box: view-box;
-  transform-origin: center;
-  backface-visibility: hidden;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
+}
+.footer-btn svg g {
+  transform-origin: 12px 12px;
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 .footer-btn:hover {
   background: var(--hairline);
@@ -907,7 +905,7 @@ body {
 #rateLink:hover {
   color: #f59e0b;
 }
-#rateLink:hover svg {
+#rateLink:hover svg g {
   transform: rotate(72deg);
 }
 
@@ -915,7 +913,7 @@ body {
 #reportLink:hover {
   color: #f43f5e;
 }
-#reportLink:hover svg {
+#reportLink:hover svg g {
   transform: rotate(-15deg);
 }
 
@@ -928,13 +926,13 @@ body {
   display: block;
   overflow: visible;
   pointer-events: none;
-  transform-box: view-box;
-  transform-origin: center;
-  backface-visibility: hidden;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
 }
-.seg-btn[data-value="auto"]:hover svg  { transform: rotate(-8deg); }
-.seg-btn[data-value="light"]:hover svg { transform: rotate(45deg); }
-.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-30deg); }
-.seg-btn[data-value="dark"]:hover svg  { transform: rotate(-30deg); }
+.seg-btn[data-value="auto"] svg g,
+.seg-btn[data-value="light"] svg g,
+.seg-btn[data-value="dark"] svg g {
+  transform-origin: 12px 12px;
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+.seg-btn[data-value="auto"]:hover svg g  { transform: rotate(-8deg); }
+.seg-btn[data-value="light"]:hover svg g { transform: rotate(45deg); }
+.seg-btn[data-value="dark"]:hover svg g  { transform: rotate(-15deg); }

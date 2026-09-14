@@ -228,26 +228,26 @@ body {
   display: block;
   overflow: visible;
   pointer-events: none;
-  transform-box: view-box;
-  transform-origin: center;
-  backface-visibility: hidden;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
+}
+
+.seg-item svg g {
+  transform-origin: 12px 12px;
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .seg-item:hover {
   color: var(--text-1);
 }
 
-.seg-item[data-value="light"]:hover svg {
+.seg-item[data-value="light"]:hover svg g {
   transform: rotate(45deg);
 }
 
-.seg-item[data-value="dark"]:hover svg {
-  transform: rotate(-30deg);
+.seg-item[data-value="dark"]:hover svg g {
+  transform: rotate(-15deg);
 }
 
-.seg-item[data-value="auto"]:hover svg {
+.seg-item[data-value="auto"]:hover svg g {
   transform: rotate(-8deg);
 }
 
