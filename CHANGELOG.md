@@ -3,7 +3,8 @@
 ## [1.2.0] - 2026-09-13
 
 ### Added
-- **5 Bundled Variable Fonts**: Added `Estedad-Variable.woff2`, `Sahel-Variable.woff2`, `Arad-Variable.woff2`, and `Mikhak-Variable.woff2` alongside `Vazirmatn-Variable.woff2` (all 100–900 variable weight, under 380 KB total package footprint).
+- **5 Bundled Variable Fonts**: Added `Estedad-Variable.woff2`, `Sahel-Variable.woff2`, `Arad-Variable.woff2`, and `Mikhak-Variable.woff2` alongside `Vazirmatn-Variable.woff2` (all 100-900 variable weight, under 380 KB total package footprint).
+- **Interactive Vector Footer Buttons**: Replaced plain text links with centered vector buttons for rating on Chrome Web Store (Star) and reporting issues on GitHub (Bug), with branded hover feedback.
 - **Scalable Frosted Popover Font Picker**: Compact frosted pill selector in the extension popup that expands into an authentic typography menu with category badges and active checkmarks.
 - **Full Settings & Typography Studio Dashboard**: Dedicated options page (`options/options.html`) accessible via popup and Chrome context menu with interactive live preview sandbox, code/KaTeX isolation testing, site management grid, and theme controls.
 - **Tactile Drag Engine for Toggle Switches**: Implemented smooth pointer dragging and click support for all switch knobs with real-time 60fps tracking (`--drag-x`), 50% threshold snapping, and synthetic click suppression.
@@ -13,6 +14,10 @@
 - **Enhanced Live Typing Engine**: Real-time Persian input handling with automatic RTL orientation for rich text editors and prompt boxes.
 
 ### Changed & Improved
+- **Concentric Vector Group Transforms & Zero Icon Jitter**: Transferred all CSS transforms and transitions from root `<svg>` elements to internal `<g>` containers with `transform-origin: 12px 12px` and `0.35s cubic-bezier(0.2, 0, 0, 1)`. Eliminates GraphicsLayer raster texture promotion, subpixel pixel-snapping crawl on Windows 11 high-DPI scaling, and bounding box expansion, preserving 0.0px layout stability.
+- **Mathematically Centered Star and Bug Geometry**: Standardized the Star icon to an exact 5-point symmetric polygon centered at (12.0, 12.0) with radius 9.5, and shifted the Bug icon coordinates by -0.5 on Y to align its center of mass precisely at (12.0, 12.0), eliminating all orbital precession and lateral swing during hover.
+- **Refined Moon Icon Theme Animation**: Applied calm -15deg rotation on internal `<g>` vector group, eliminating jitter in both active and inactive states in popup and options studio.
+- **Compact Center-Aligned Typography Cards**: Center-aligned all font cards in the options dashboard, removed redundant 100-900 weight indicators, and eliminated the active text badge in favor of clean accent border highlights and subtle glow, reducing card height to ~143px.
 - **Responsive Monochromatic ChatGPT Toggle**: Engineered an authentic OpenAI monochromatic design for ChatGPT toggles (Obsidian Black `#111111` with crisp white knob in light mode; Luminous Snow White `#ffffff` with diffuse glow and obsidian knob in dark mode), synchronized across popup and settings studio.
 - **Direction-Aware Squash-and-Stretch Toggle Physics**: Implemented responsive tactile deformation where the switch knob dynamically stretches 3px in its exact movement direction (3px leftward when turning OFF, 3px rightward when turning ON) with deterministic physical coordinates across both English (LTR) and Persian (RTL) locales.
 - **Eye-Pleasing Emerald Green Master Switch**: Updated the global master switch from blue to authentic emerald green (`#1f9d55` in light mode, `#22c55e` in dark mode) perfectly matched with the active status badge.

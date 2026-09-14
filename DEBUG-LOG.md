@@ -324,26 +324,86 @@ document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
 
 ---
 
+---
+
+### Issue 18: Vector Layer Shimmer & Orbital Wobble on Star, Bug, and Moon Icons (Resolved)
+
+**Symptom:** Hovering on Star, Bug, and Moon icons in the popup and options page caused visible jitter, fluttering, and lateral orbital drift. On the Moon icon, jitter occurred when hovered in inactive state but disappeared when active.
+
+**Root cause:**
+1. CSS transforms (`transform: rotate(...)`, `will-change: transform`, `transform-box: view-box`) applied to the root HTML `<svg>` element forced Chromium/Blink to promote the small (14px/16px) SVG container into a low-resolution GraphicsLayer bitmap. Rotating this texture over subpixel coordinates under Windows 11 high-DPI scaling forced continuous bilinear filter resampling and pixel snapping.
+2. Rotating the root `<svg>` element expanded its axis-aligned bounding box (AABB) from 14px to 19.8px, causing hit-test bounding box oscillations.
+3. Color transitions (`color 0.2s ease` on `:hover`) combined with `stroke="currentColor"` forced continuous raster repaints during rotation when the icon was inactive.
+4. Eccentric vertex coordinates in original paths:
+   - Star polygon had top vertex at y=2.0 (distance 10.0) and bottom vertices at y=21.02 (distance 10.93), shifting geometric center to (12.0, 11.51) and causing 0.49px orbital precession.
+   - Bug path spanned y in [4, 21], placing vertical center at y=12.5 and causing lateral pendulum swing.
+
+**Fix:**
+1. Transferred all transform and transition rules from the root `<svg>` element to internal vector `<g>` containers:
+   ```css
+   .header-actions .btn-icon svg g,
+   .seg-btn svg g,
+   .seg-item svg g,
+   .footer-btn svg g {
+     transform-origin: 12px 12px;
+     transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
+   }
+   ```
+2. Stripped `will-change: transform`, `backface-visibility`, and `transform-box` from `<svg>`, keeping the outer HTML box completely static (0.0px layout shift).
+3. Replaced Star coordinates with an exact 5-fold symmetric polygon centered at (12.0, 12.0) with outer tip radius 9.5 and inner valley radius 4.2.
+4. Shifted Bug coordinates by -0.5 on Y to lock its bounding box to [3.5, 20.5], aligning center of mass precisely at (12.0, 12.0).
+5. Locked Moon hover rotation to -15deg on `<g>` with origin at (12px, 12px) in both popup and options page.
+6. Verified 0.0px layout movement and zero texture shimmer via browser harness.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
+### Issue 19: Font Cards Redundant Badges & Compact Alignment (Resolved)
+
+**Symptom:** Font cards in the options dashboard displayed redundant "100-900" weight text, inflated card heights, and contained an unnecessary "Active" text badge alongside the already active colored border and glow.
+
+**Fix:**
+1. Removed "100-900" weight line from all 5 font cards.
+2. Removed `.font-active-status` text element from HTML, CSS, and JS translations, relying on the accent border and glow as the sole active indicator.
+3. Updated `.font-card` to centered alignment: `align-items: center; text-align: center; justify-content: center; gap: 6px; padding: 18px 14px 16px;`.
+4. Reduced card height to compact ~143px across all 5 cards.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
+### Issue 20: Popup Footer Quick Actions Redesign (Resolved)
+
+**Symptom:** The footer displayed plain text links for "Rate" and "Report", and the privacy shield was misaligned with the text label.
+
+**Fix:**
+1. Replaced text links with interactive icon action buttons (`#rateLink` Star and `#reportLink` Bug) with branded hover colors:
+   - Rate Star: `#f59e0b` amber on hover with 72deg vector rotation.
+   - Report Bug: `#f43f5e` rose ruby on hover with -15deg vector rotation.
+2. Aligned the privacy shield icon (`.zero-shield`) and text within `.zero-badge`.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
 ## Summary of All Changes
 
 | File | Change | Status |
 |------|--------|--------|
-| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.0`, added `fonts/Estedad-Variable.woff2` to `web_accessible_resources` | ✅ Applied |
+| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.0`, registered 5 variable fonts and options studio | ✅ Applied |
 | `README.md` | Version badge updated to `1.2.0`, full RTL Persian layout, zero em dashes | ✅ Applied |
-| `fonts/*.woff2` | Downloaded 5 authentic variable fonts: Vazirmatn, Estedad, Sahel, Arad, Mikhak | ✅ Applied |
-| `manifest.json` | Registered 5 variable fonts in `web_accessible_resources`, registered `options_ui` | ✅ Applied |
-| `popup/popup.html` | Frosted popover font picker, `<g>` grouped vector icons, zero em dashes | ✅ Applied |
-| `popup/popup.css` | Popover dropdown styling, emerald master toggle, responsive OpenAI toggle, directional stretch, view-box icon rotation | ✅ Applied |
+| `CHANGELOG.md` | Updated v1.2.0 release log with all features, vector transforms, and zero em dashes | ✅ Applied |
+| `fonts/*.woff2` | 5 authentic variable fonts: Vazirmatn, Estedad, Sahel, Arad, Mikhak | ✅ Applied |
+| `popup/popup.html` | Popover font picker, centered Star & Bug footer buttons, `<g>` vector groups | ✅ Applied |
+| `popup/popup.css` | Vector `<g>` rotation, emerald master toggle, OpenAI monochrome toggle, drag engine | ✅ Applied |
 | `popup/popup.js` | Popover interaction state, bilingual font badges, options dashboard trigger, draggable switches | ✅ Applied |
-| `options/options.html` | Typography Studio with live sandbox, Default metrics button, `<g>` grouped icons, zero em dashes | ✅ Applied |
-| `options/options.css` | Studio layout, font card grid, emerald master toggle, responsive OpenAI toggle, directional stretch, view-box icon rotation | ✅ Applied |
+| `options/options.html` | Typography Studio with live sandbox, compact font cards, `<g>` grouped icons | ✅ Applied |
+| `options/options.css` | Centered font cards, vector `<g>` rotation, emerald master toggle, OpenAI monochrome toggle | ✅ Applied |
 | `options/options.js` | Dynamic font previewing, site toggles, theme/lang sync, XSS-safe DOM, Pointer Events drag engine | ✅ Applied |
 | `background.js` | Added `font: "vazirmatn"` default preference, zero em dashes | ✅ Applied |
-| `core/engine.js` | Parallel 5-font Base64 loading; dynamic `:root[data-rc-font="..."]` switching; RAF batching; zero em dashes | ✅ Applied |
-| `sites/*.js` | All 5 site configs updated with 5-font declarations, `--rc-font` variable theming, zero em dashes | ✅ Applied |
-| `browser-harness` | Configured UTF-8 streams and added `type_persian()` Unicode typing helper | ✅ Applied |
-| `options/*` | Wide 1360px Dashboard with 5-font cards, live typography workbench, horizontal site grid, Solar shield | ✅ Applied |
-| `popup/*` | 340px frosted glass panel with top-right settings gear, popover font picker, zero em dashes | ✅ Applied |
+| `core/engine.js` | Parallel 5-font Base64 loading, dynamic `:root[data-rc-font="..."]` switching, RAF batching | ✅ Applied |
+| `sites/*.js` | All 5 site configs updated with 5-font declarations, `--rc-font` variable theming | ✅ Applied |
 | `icons/*.svg` | Added standalone SVG assets with authentic brand colors and responsive OpenAI monochrome | ✅ Applied |
 | `icons/solar/*` | Added clean Solar Icon Set vector assets for theme modes and security badges | ✅ Applied |
 
