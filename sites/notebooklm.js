@@ -180,5 +180,14 @@ RustChin.start({
     ul.bidi-scope-list {
       list-style-type: disc !important;
     }
+
+    .bidi-scope code:not(pre code),
+    .bidi-scope .katex,
+    .bidi-scope .math,
+    .bidi-scope [class*='math' i] {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
   `,
 });

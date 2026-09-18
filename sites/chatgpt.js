@@ -186,6 +186,14 @@ RustChin.start({
       unicode-bidi: isolate !important;
     }
 
+    .bidi-scope .katex,
+    .bidi-scope .math,
+    .bidi-scope [class*='math' i] {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
+
     /* Persian numbering only for RTL ordered lists; leave <ul> as disc. */
     .bidi-scope ol[dir="rtl"] { list-style-type: persian !important; }
     .bidi-scope ul { list-style-type: disc !important; }

@@ -11,7 +11,7 @@ RustChin.start({
   extraSelector:
     "[class*='ChatHistoryItem'], [class*='BotHeader_title'], [class*='SidebarItem'], nav a span",
   exclude:
-    "pre, code, .katex, .math, [class*='math' i]",
+    "pre, code, .katex, .math, [class*='math' i], [class*='not-prose']",
   editableSelector:
     "textarea, input, [contenteditable='true'], [class*='ChatMessageInput']",
   numberedLists: true,
@@ -124,7 +124,19 @@ RustChin.start({
       direction: rtl !important;
     }
 
-    .bidi-scope code:not(pre code) {
+    .bidi-scope pre,
+    .bidi-scope pre *,
+    pre,
+    pre code {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      text-align: left !important;
+    }
+
+    .bidi-scope code:not(pre code),
+    .bidi-scope .katex,
+    .bidi-scope .math,
+    .bidi-scope [class*='math' i] {
       direction: ltr !important;
       unicode-bidi: isolate !important;
       display: inline-block;

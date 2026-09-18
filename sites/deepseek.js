@@ -174,6 +174,15 @@ RustChin.start({
       direction: ltr !important;
       unicode-bidi: isolate !important;
     }
+
+    .bidi-scope .katex,
+    .bidi-scope .math,
+    .bidi-scope [class*='math' i],
+    .bidi-scope code:not(pre code) {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
     /* Math (.katex/math) is already excluded from the global rule above.
        Do NOT override its font-family: KaTeX picks its own size variants
        per symbol; forcing one font breaks large operators like ∫. */

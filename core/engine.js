@@ -197,6 +197,8 @@
 
     function processContainer(container) {
       if (container.isContentEditable || (container.matches && container.matches("input, textarea, select"))) return;
+      if (config.exclude && container.matches && container.matches(config.exclude)) return;
+      if (container.closest && container.closest("pre, code, [class*='not-prose']")) return;
 
       if (!container.classList.contains("bidi-scope")) {
         container.classList.add("bidi-scope");
@@ -239,7 +241,11 @@
           .forEach(fixElement);
       } else {
         var containers = document.querySelectorAll(config.containers);
-        containers.forEach(processContainer);
+        containers.forEach(function (c) {
+          if (c.matches("pre, code, [class*='not-prose']")) return;
+          if (c.closest("pre, code, [class*='not-prose']")) return;
+          processContainer(c);
+        });
       }
 
       // Optional: standalone leaf elements outside the normal container/tag
@@ -262,6 +268,8 @@
         // Skip anything inside an editable surface (ProseMirror, textarea, input)
         if (node.isContentEditable || (node.matches && node.matches("input, textarea, select"))) return;
         if (node.closest && node.closest('[contenteditable="true"], textarea, input')) return;
+        if (config.exclude && node.matches && node.matches(config.exclude)) return;
+        if (node.closest && node.closest("pre, code, [class*='not-prose']")) return;
 
         // Treat the node itself as a potential message root or text tag.
         try {

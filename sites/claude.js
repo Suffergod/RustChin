@@ -143,6 +143,15 @@ RustChin.start({
       font-family: Consolas, Monaco, 'Courier New', monospace !important;
       direction: ltr !important;
     }
+
+    .bidi-scope .katex,
+    .bidi-scope .math,
+    .bidi-scope [class*='math' i],
+    .bidi-scope code:not(pre code) {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
     /* Math (.katex/math) is already excluded above. Do NOT override its
        font-family here: KaTeX picks its own size variants per symbol
        (KaTeX_Main, KaTeX_Size1 for large operators like ∫), and forcing

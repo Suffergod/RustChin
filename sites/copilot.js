@@ -7,11 +7,11 @@ RustChin.start({
   siteId: "copilot",
   host: "copilot.microsoft.com",
   containers:
-    "main, [data-content='user-message'], [data-content='ai-message'], .prose, .markdown, [class*='message' i], [class*='content' i], [data-testid*='message']",
+    "main, [data-content='user-message'], [data-content='ai-message'], .prose, [class*='prose']:not([class*='not-prose']):not(pre):not(code), .markdown, [class*='message' i], [class*='content' i], [data-testid*='message']",
   extraSelector:
     "[class*='title' i], [class*='history' i] span, [class*='thread' i] span, nav a span",
   exclude:
-    "pre, code, .katex, .math, [class*='math' i]",
+    "pre, code, .katex, .math, [class*='math' i], [class*='not-prose']",
   editableSelector:
     'textarea, input, #userInput, [contenteditable="true"]',
   numberedLists: true,
@@ -124,7 +124,19 @@ RustChin.start({
       direction: rtl !important;
     }
 
-    .bidi-scope code:not(pre code) {
+    .bidi-scope pre,
+    .bidi-scope pre *,
+    pre,
+    pre code {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      text-align: left !important;
+    }
+
+    .bidi-scope code:not(pre code),
+    .bidi-scope .katex,
+    .bidi-scope .math,
+    .bidi-scope [class*='math' i] {
       direction: ltr !important;
       unicode-bidi: isolate !important;
       display: inline-block;
