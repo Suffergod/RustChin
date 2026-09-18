@@ -16,3 +16,7 @@ Thumbs.db
 .zcode/
 *.swp
 *.swo
+
+# Scraped research notes
+*.txt
+

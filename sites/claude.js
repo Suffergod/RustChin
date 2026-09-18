@@ -88,6 +88,15 @@ RustChin.start({
     :root[data-rc-font="mikhak"] {
       --rc-font: 'Mikhak', 'Söhne', 'ui-sans-serif', system-ui, sans-serif;
     }
+    :root[data-rc-font="custom"] {
+      --rc-font: var(--rc-custom-font, 'Vazirmatn'), 'Söhne', 'ui-sans-serif', system-ui, sans-serif;
+    }
+
+    .bidi-scope code:not(pre code) {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
 
     /* Active font only on RTL-detected text. English paragraphs, headings, UI
        chrome, and sidebar titles keep Claude's native font ('Söhne' / system).

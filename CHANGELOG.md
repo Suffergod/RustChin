@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0] - 2026-09-18
+
+### Added
+- **3 New Supported AI Platforms**: Added dedicated site integrations for Microsoft Copilot (`copilot.microsoft.com`), Perplexity AI (`perplexity.ai`), and Poe (`poe.com`) with authentic brand SVG icons, custom message container selectors, input listeners, and site-specific CSS scopes. Total supported platforms scaled from 5 to 8.
+- **Custom Local System Font Support**: Enabled user-defined typography without bundling extra font assets. Users can specify any font installed on their operating system (e.g. Shabnam, Samim, IRANSans, B Nazanin) with clean fallback to Vazirmatn. Configurable via both the popup dropdown and the Settings & Typography Studio.
+- **Zero-Latency Keyboard Shortcut Engine (`Alt+Shift+X`)**: Registered `toggle-input-direction` in manifest commands and added an in-DOM capture-phase keydown handler in the core engine. Users can toggle the active input box between RTL and LTR instantly with 0ms latency.
+- **Persian Ordered List Numerals**: Enforced `ol[dir="rtl"] { list-style-type: persian !important; }` across all platforms so enumerated lists render with Persian digits (۱، ۲، ۳).
+
+### Enhanced & Fixed
+- **First-Strong & Token-Stripped Bidirectional Algorithm**: Upgraded `getDirection(text)` in `core/engine.js` to strip URLs (`https?://\S+`) and inline code backticks (`` `...` ``) before computing character frequencies, combined with first-strong character detection. Technical Persian sentences containing English method names or URLs never mistakenly snap to LTR.
+- **Smart Input Synchronizer & Rich-Textarea Web Component Binding**: Fixed Google Gemini input styling where Quill editors assign `dir="rtl"` without enforcing text alignment. In v1.3.0, `handleDynamicInput` unconditionally enforces `text-align: right !important`, `direction: rtl !important`, and `--rc-font`, while bidirectionally synchronizing both the inner `.ql-editor` and the outer `<rich-textarea>` custom element.
+- **Inline Code & LaTeX Shielding**: Enforced `direction: ltr !important; unicode-bidi: isolate !important; display: inline-block;` on `.bidi-scope code:not(pre code)`. Eliminates punctuation inversions, parenthesis flips, and dot mangling in inline code (e.g. `user.getName()`) embedded within Persian sentences.
+- **Expanded Options Studio Grid**: Scaled the supported platforms grid to 8 services with live toggles, authentic brand colors, and status indicators.
+
 ## [1.2.1] - 2026-09-18
 
 ### Fixed & Enhanced

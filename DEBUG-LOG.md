@@ -410,24 +410,51 @@ document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
 
 ---
 
+### Issue 22: v1.3.0 Architectural Scaling and Platform Compatibility (Resolved)
+
+**Symptom:** Persian users on Microsoft Copilot, Perplexity AI, and Poe experienced left-aligned text, Latin font rendering, and inverted parenthesis/code punctuation in technical discussions. In addition, Google Gemini inputs frequently aligned to the left despite containing Persian text due to Quill editor direction handling, and power users requested a zero-latency keyboard shortcut to manually flip input direction when drafting mixed-language prompts.
+
+**Root cause:**
+1. Microsoft Copilot, Perplexity, and Poe were unmanaged platforms without dedicated content scripts or SVG brand assets.
+2. `getDirection(text)` evaluated raw text containing code blocks and URLs, causing technical Persian sentences to score as predominantly Latin.
+3. Google Gemini wraps its prompt editor in a `<rich-textarea>` custom element with inner `<div class="ql-editor">` that assigns `dir="rtl"` without enforcing text alignment.
+4. Inline `<code>` elements inside Persian paragraphs suffered from bidirectional reordering where parentheses and punctuation inverted.
+
+**Fix:**
+1. Created declarative site configs and brand SVG assets for Microsoft Copilot (`sites/copilot.js`), Perplexity AI (`sites/perplexity.js`), and Poe (`poe.com` / `sites/poe.js`), scaling total supported platforms to 8.
+2. Refactored `getDirection(text)` in `core/engine.js` to strip URLs (`https?://\S+`) and inline code backticks (`` `...` ``) before frequency calculation, and evaluated first-strong directional characters.
+3. Updated `handleDynamicInput` to unconditionally set `text-align: right !important`, `direction: rtl !important`, and `--rc-font`, while synchronizing both `.ql-editor` and `<rich-textarea>`.
+4. Enforced `direction: ltr !important; unicode-bidi: isolate !important; display: inline-block;` on `.bidi-scope code:not(pre code)` across all 8 platforms.
+5. Added custom local system font architecture (`--rc-custom-font`) selectable from popup and options studio.
+6. Registered `toggle-input-direction` (`Alt+Shift+X`) in `manifest.json`, backed by an in-DOM capture-phase keydown handler in `core/engine.js`.
+7. Enforced `ol[dir="rtl"] { list-style-type: persian !important; }` across all platforms.
+8. Verified live in Chrome browser harness on Copilot, Perplexity, and Poe with 100% test pass.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
 ## Summary of All Changes
 
 | File | Change | Status |
 |------|--------|--------|
-| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.1`, registered 5 variable fonts and options studio | ✅ Applied |
-| `README.md` | Version badge updated to `1.2.1`, full RTL Persian layout, zero em dashes | ✅ Applied |
-| `CHANGELOG.md` | Updated v1.2.1 release log with metrics fix, popup stepper, and zero em dashes | ✅ Applied |
-| `fonts/*.woff2` | 5 authentic variable fonts: Vazirmatn, Estedad, Sahel, Arad, Mikhak | ✅ Applied |
-| `popup/popup.html` | Popover font picker, quick font scale stepper, centered Star & Bug footer buttons, `<g>` vector groups | ✅ Applied |
-| `popup/popup.css` | Stepper styling, vector `<g>` rotation, emerald master toggle, OpenAI monochrome toggle, drag engine | ✅ Applied |
-| `popup/popup.js` | Stepper controls, state preservation, popover interaction state, bilingual font badges, draggable switches | ✅ Applied |
-| `options/options.html` | Typography Studio with live sandbox, compact font cards, `<g>` grouped icons | ✅ Applied |
-| `options/options.css` | Centered font cards, vector `<g>` rotation, emerald master toggle, OpenAI monochrome toggle | ✅ Applied |
-| `options/options.js` | Dynamic font previewing, site toggles, theme/lang sync, XSS-safe DOM, Pointer Events drag engine | ✅ Applied |
-| `background.js` | Added `fontSize: 15, lineHeight: 1.8` default preference, zero em dashes | ✅ Applied |
-| `core/engine.js` | Live `--rc-font-size` and `--rc-line-height` injection, parallel 5-font loading, RAF batching | ✅ Applied |
-| `sites/*.js` | All 5 site configs updated with `--rc-font-size`, `--rc-line-height`, and proportional headings | ✅ Applied |
-| `icons/*.svg` | Added standalone SVG assets with authentic brand colors and responsive OpenAI monochrome | ✅ Applied |
-| `icons/solar/*` | Added clean Solar Icon Set vector assets for theme modes and security badges | ✅ Applied |
+| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.3.0`, added Copilot, Perplexity, Poe matches and `Alt+Shift+X` command | ✅ Applied |
+| `README.md` | Version badge updated to `1.3.0`, full RTL Persian layout, zero em dashes | ✅ Applied |
+| `CHANGELOG.md` | Updated v1.3.0 release log with 8 platforms, custom fonts, input sync, and zero em dashes | ✅ Applied |
+| `DEBUG-LOG.md` | Documented Issue 22 v1.3.0 upgrade and verification log | ✅ Applied |
+| `core/engine.js` | Token-stripped bidi algorithm, rich-textarea synchronization, Alt+Shift+X shortcut, custom font support | ✅ Applied |
+| `sites/copilot.js` | Dedicated Microsoft Copilot adapter with message selectors and input listeners | ✅ Applied |
+| `sites/perplexity.js` | Dedicated Perplexity AI adapter with ProseMirror/input listeners and isolation rules | ✅ Applied |
+| `sites/poe.js` | Dedicated Poe adapter with ChatMessage selectors and isolation rules | ✅ Applied |
+| `sites/*.js` | Added inline code isolation, custom font support, and Persian ordered list numerals | ✅ Applied |
+| `icons/copilot.svg` | Microsoft Copilot brand SVG vector | ✅ Applied |
+| `icons/perplexity.svg` | Perplexity AI brand SVG vector | ✅ Applied |
+| `icons/poe.svg` | Poe brand SVG vector | ✅ Applied |
+| `popup/popup.html` | Updated version to v1.3.0, 8/8 sites status, custom font dropdown entry | ✅ Applied |
+| `popup/popup.js` | Expanded SITES to 8 platforms, wired custom font selection, bumped version | ✅ Applied |
+| `options/options.html` | Updated version to v1.3.0, added Card 6 Custom Font with text input, 8/8 sites status | ✅ Applied |
+| `options/options.css` | Added styling for `.custom-font-input` with focus rings and smooth transitions | ✅ Applied |
+| `options/options.js` | Expanded SITES to 8 platforms, synchronized custom font name with live sandbox canvas | ✅ Applied |
+| `background.js` | Added new platforms to `SUPPORTED_SITES`, registered command listener and message relay | ✅ Applied |
 
 

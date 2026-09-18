@@ -86,6 +86,15 @@ RustChin.start({
     :root[data-rc-font="mikhak"] {
       --rc-font: 'Mikhak', ui-sans-serif, system-ui, -apple-system, sans-serif;
     }
+    :root[data-rc-font="custom"] {
+      --rc-font: var(--rc-custom-font, 'Vazirmatn'), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    .bidi-scope code:not(pre code) {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
 
     /* Persian text uses active font (--rc-font); everything else falls through per-char.
        Scoped to RTL-detected text only so English paragraphs, headings, and

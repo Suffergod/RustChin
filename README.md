@@ -9,7 +9,7 @@
 <h1 align="center">راست‌چین | RustChin</h1>
 
 <p align="center">
-  <b>راست‌چین‌سازی هوشمند، ۵ فونت متغیر فارسی و شماره‌گذاری خودکار برای وب‌سایت‌های هوش مصنوعی</b><br>
+  <b>راست‌چین‌سازی هوشمند، ۸ سرویس هوش مصنوعی، ۵ فونت متغیر فارسی و شماره‌گذاری خودکار</b><br>
   سبک، پرسرعت، کاملاً متن‌باز و با امنیت ۱۰۰٪ بدون ارسال حتی یک بایت داده.
 </p>
 
@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.1-blue?style=flat-square" alt="Version 1.2.1">
+  <img src="https://img.shields.io/badge/version-1.3.0-blue?style=flat-square" alt="Version 1.3.0">
   <img src="https://img.shields.io/badge/manifest-v3-orange?style=flat-square" alt="Manifest V3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen?style=flat-square" alt="Zero Data"></a>
@@ -66,8 +66,12 @@
       <td align="right">بررسی لحظه‌ای نسبت حروف فارسی به انگلیسی؛ متن‌های ترکیبی و علائم نگارشی مثل نقطه و پرانتز در جای درست قرار می‌گیرند.</td>
     </tr>
     <tr>
-      <td align="right">🎨 <b>۵ فونت متغیر فارسی (Variable)</b></td>
-      <td align="right">پشتیبانی همزمان از ۵ قلم محبوب: <b>وزیرمتن</b>، <b>استعداد</b>، <b>ساحل</b>، <b>آراد</b> و <b>میخک</b> با تنظیم خودکار وزن از ۱۰۰ تا ۹۰۰.</td>
+      <td align="right">🎨 <b>۵ فونت متغیر فارسی + فونت دلخواه</b></td>
+      <td align="right">پشتیبانی همزمان از ۵ قلم محبوب: <b>وزیرمتن</b>، <b>استعداد</b>، <b>ساحل</b>، <b>آراد</b> و <b>میخک</b> (وزن ۱۰۰ تا ۹۰۰) به همراه قابلیت انتخاب هر فونت دلخواه نصب‌شده روی سیستم‌عامل (مانند شبنم، صمیم، ایران‌سنس یا بی‌نازنین).</td>
+    </tr>
+    <tr>
+      <td align="right">⌨️ <b>کلید میانبر تغییر جهت (Alt+Shift+X)</b></td>
+      <td align="right">تغییر آنی جهت کادر ورودی متن بین راست‌چین و چپ‌چین با کلید میانبر Alt+Shift+X با تاخیر صفر میلی‌ثانیه برای تایپ سریع پرامپت‌های ترکیبی.</td>
     </tr>
     <tr>
       <td align="right">🔢 <b>شماره‌گذاری فارسی لیست‌ها</b></td>
@@ -151,6 +155,24 @@
       <td align="center"><code>chat.deepseek.com</code></td>
       <td align="center"><img src="https://img.shields.io/badge/%20-4D6BFE?style=flat-square" alt="#4D6BFE"></td>
       <td align="center">✅ سازگار کامل (شامل جعبه ورودی و فرمول‌ها)</td>
+    </tr>
+    <tr>
+      <td align="right"><img src="icons/copilot.svg" width="20" align="center"> <b>Microsoft Copilot</b></td>
+      <td align="center"><code>copilot.microsoft.com</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-0078D4?style=flat-square" alt="#0078D4"></td>
+      <td align="center">✅ سازگار کامل (شامل ورودی پیام و تاریخچه)</td>
+    </tr>
+    <tr>
+      <td align="right"><img src="icons/perplexity.svg" width="20" align="center"> <b>Perplexity AI</b></td>
+      <td align="center"><code>perplexity.ai</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-1FB8CD?style=flat-square" alt="#1FB8CD"></td>
+      <td align="center">✅ سازگار کامل (شامل ProseMirror و منابع)</td>
+    </tr>
+    <tr>
+      <td align="right"><img src="icons/poe.svg" width="20" align="center"> <b>Poe</b></td>
+      <td align="center"><code>poe.com</code></td>
+      <td align="center"><img src="https://img.shields.io/badge/%20-5D5CDE?style=flat-square" alt="#5D5CDE"></td>
+      <td align="center">✅ سازگار کامل (شامل بات‌های اختصاصی و پیام‌ها)</td>
     </tr>
   </tbody>
 </table>

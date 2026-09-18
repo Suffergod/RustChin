@@ -9,6 +9,9 @@ const SITES = [
   { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#8E75B2", logo: "../icons/gemini.svg" },
   { host: "notebook.google.com",   name: "Gemini Notebook", nameFa: "جمنای نوت‌بوک", color: "#3186FF", logo: "../icons/notebooklm.svg", altHost: "notebooklm.google.com" },
   { host: "chat.deepseek.com",     name: "DeepSeek",   nameFa: "دیپ سیک",    color: "#4D6BFE", logo: "../icons/deepseek.svg" },
+  { host: "copilot.microsoft.com", name: "Copilot",    nameFa: "کوپایلوت",  color: "#0078D4", logo: "../icons/copilot.svg" },
+  { host: "perplexity.ai",         name: "Perplexity", nameFa: "پرپلکسیتی", color: "#1FB8CD", logo: "../icons/perplexity.svg" },
+  { host: "poe.com",               name: "Poe",        nameFa: "پو",        color: "#5D5CDE", logo: "../icons/poe.svg" },
 ];
 
 const FONTS = {
@@ -17,6 +20,7 @@ const FONTS = {
   sahel:     { nameFa: "ساحل",    nameEn: "Sahel",     family: "'Sahel', sans-serif" },
   arad:      { nameFa: "آراد",     nameEn: "Arad",      family: "'Arad', sans-serif" },
   mikhak:    { nameFa: "میخک",    nameEn: "Mikhak",    family: "'Mikhak', sans-serif" },
+  custom:    { nameFa: "فونت دلخواه", nameEn: "Custom Font", family: "inherit" },
 };
 
 const I18N = {
@@ -31,6 +35,8 @@ const I18N = {
     badgeClean: "Clean",
     badgeGeometric: "Geometric",
     badgeCasual: "Casual",
+    badgeCustom: "Custom",
+    customFontLabel: "Local System Font",
     vazirmatnDesc: "Balanced legibility across screen sizes. Clean proportioned letterforms optimized for modern digital displays.",
     estedadDesc: "Sharp contemporary sans-serif with high stroke clarity. Crisp geometry suited for technical text and chat streams.",
     sahelDesc: "Designed for continuous reading with open counters and clear diacritic dots. Ultra-lightweight 38 KB footprint.",
@@ -62,6 +68,8 @@ const I18N = {
     badgeClean: "روان",
     badgeGeometric: "هندسی",
     badgeCasual: "صمیمی",
+    badgeCustom: "شخصی",
+    customFontLabel: "فونت سیستم‌عامل",
     vazirmatnDesc: "خوانایی فوق‌العاده در تمام اندازه‌ها. خطوط متعادل و هماهنگ، بهینه‌سازی‌شده برای نمایشگرهای مدرن.",
     estedadDesc: "سن‌سریف معاصر و شفاف با خوانایی بالا. ساختار هندسی واضح و مناسب برای مکالمات فنی و کدنویسی.",
     sahelDesc: "طراحی‌شده برای مطالعه طولانی با فضاهای باز و نقطه‌های خوانا. حجم بسیار کم و سبک (۳۸ کیلوبایت).",
@@ -95,7 +103,7 @@ function resolveLang(pref) {
 function defaultState() {
   const sites = {};
   SITES.forEach((s) => { sites[s.host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8 };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "" };
 }
 
 let currentState = defaultState();
@@ -105,6 +113,8 @@ const themeSeg = document.getElementById("themeSeg");
 const langSeg = document.getElementById("langSeg");
 const fontGrid = document.getElementById("fontGrid");
 const sandboxView = document.getElementById("sandboxView");
+const customFontInput = document.getElementById("customFontInput");
+const customSpecimen = document.getElementById("customSpecimen");
 const fontSizeSlider = document.getElementById("fontSizeSlider");
 const fontSizeVal = document.getElementById("fontSizeVal");
 const lineHeightSlider = document.getElementById("lineHeightSlider");
@@ -155,9 +165,25 @@ function saveState(state) {
 
 /* ---------- Typography Calibration ---------- */
 function applyFont(fontKey) {
-  const font = FONTS[fontKey] || FONTS.vazirmatn;
+  let family = "'Vazirmatn', sans-serif";
+  if (fontKey === "custom" && currentState.customFont) {
+    family = `'${currentState.customFont.replace(/['";\\]/g, "")}', sans-serif`;
+  } else if (FONTS[fontKey]) {
+    family = FONTS[fontKey].family;
+  }
+
   if (sandboxView) {
-    sandboxView.style.setProperty("--preview-font", font.family);
+    sandboxView.style.setProperty("--preview-font", family);
+  }
+
+  if (customSpecimen) {
+    if (currentState.customFont) {
+      customSpecimen.textContent = currentState.customFont;
+      customSpecimen.style.fontFamily = `'${currentState.customFont.replace(/['";\\]/g, "")}', sans-serif`;
+    } else {
+      customSpecimen.textContent = lang === "fa" ? "فونت دلخواه" : "Custom Font";
+      customSpecimen.style.removeProperty("font-family");
+    }
   }
 
   if (fontGrid) {
@@ -242,6 +268,23 @@ function initFontGrid() {
       currentState.fontSize = 15;
       currentState.lineHeight = 1.8;
       applyMetrics(15, 1.8);
+      saveState(currentState);
+    });
+  }
+
+  if (customFontInput) {
+    customFontInput.value = currentState.customFont || "";
+    customFontInput.addEventListener("input", (e) => {
+      const val = e.target.value.trim();
+      currentState.customFont = val;
+      currentState.font = "custom";
+      applyFont("custom");
+      saveState(currentState);
+    });
+    customFontInput.addEventListener("click", (e) => {
+      e.stopPropagation();
+      currentState.font = "custom";
+      applyFont("custom");
       saveState(currentState);
     });
   }
@@ -493,6 +536,9 @@ function finishInit() {
   applyI18n();
 
   // Font & Metrics
+  if (customFontInput && currentState.customFont) {
+    customFontInput.value = currentState.customFont;
+  }
   applyFont(currentState.font || "vazirmatn");
   applyMetrics(currentState.fontSize || 15, currentState.lineHeight || 1.8);
 
@@ -516,6 +562,9 @@ if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.onChanged)
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "local" && changes.state) {
       currentState = changes.state.newValue;
+      if (customFontInput && currentState.customFont !== undefined) {
+        customFontInput.value = currentState.customFont;
+      }
       applyFont(currentState.font || "vazirmatn");
       applyMetrics(currentState.fontSize || 15, currentState.lineHeight || 1.8);
       updateSitesUI();

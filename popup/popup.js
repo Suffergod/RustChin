@@ -2,7 +2,7 @@
    RustChin: Popup logic
    • Mirrors background.js SUPPORTED_SITES.
    • Reads/writes state to chrome.storage.local.
-   • Custom popover font selector for 5 variable typefaces.
+   • Custom popover font selector for 5 variable typefaces and custom system fonts.
    • Bilingual UI with zero tracking.
    ============================================================ */
 
@@ -12,6 +12,9 @@ const SITES = [
   { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#8E75B2", logo: "../icons/gemini.svg",     siteId: "gemini" },
   { host: "notebook.google.com",   name: "Gemini Notebook", nameFa: "جمنای نوت‌بوک", color: "#3186FF", logo: "../icons/notebooklm.svg", siteId: "notebooklm", altHost: "notebooklm.google.com" },
   { host: "chat.deepseek.com",     name: "DeepSeek",   nameFa: "دیپ سیک",    color: "#4D6BFE", logo: "../icons/deepseek.svg",   siteId: "deepseek" },
+  { host: "copilot.microsoft.com", name: "Copilot",    nameFa: "کوپایلوت",  color: "#0078D4", logo: "../icons/copilot.svg",    siteId: "copilot" },
+  { host: "perplexity.ai",         name: "Perplexity", nameFa: "پرپلکسیتی", color: "#1FB8CD", logo: "../icons/perplexity.svg", siteId: "perplexity" },
+  { host: "poe.com",               name: "Poe",        nameFa: "پو",        color: "#5D5CDE", logo: "../icons/poe.svg",        siteId: "poe" },
 ];
 
 const FONTS = {
@@ -20,12 +23,13 @@ const FONTS = {
   sahel:     { nameFa: "ساحل",    cls: "font-sahel", family: "'Sahel', -apple-system, BlinkMacSystemFont, sans-serif" },
   arad:      { nameFa: "آراد",     cls: "font-arad", family: "'Arad', -apple-system, BlinkMacSystemFont, sans-serif" },
   mikhak:    { nameFa: "میخک",    cls: "font-mikhak", family: "'Mikhak', -apple-system, BlinkMacSystemFont, sans-serif" },
+  custom:    { nameFa: "فونت دلخواه", cls: "font-custom", family: "inherit" },
 };
 
 const VERSION =
   typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest
-    ? chrome.runtime.getManifest()?.version || "1.2.1"
-    : "1.2.1";
+    ? chrome.runtime.getManifest()?.version || "1.3.0"
+    : "1.3.0";
 
 const I18N = {
   en: {
@@ -37,6 +41,8 @@ const I18N = {
     badgeClean: "Clean",
     badgeGeometric: "Geometric",
     badgeCasual: "Casual",
+    badgeCustom: "Custom",
+    customFontPrompt: "Enter font name (e.g. Shabnam, IRANSans, Tahoma):",
     enable: "Enabled",
     labelOn: "On",
     labelOff: "Off",
@@ -61,6 +67,8 @@ const I18N = {
     badgeClean: "روان",
     badgeGeometric: "هندسی",
     badgeCasual: "صمیمی",
+    badgeCustom: "شخصی",
+    customFontPrompt: "نام فونت دلخواه را وارد کنید (مانند شبنم، ایران‌سنس):",
     enable: "فعال",
     labelOn: "روشن",
     labelOff: "خاموش",
@@ -92,7 +100,7 @@ const REPORT_URL = "https://github.com/Suffergod/RustChin/issues";
 function defaultState() {
   const sites = {};
   SITES.forEach((s) => { sites[s.host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8 };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "" };
 }
 
 let currentState = defaultState();
@@ -106,6 +114,7 @@ function getStateFromUI() {
     font: currentState.font || "vazirmatn",
     fontSize: currentState.fontSize || 15,
     lineHeight: currentState.lineHeight || 1.8,
+    customFont: currentState.customFont || "",
   };
   sitesList.querySelectorAll("input[data-host]").forEach((cb) => {
     state.sites[cb.dataset.host] = cb.checked;
@@ -302,11 +311,18 @@ function renderPrefs(state) {
   });
 
   const fontPref = state.font || "vazirmatn";
-  const fontData = FONTS[fontPref] || FONTS.vazirmatn;
+  let fontData = FONTS[fontPref] || FONTS.vazirmatn;
+  if (fontPref === "custom" && state.customFont) {
+    fontData = { nameFa: state.customFont, cls: "font-custom", family: `'${state.customFont}', sans-serif` };
+  }
   document.documentElement.style.setProperty("--rc-font", fontData.family || "'Vazirmatn', sans-serif");
   if (fontPickerCurrent) {
     fontPickerCurrent.textContent = fontData.nameFa;
     fontPickerCurrent.className = "font-picker-current " + fontData.cls;
+  }
+  const customDisplay = document.getElementById("customFontNameDisplay");
+  if (customDisplay && state.customFont) {
+    customDisplay.textContent = state.customFont;
   }
   if (fontDropdown) {
     fontDropdown.querySelectorAll(".font-option").forEach((opt) => {
@@ -448,7 +464,20 @@ if (fontDropdown) {
   fontDropdown.querySelectorAll(".font-option").forEach((opt) => {
     opt.addEventListener("click", () => {
       const val = opt.dataset.value;
-      currentState.font = val;
+      if (val === "custom") {
+        const currentCustom = currentState.customFont || "";
+        const entered = prompt(t.customFontPrompt, currentCustom);
+        if (entered !== null && entered.trim()) {
+          currentState.customFont = entered.trim();
+          currentState.font = "custom";
+        } else if (!currentState.customFont) {
+          return;
+        } else {
+          currentState.font = "custom";
+        }
+      } else {
+        currentState.font = val;
+      }
       if (fontPicker) {
         fontPicker.classList.remove("open");
         if (fontPickerBtn) fontPickerBtn.setAttribute("aria-expanded", "false");

@@ -88,6 +88,15 @@ RustChin.start({
     :root[data-rc-font="mikhak"] {
       --rc-font: 'Mikhak', 'Google Sans', 'IRANSans', sans-serif;
     }
+    :root[data-rc-font="custom"] {
+      --rc-font: var(--rc-custom-font, 'Vazirmatn'), 'Google Sans', 'IRANSans', sans-serif;
+    }
+
+    code:not(pre code) {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
 
     /* Global font, excluding icons, code and math. */
     body *:not(mat-icon):not([class*="icon" i]):not([class*="symbol" i]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math) {

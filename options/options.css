@@ -452,6 +452,25 @@ body {
   transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.custom-font-input {
+  width: 92%;
+  height: 25px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--text-1);
+  outline: none;
+  text-align: center;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.custom-font-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
 .font-github-link svg {
   flex-shrink: 0;
   color: var(--text-3);

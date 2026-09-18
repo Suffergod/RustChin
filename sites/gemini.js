@@ -89,6 +89,15 @@ RustChin.start({
     :root[data-rc-font="mikhak"] {
       --rc-font: 'Mikhak', 'Google Sans', system-ui, sans-serif;
     }
+    :root[data-rc-font="custom"] {
+      --rc-font: var(--rc-custom-font, 'Vazirmatn'), 'Google Sans', system-ui, sans-serif;
+    }
+
+    .bidi-scope code:not(pre code) {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
 
     /* Apply active font only to text that RustChin actually detected as RTL.
        This preserves Gemini's original Latin/UI typography (including
@@ -128,8 +137,19 @@ RustChin.start({
 
     /* Prompt/textarea areas: the live-input handler marks these with .rc-input
        instead of .rc-done, so a separate rule is needed for active font. */
-    .rc-input[dir="rtl"] {
+    .rc-input[dir="rtl"],
+    .rc-input[dir="rtl"] *,
+    rich-textarea[dir="rtl"],
+    rich-textarea[dir="rtl"] *,
+    .ql-editor[dir="rtl"],
+    .ql-editor[dir="rtl"] * {
       font-family: var(--rc-font) !important;
+    }
+    .rc-input[dir="rtl"],
+    rich-textarea[dir="rtl"],
+    .ql-editor[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
     }
 
     /* Sidebar conversation titles: the engine sets dir/text-align on the

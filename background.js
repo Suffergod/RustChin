@@ -13,7 +13,10 @@ const SUPPORTED_SITES = [
   "gemini.google.com",
   "notebook.google.com",
   "notebooklm.google.com",
-  "chat.deepseek.com"
+  "chat.deepseek.com",
+  "copilot.microsoft.com",
+  "perplexity.ai",
+  "poe.com"
 ];
 
 const ICONS = {
@@ -32,7 +35,7 @@ const ICONS = {
 function defaultState() {
   const sites = {};
   SUPPORTED_SITES.forEach((host) => { sites[host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8 };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "" };
 }
 
 function isEnabled(state) {
@@ -61,7 +64,18 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-chrome.runtime.onStartup.addListener(syncActionIcon);
+// Keyboard shortcut listener (Alt+Shift+X) to toggle input direction in the active tab.
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "toggle-input-direction") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0] && tabs[0].id) {
+        chrome.tabs
+          .sendMessage(tabs[0].id, { type: "TOGGLE_INPUT_DIRECTION" })
+          .catch(() => {});
+      }
+    });
+  }
+});
 
 // Relay toggle updates from the popup to every open tab. Tabs without a
 // RustChin content script simply reject; we swallow those silently.
@@ -73,6 +87,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.tabs
           .sendMessage(tab.id, { type: "STATE_CHANGED", state: message.state })
           .catch(() => {}); // silently ignore tabs without our content script
+      }
+    });
+    sendResponse({ ok: true });
+  } else if (message.type === "TOGGLE_INPUT_DIRECTION") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0] && tabs[0].id) {
+        chrome.tabs
+          .sendMessage(tabs[0].id, { type: "TOGGLE_INPUT_DIRECTION" })
+          .catch(() => {});
       }
     });
     sendResponse({ ok: true });

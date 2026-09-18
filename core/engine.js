@@ -24,15 +24,52 @@
 
   /**
    * Decide paragraph direction from text content.
-   * Counts RTL-script chars vs Latin chars; RTL wins unless the text is
-   * dominated by Latin (ratio > 1.5). Pure function, deterministic.
+   * Strips URLs and inline code so technical tokens do not invert Persian sentences.
+   * Uses first-strong character detection combined with balanced character ratio.
+   * Pure function, deterministic.
    */
   function getDirection(text) {
     if (!text) return "ltr";
-    var pCount = (text.match(RTL_RE) || []).length;
-    var eCount = (text.match(LATIN_RE) || []).length;
+
+    // Strip URLs and inline code/backticks from consideration so English identifiers or URLs
+    // do not skew paragraph direction.
+    var cleaned = text
+      .replace(/https?:\/\/\S+/g, "")
+      .replace(/`[^`]*`/g, "")
+      .trim();
+    if (!cleaned) cleaned = text;
+
+    var pMatches = cleaned.match(RTL_RE);
+    var pCount = pMatches ? pMatches.length : 0;
     if (pCount === 0) return "ltr";
-    if (eCount > pCount * 1.5) return "ltr";
+
+    var eMatches = cleaned.match(LATIN_RE);
+    var eCount = eMatches ? eMatches.length : 0;
+    if (eCount === 0) return "rtl";
+
+    // Find first strong directional character (ignoring symbols, digits, punctuation)
+    var firstStrong = "";
+    for (var i = 0; i < cleaned.length; i++) {
+      var ch = cleaned[i];
+      if (RTL_RE.test(ch)) {
+        firstStrong = "rtl";
+        RTL_RE.lastIndex = 0;
+        break;
+      }
+      if (LATIN_RE.test(ch)) {
+        firstStrong = "ltr";
+        LATIN_RE.lastIndex = 0;
+        break;
+      }
+    }
+
+    // If the sentence begins with Persian, RTL wins as long as Persian is present (>= 20% ratio)
+    if (firstStrong === "rtl") {
+      if (pCount >= 2 && (pCount / (pCount + eCount)) >= 0.2) return "rtl";
+    }
+
+    // General ratio: RTL wins unless Latin heavily dominates (> 2.5x)
+    if (eCount > pCount * 2.5) return "ltr";
     return "rtl";
   }
 
@@ -286,19 +323,71 @@
         rafQueued = false;
         var text = inputEl.value || inputEl.innerText || inputEl.textContent || "";
         var dir = getDirection(text);
-        if (inputEl.getAttribute("dir") !== dir) {
-          inputEl.setAttribute("dir", dir);
-          inputEl.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
-          inputEl.style.setProperty("direction", dir, "important");
-        }
+
+        // Always set dir, text-align, and direction to guarantee right alignment
+        // even if host site or Quill already set dir="rtl" without text-align.
+        inputEl.setAttribute("dir", dir);
+        inputEl.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
+        inputEl.style.setProperty("direction", dir, "important");
         if (!inputEl.classList.contains("rc-input")) {
           inputEl.classList.add("rc-input");
+        }
+
+        // Gemini support: sync outer rich-textarea if present
+        var richParent = inputEl.closest ? inputEl.closest("rich-textarea") : null;
+        if (richParent && richParent !== inputEl) {
+          richParent.setAttribute("dir", dir);
+          richParent.style.setProperty("direction", dir, "important");
+          richParent.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
+          if (!richParent.classList.contains("rc-input")) {
+            richParent.classList.add("rc-input");
+          }
         }
       };
       if (global.requestAnimationFrame) {
         requestAnimationFrame(update);
       } else {
         setTimeout(update, 16);
+      }
+    }
+
+    /**
+     * Keyboard shortcut handler (Alt+Shift+X): toggle direction of active input or focused element.
+     */
+    function toggleActiveInputDirection() {
+      if (!active) return;
+      var activeEl = document.activeElement;
+      var inputEl = resolveEditable(activeEl);
+      if (!inputEl) {
+        inputEl = document.querySelector(config.editableSelector);
+      }
+      if (!inputEl) return;
+
+      var currentDir = inputEl.getAttribute("dir") || "ltr";
+      var nextDir = currentDir === "rtl" ? "ltr" : "rtl";
+      inputEl.setAttribute("dir", nextDir);
+      inputEl.style.setProperty("text-align", nextDir === "rtl" ? "right" : "left", "important");
+      inputEl.style.setProperty("direction", nextDir, "important");
+      if (!inputEl.classList.contains("rc-input")) {
+        inputEl.classList.add("rc-input");
+      }
+
+      var richParent = inputEl.closest ? inputEl.closest("rich-textarea") : null;
+      if (richParent && richParent !== inputEl) {
+        richParent.setAttribute("dir", nextDir);
+        richParent.style.setProperty("direction", nextDir, "important");
+        richParent.style.setProperty("text-align", nextDir === "rtl" ? "right" : "left", "important");
+        if (!richParent.classList.contains("rc-input")) {
+          richParent.classList.add("rc-input");
+        }
+      }
+    }
+
+    function handleKeydown(e) {
+      if (!active) return;
+      if (e.altKey && e.shiftKey && (e.key === "X" || e.key === "x" || e.code === "KeyX")) {
+        e.preventDefault();
+        toggleActiveInputDirection();
       }
     }
 
@@ -366,6 +455,7 @@
       document.addEventListener("input", handleDynamicInput, true);
       document.addEventListener("keyup", handleDynamicInput, true);
       document.addEventListener("compositionend", handleDynamicInput, true);
+      document.addEventListener("keydown", handleKeydown, true);
 
       // [PERF] Safety net: re-scan every 2s unconditionally. fixElement()
       // already memoizes per element (skips anything unchanged), so this is
@@ -399,6 +489,7 @@
       document.removeEventListener("input", handleDynamicInput, true);
       document.removeEventListener("keyup", handleDynamicInput, true);
       document.removeEventListener("compositionend", handleDynamicInput, true);
+      document.removeEventListener("keydown", handleKeydown, true);
 
       // [PERF] Reset memoization so a later start() re-processes everything
       // fresh. Old WeakSet/WeakMap are GC'd; can't iterate them to clear.
@@ -447,6 +538,7 @@
       document.documentElement.removeAttribute("data-rc-font");
       document.documentElement.style.removeProperty("--rc-font-size");
       document.documentElement.style.removeProperty("--rc-line-height");
+      document.documentElement.style.removeProperty("--rc-custom-font");
     }
 
     /* ---------- Boot: load font, read state, maybe start ---------- */
@@ -461,8 +553,17 @@
 
       var fontSize = (state && state.fontSize) ? Number(state.fontSize) : 15;
       var lineHeight = (state && state.lineHeight) ? Number(state.lineHeight) : 1.8;
+      var customFont = (state && state.customFont) ? String(state.customFont).trim() : "";
+
       document.documentElement.style.setProperty("--rc-font-size", fontSize + "px");
       document.documentElement.style.setProperty("--rc-line-height", String(lineHeight));
+
+      if (customFont) {
+        var sanitizedFont = customFont.replace(/['";\\]/g, "");
+        document.documentElement.style.setProperty("--rc-custom-font", "'" + sanitizedFont + "', sans-serif");
+      } else {
+        document.documentElement.style.removeProperty("--rc-custom-font");
+      }
 
       var siteEnabled = true;
       if (state && state.sites) {
@@ -488,6 +589,8 @@
     chrome.runtime.onMessage.addListener(function (msg) {
       if (msg && msg.type === "STATE_CHANGED") {
         applyState(msg.state);
+      } else if (msg && msg.type === "TOGGLE_INPUT_DIRECTION") {
+        toggleActiveInputDirection();
       }
     });
 

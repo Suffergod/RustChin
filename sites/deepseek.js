@@ -88,6 +88,15 @@ RustChin.start({
     :root[data-rc-font="mikhak"] {
       --rc-font: 'Mikhak', system-ui, sans-serif;
     }
+    :root[data-rc-font="custom"] {
+      --rc-font: var(--rc-custom-font, 'Vazirmatn'), system-ui, sans-serif;
+    }
+
+    .bidi-scope code:not(pre code) {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block;
+    }
 
     /* Apply active font only to text that RustChin actually detected as RTL.
        This preserves DeepSeek's original Latin/UI typography. */
