@@ -144,9 +144,13 @@ function applyI18n() {
 /* ---------- State Save & Relay ---------- */
 function saveState(state) {
   currentState = state;
-  chrome.storage.local.set({ state }, () => {
-    chrome.runtime.sendMessage({ type: "STATE_CHANGED", state });
-  });
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.set({ state }, () => {
+      if (chrome.runtime && chrome.runtime.sendMessage) {
+        chrome.runtime.sendMessage({ type: "STATE_CHANGED", state });
+      }
+    });
+  }
 }
 
 /* ---------- Typography Calibration ---------- */
@@ -472,40 +476,51 @@ setupSeg(langSeg, (val) => {
 });
 
 /* ---------- Initialization ---------- */
-function init() {
-  chrome.storage.local.get("state", (data) => {
-    currentState = data.state || defaultState();
+function finishInit() {
+  // Theme
+  const theme = currentState.theme || "auto";
+  applyTheme(theme);
+  if (themeSeg) {
+    themeSeg.querySelectorAll(".seg-item").forEach(b => b.classList.toggle("active", b.dataset.value === theme));
+  }
 
-    // Theme
-    const theme = currentState.theme || "auto";
-    applyTheme(theme);
-    if (themeSeg) {
-      themeSeg.querySelectorAll(".seg-item").forEach(b => b.classList.toggle("active", b.dataset.value === theme));
-    }
+  // Language
+  lang = resolveLang(currentState.lang || "auto");
+  t = I18N[lang];
+  if (langSeg) {
+    langSeg.querySelectorAll(".seg-item").forEach(b => b.classList.toggle("active", b.dataset.value === (currentState.lang || "auto")));
+  }
+  applyI18n();
 
-    // Language
-    lang = resolveLang(currentState.lang || "auto");
-    t = I18N[lang];
-    if (langSeg) {
-      langSeg.querySelectorAll(".seg-item").forEach(b => b.classList.toggle("active", b.dataset.value === (currentState.lang || "auto")));
-    }
-    applyI18n();
+  // Font & Metrics
+  applyFont(currentState.font || "vazirmatn");
+  applyMetrics(currentState.fontSize || 15, currentState.lineHeight || 1.8);
 
-    // Font & Metrics
-    applyFont(currentState.font || "vazirmatn");
-    applyMetrics(currentState.fontSize || 15, currentState.lineHeight || 1.8);
-
-    updateSitesUI();
-    initFontGrid();
-  });
+  updateSitesUI();
+  initFontGrid();
 }
 
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.state) {
-    currentState = changes.state.newValue;
-    applyFont(currentState.font || "vazirmatn");
-    updateSitesUI();
+function init() {
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get("state", (data) => {
+      currentState = data.state || defaultState();
+      finishInit();
+    });
+  } else {
+    currentState = defaultState();
+    finishInit();
   }
-});
+}
+
+if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.onChanged) {
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.state) {
+      currentState = changes.state.newValue;
+      applyFont(currentState.font || "vazirmatn");
+      applyMetrics(currentState.fontSize || 15, currentState.lineHeight || 1.8);
+      updateSitesUI();
+    }
+  });
+}
 
 document.addEventListener("DOMContentLoaded", init);

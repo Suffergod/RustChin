@@ -73,6 +73,8 @@ RustChin.start({
 
     :root {
       --rc-font: 'Vazirmatn', 'Google Sans', 'IRANSans', sans-serif;
+      --rc-font-size: 15px;
+      --rc-line-height: 1.8;
     }
     :root[data-rc-font="estedad"] {
       --rc-font: 'Estedad', 'Google Sans', 'IRANSans', sans-serif;
@@ -100,9 +102,13 @@ RustChin.start({
        Do NOT override its font-family: KaTeX picks its own size variants
        per symbol; forcing one font breaks large operators like ∫. */
 
-    p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th {
-      line-height: 1.8 !important;
+    p, li, blockquote, td, th {
+      font-size: var(--rc-font-size) !important;
+      line-height: var(--rc-line-height) !important;
     }
+    h1 { font-size: calc(var(--rc-font-size) * 1.55) !important; line-height: 1.35 !important; }
+    h2 { font-size: calc(var(--rc-font-size) * 1.35) !important; line-height: 1.4 !important; }
+    h3 { font-size: calc(var(--rc-font-size) * 1.2) !important; line-height: 1.45 !important; }
 
     /* The paragraph wrapper (div.paragraph) is not in the scan list, so it
        stays LTR even when all its inner RTL spans get dir="rtl". Without

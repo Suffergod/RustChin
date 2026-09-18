@@ -443,8 +443,10 @@
         el.removeAttribute("dir");
       });
 
-      // 5. Remove font preference attribute from root.
+      // 5. Remove font preference attribute and typography metrics from root.
       document.documentElement.removeAttribute("data-rc-font");
+      document.documentElement.style.removeProperty("--rc-font-size");
+      document.documentElement.style.removeProperty("--rc-line-height");
     }
 
     /* ---------- Boot: load font, read state, maybe start ---------- */
@@ -456,6 +458,11 @@
       } else {
         document.documentElement.removeAttribute("data-rc-font");
       }
+
+      var fontSize = (state && state.fontSize) ? Number(state.fontSize) : 15;
+      var lineHeight = (state && state.lineHeight) ? Number(state.lineHeight) : 1.8;
+      document.documentElement.style.setProperty("--rc-font-size", fontSize + "px");
+      document.documentElement.style.setProperty("--rc-line-height", String(lineHeight));
 
       var siteEnabled = true;
       if (state && state.sites) {

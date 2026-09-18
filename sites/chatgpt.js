@@ -71,6 +71,8 @@ RustChin.start({
 
     :root {
       --rc-font: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --rc-font-size: 15px;
+      --rc-line-height: 1.8;
     }
     :root[data-rc-font="estedad"] {
       --rc-font: 'Estedad', ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -95,6 +97,32 @@ RustChin.start({
       font-family: var(--rc-font) !important;
     }
 
+    /* Typography metrics for RTL content */
+    .bidi-scope .rc-done p:not(pre *):not(code *),
+    .bidi-scope .rc-done li:not(pre *):not(code *),
+    .bidi-scope .rc-done blockquote:not(pre *):not(code *),
+    .bidi-scope .rc-done th:not(pre *):not(code *),
+    .bidi-scope .rc-done td:not(pre *):not(code *),
+    .bidi-scope p.rc-done:not(pre *):not(code *),
+    .bidi-scope li.rc-done:not(pre *):not(code *),
+    .bidi-scope blockquote.rc-done:not(pre *):not(code *),
+    [data-message-author-role='user'] [class*='whitespace-pre-wrap'][dir="rtl"] {
+      font-size: var(--rc-font-size) !important;
+      line-height: var(--rc-line-height) !important;
+    }
+    .bidi-scope .rc-done h1:not(pre *):not(code *), .bidi-scope h1.rc-done:not(pre *):not(code *) {
+      font-size: calc(var(--rc-font-size) * 1.55) !important;
+      line-height: 1.35 !important;
+    }
+    .bidi-scope .rc-done h2:not(pre *):not(code *), .bidi-scope h2.rc-done:not(pre *):not(code *) {
+      font-size: calc(var(--rc-font-size) * 1.35) !important;
+      line-height: 1.4 !important;
+    }
+    .bidi-scope .rc-done h3:not(pre *):not(code *), .bidi-scope h3.rc-done:not(pre *):not(code *) {
+      font-size: calc(var(--rc-font-size) * 1.2) !important;
+      line-height: 1.45 !important;
+    }
+
     /* User sent messages */
     [data-message-author-role='user'] [class*='whitespace-pre-wrap'][dir="rtl"] {
       font-family: var(--rc-font) !important;
@@ -111,11 +139,14 @@ RustChin.start({
     .writing-block-surface [dir="rtl"] *:not(pre):not(code):not(pre *):not(code *):not(.katex):not(.katex *):not(math):not(.math) {
       font-family: var(--rc-font) !important;
     }
+    .rc-input[dir="rtl"],
     .ProseMirror[dir="rtl"],
     [contenteditable="true"][dir="rtl"],
     .writing-block-surface [dir="rtl"] {
       direction: rtl !important;
       text-align: right !important;
+      font-size: var(--rc-font-size) !important;
+      line-height: var(--rc-line-height) !important;
     }
 
     /* Ensure tables inside Canvas / ProseMirror render RTL without DOM fighting */

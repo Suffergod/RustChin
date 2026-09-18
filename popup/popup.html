@@ -19,7 +19,7 @@
         <button type="button" class="btn-icon" id="openDashboardBtn" title="Settings &amp; Dashboard" aria-label="Settings">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><g><circle cx="12" cy="12" r="3"/><path d="M13.8 2.2C13.4 2 12.9 2 12 2s-1.4 0-1.8.2c-.5.2-.9.6-1.1 1.1-.1.2-.1.5-.2.9-.1.6-.4 1.1-.9 1.4-.5.3-1.1.3-1.6 0-.3-.2-.6-.3-.8-.3-.5-.1-1.1.1-1.5.4-.3.2-.6.6-1 1.4-.5.8-.7 1.2-.8 1.6-.1.5.1 1.1.4 1.5.1.2.3.4.7.6.5.3.8.8.8 1.4s-.3 1.1-.8 1.4c-.3.2-.5.4-.7.6-.3.4-.5 1-.4 1.5.1.4.3.8.8 1.6.5.8.7 1.2 1 1.4.4.3 1 .5 1.5.4.2 0 .5-.1.8-.3.5-.3 1.1-.3 1.6 0 .5.3.8.8.9 1.4.1.4.1.7.2.9.2.5.6.9 1.1 1.1.4.2.9.2 1.8.2s1.4 0 1.8-.2c.5-.2.9-.6 1.1-1.1.1-.2.1-.5.2-.9.1-.6.4-1.1.9-1.4.5-.3 1.1-.3 1.6 0 .3.2.6.3.8.3.5.1 1.1-.1 1.5-.4.3-.2.6-.6 1-1.4.5-.8.7-1.2.8-1.6.1-.5-.1-1.1-.4-1.5-.1-.2-.3-.4-.7-.6-.5-.3-.8-.8-.8-1.4s.3-1.1.8-1.4c.3-.2.5-.4.7-.6.3-.4.5-1 .4-1.5-.1-.4-.3-.8-.8-1.6-.5-.8-.7-1.2-1-1.4-.4-.3-1-.5-1.5-.4-.2 0-.5.1-.8.3-.5.3-1.1.3-1.6 0-.5-.3-.8-.8-.9-1.4-.1-.4-.1-.7-.2-.9-.2-.5-.6-.9-1.1-1.1z"/></g></svg>
         </button>
-        <span class="ver" id="versionBadge">v1.2.0</span>
+        <span class="ver" id="versionBadge">v1.2.1</span>
       </div>
     </div>
 
@@ -43,17 +43,23 @@
       </div>
     </div>
 
-    <!-- Font selection with dropdown popover -->
+    <!-- Font selection with dropdown popover & quick scale stepper -->
     <div class="font-row">
       <div class="font-meta">
         <svg class="font-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg>
         <span class="font-label" data-i18n="font">Font</span>
       </div>
-      <div class="font-picker-wrapper" id="fontPicker">
-        <button type="button" class="font-picker-btn" id="fontPickerBtn" aria-haspopup="listbox" aria-expanded="false">
-          <span class="font-picker-current font-vazir" id="fontPickerCurrent">وزیرمتن</span>
-          <svg class="font-picker-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
+      <div class="font-actions">
+        <div class="font-size-stepper" id="fontSizeStepper" title="Adjust font size">
+          <button type="button" class="stepper-btn" id="fontDecBtn" aria-label="Decrease font size" title="Smaller font">−</button>
+          <span class="stepper-val" id="fontSizeVal">15px</span>
+          <button type="button" class="stepper-btn" id="fontIncBtn" aria-label="Increase font size" title="Larger font">+</button>
+        </div>
+        <div class="font-picker-wrapper" id="fontPicker">
+          <button type="button" class="font-picker-btn" id="fontPickerBtn" aria-haspopup="listbox" aria-expanded="false">
+            <span class="font-picker-current font-vazir" id="fontPickerCurrent">وزیرمتن</span>
+            <svg class="font-picker-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
         <div class="font-dropdown" id="fontDropdown" role="listbox" aria-label="Choose font">
           <div class="font-option active" data-value="vazirmatn" role="option" aria-selected="true">
             <div class="font-opt-main">

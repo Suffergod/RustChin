@@ -387,23 +387,46 @@ document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
 
 ---
 
+---
+
+### Issue 21: Typography Metrics Live Application to AI Chat Platforms (Resolved)
+
+**Symptom:** In version 1.2.0, changing Font Scale and Line Height in the Typography Studio only updated CSS variables inside the options sandbox preview. Open chat tabs (ChatGPT, Claude, Gemini, DeepSeek, Google Notebook) did not reflect the custom font size or line height. Furthermore, changing settings from the popup stripped font scale and line height from storage.
+
+**Root cause:**
+1. `core/engine.js`: `applyState(state)` only read `state.font` to set `data-rc-font`, leaving `--rc-font-size` and `--rc-line-height` unset on `document.documentElement`.
+2. `sites/*.js`: Site CSS stylesheets lacked rules for `font-size: var(--rc-font-size) !important;` and `line-height: var(--rc-line-height) !important;`, leaving elements bound to site defaults or hardcoded values.
+3. `popup/popup.js`: `defaultState()` and `getStateFromUI()` did not include `fontSize` or `lineHeight`, causing popup operations to overwrite saved metrics with `undefined`.
+
+**Fix:**
+1. In `core/engine.js`, dynamically set `--rc-font-size` and `--rc-line-height` on `document.documentElement.style` whenever state is applied, and remove them on `stop()`.
+2. In all 5 site stylesheets (`sites/*.js`), define `--rc-font-size` and `--rc-line-height` in `:root`, and apply them to RTL paragraphs, list items, blockquotes, table cells, user messages, inputs, and proportionally to headings (`h1`, `h2`, `h3`).
+3. In `background.js` and `popup/popup.js`, ensure `defaultState()` seeds `fontSize: 15` and `lineHeight: 1.8`.
+4. In `popup/popup.js`, preserve `fontSize` and `lineHeight` in `getStateFromUI()`.
+5. Added a quick font size stepper (`[−] 15px [+]`) directly inside `popup/popup.html` and `popup/popup.css` for instant 1-click resizing without opening options.
+6. Verified live on active ChatGPT conversation in browser harness that changing metrics immediately alters computed font-size and line-height on real message elements.
+
+**Status:** ✅ Applied & Verified.
+
+---
+
 ## Summary of All Changes
 
 | File | Change | Status |
 |------|--------|--------|
-| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.0`, registered 5 variable fonts and options studio | ✅ Applied |
-| `README.md` | Version badge updated to `1.2.0`, full RTL Persian layout, zero em dashes | ✅ Applied |
-| `CHANGELOG.md` | Updated v1.2.0 release log with all features, vector transforms, and zero em dashes | ✅ Applied |
+| `manifest.json` | Name updated to `RustChin: RTL & Persian Fonts`, version `1.2.1`, registered 5 variable fonts and options studio | ✅ Applied |
+| `README.md` | Version badge updated to `1.2.1`, full RTL Persian layout, zero em dashes | ✅ Applied |
+| `CHANGELOG.md` | Updated v1.2.1 release log with metrics fix, popup stepper, and zero em dashes | ✅ Applied |
 | `fonts/*.woff2` | 5 authentic variable fonts: Vazirmatn, Estedad, Sahel, Arad, Mikhak | ✅ Applied |
-| `popup/popup.html` | Popover font picker, centered Star & Bug footer buttons, `<g>` vector groups | ✅ Applied |
-| `popup/popup.css` | Vector `<g>` rotation, emerald master toggle, OpenAI monochrome toggle, drag engine | ✅ Applied |
-| `popup/popup.js` | Popover interaction state, bilingual font badges, options dashboard trigger, draggable switches | ✅ Applied |
+| `popup/popup.html` | Popover font picker, quick font scale stepper, centered Star & Bug footer buttons, `<g>` vector groups | ✅ Applied |
+| `popup/popup.css` | Stepper styling, vector `<g>` rotation, emerald master toggle, OpenAI monochrome toggle, drag engine | ✅ Applied |
+| `popup/popup.js` | Stepper controls, state preservation, popover interaction state, bilingual font badges, draggable switches | ✅ Applied |
 | `options/options.html` | Typography Studio with live sandbox, compact font cards, `<g>` grouped icons | ✅ Applied |
 | `options/options.css` | Centered font cards, vector `<g>` rotation, emerald master toggle, OpenAI monochrome toggle | ✅ Applied |
 | `options/options.js` | Dynamic font previewing, site toggles, theme/lang sync, XSS-safe DOM, Pointer Events drag engine | ✅ Applied |
-| `background.js` | Added `font: "vazirmatn"` default preference, zero em dashes | ✅ Applied |
-| `core/engine.js` | Parallel 5-font Base64 loading, dynamic `:root[data-rc-font="..."]` switching, RAF batching | ✅ Applied |
-| `sites/*.js` | All 5 site configs updated with 5-font declarations, `--rc-font` variable theming | ✅ Applied |
+| `background.js` | Added `fontSize: 15, lineHeight: 1.8` default preference, zero em dashes | ✅ Applied |
+| `core/engine.js` | Live `--rc-font-size` and `--rc-line-height` injection, parallel 5-font loading, RAF batching | ✅ Applied |
+| `sites/*.js` | All 5 site configs updated with `--rc-font-size`, `--rc-line-height`, and proportional headings | ✅ Applied |
 | `icons/*.svg` | Added standalone SVG assets with authentic brand colors and responsive OpenAI monochrome | ✅ Applied |
 | `icons/solar/*` | Added clean Solar Icon Set vector assets for theme modes and security badges | ✅ Applied |
 

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "RustChin: RTL & Persian Fonts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Fixes Persian text direction and font issues on AI chat platforms. Private, fast, and open-source.",
   "permissions": [
     "storage",

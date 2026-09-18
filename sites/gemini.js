@@ -74,6 +74,8 @@ RustChin.start({
 
     :root {
       --rc-font: 'Vazirmatn', 'Google Sans', system-ui, sans-serif;
+      --rc-font-size: 15px;
+      --rc-line-height: 1.8;
     }
     :root[data-rc-font="estedad"] {
       --rc-font: 'Estedad', 'Google Sans', system-ui, sans-serif;
@@ -100,6 +102,30 @@ RustChin.start({
     .rc-done[dir="rtl"] :not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math) {
       font-family: var(--rc-font) !important;
     }
+
+    /* Typography metrics for RTL content */
+    .bidi-scope p.rc-done[dir="rtl"],
+    .bidi-scope li.rc-done[dir="rtl"],
+    .bidi-scope blockquote.rc-done[dir="rtl"],
+    .bidi-scope td.rc-done[dir="rtl"],
+    .bidi-scope th.rc-done[dir="rtl"],
+    .rc-input[dir="rtl"] {
+      font-size: var(--rc-font-size) !important;
+      line-height: var(--rc-line-height) !important;
+    }
+    .bidi-scope h1.rc-done[dir="rtl"] {
+      font-size: calc(var(--rc-font-size) * 1.55) !important;
+      line-height: 1.35 !important;
+    }
+    .bidi-scope h2.rc-done[dir="rtl"] {
+      font-size: calc(var(--rc-font-size) * 1.35) !important;
+      line-height: 1.4 !important;
+    }
+    .bidi-scope h3.rc-done[dir="rtl"] {
+      font-size: calc(var(--rc-font-size) * 1.2) !important;
+      line-height: 1.45 !important;
+    }
+
     /* Prompt/textarea areas: the live-input handler marks these with .rc-input
        instead of .rc-done, so a separate rule is needed for active font. */
     .rc-input[dir="rtl"] {
@@ -127,17 +153,6 @@ RustChin.start({
     .bidi-scope :not(pre) > code {
       unicode-bidi: isolate !important;
       direction: ltr !important;
-    }
-
-    .bidi-scope p.rc-done[dir="rtl"],
-    .bidi-scope li.rc-done[dir="rtl"],
-    .bidi-scope h1.rc-done[dir="rtl"],
-    .bidi-scope h2.rc-done[dir="rtl"],
-    .bidi-scope h3.rc-done[dir="rtl"],
-    .bidi-scope blockquote.rc-done[dir="rtl"],
-    .bidi-scope td.rc-done[dir="rtl"],
-    .bidi-scope th.rc-done[dir="rtl"] {
-      line-height: 1.65 !important;
     }
 
     .bidi-scope blockquote {

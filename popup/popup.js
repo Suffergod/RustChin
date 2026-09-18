@@ -22,7 +22,10 @@ const FONTS = {
   mikhak:    { nameFa: "میخک",    cls: "font-mikhak", family: "'Mikhak', -apple-system, BlinkMacSystemFont, sans-serif" },
 };
 
-const VERSION = chrome.runtime.getManifest()?.version || "1.2.0";
+const VERSION =
+  typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest
+    ? chrome.runtime.getManifest()?.version || "1.2.1"
+    : "1.2.1";
 
 const I18N = {
   en: {
@@ -89,7 +92,7 @@ const REPORT_URL = "https://github.com/Suffergod/RustChin/issues";
 function defaultState() {
   const sites = {};
   SITES.forEach((s) => { sites[s.host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn" };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8 };
 }
 
 let currentState = defaultState();
@@ -101,6 +104,8 @@ function getStateFromUI() {
     theme: currentState.theme || "auto",
     lang: currentState.lang || "auto",
     font: currentState.font || "vazirmatn",
+    fontSize: currentState.fontSize || 15,
+    lineHeight: currentState.lineHeight || 1.8,
   };
   sitesList.querySelectorAll("input[data-host]").forEach((cb) => {
     state.sites[cb.dataset.host] = cb.checked;
@@ -113,14 +118,24 @@ function getStateFromUI() {
 
 function saveState(state, options = {}) {
   currentState = state;
-  chrome.storage.local.set({ state }, () => {
-    chrome.runtime.sendMessage({ type: "STATE_CHANGED", state });
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.set({ state }, () => {
+      if (chrome.runtime && chrome.runtime.sendMessage) {
+        chrome.runtime.sendMessage({ type: "STATE_CHANGED", state });
+      }
+      if (options.render === false) {
+        updateStatus(state);
+        return;
+      }
+      render(state);
+    });
+  } else {
     if (options.render === false) {
       updateStatus(state);
       return;
     }
     render(state);
-  });
+  }
 }
 
 /* ---------- Rendering ---------- */
@@ -133,6 +148,9 @@ const fontPicker = document.getElementById("fontPicker");
 const fontPickerBtn = document.getElementById("fontPickerBtn");
 const fontPickerCurrent = document.getElementById("fontPickerCurrent");
 const fontDropdown = document.getElementById("fontDropdown");
+const fontDecBtn = document.getElementById("fontDecBtn");
+const fontIncBtn = document.getElementById("fontIncBtn");
+const fontSizeVal = document.getElementById("fontSizeVal");
 const themeSeg = document.getElementById("themeSeg");
 const langSeg = document.getElementById("langSeg");
 const dashboardLink = document.getElementById("dashboardLink");
@@ -297,6 +315,32 @@ function renderPrefs(state) {
       opt.setAttribute("aria-selected", isActive ? "true" : "false");
     });
   }
+  updateFontSizeUI(state.fontSize || 15);
+}
+
+function updateFontSizeUI(size) {
+  const sz = Number(size) || 15;
+  if (fontSizeVal) fontSizeVal.textContent = sz + "px";
+  if (fontDecBtn) fontDecBtn.disabled = sz <= 12;
+  if (fontIncBtn) fontIncBtn.disabled = sz >= 24;
+}
+
+if (fontDecBtn) {
+  fontDecBtn.addEventListener("click", () => {
+    let sz = Math.max(12, (currentState.fontSize || 15) - 1);
+    currentState.fontSize = sz;
+    updateFontSizeUI(sz);
+    saveState(currentState, { render: false });
+  });
+}
+
+if (fontIncBtn) {
+  fontIncBtn.addEventListener("click", () => {
+    let sz = Math.min(24, (currentState.fontSize || 15) + 1);
+    currentState.fontSize = sz;
+    updateFontSizeUI(sz);
+    saveState(currentState, { render: false });
+  });
 }
 
 function render(state) {
@@ -535,11 +579,23 @@ if (reportLink) reportLink.href = REPORT_URL;
 if (versionBadge) versionBadge.textContent = "v" + VERSION;
 
 /* ---------- Boot ---------- */
-chrome.storage.local.get("state", (data) => {
-  currentState = data.state || defaultState();
-  applyTheme(currentState.theme || "auto");
-  lang = resolveLang(currentState.lang || "auto");
-  t = I18N[lang];
-  applyI18n();
-  render(currentState);
-});
+function initBoot() {
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get("state", (data) => {
+      currentState = data.state || defaultState();
+      applyTheme(currentState.theme || "auto");
+      lang = resolveLang(currentState.lang || "auto");
+      t = I18N[lang];
+      applyI18n();
+      render(currentState);
+    });
+  } else {
+    currentState = defaultState();
+    applyTheme(currentState.theme || "auto");
+    lang = resolveLang(currentState.lang || "auto");
+    t = I18N[lang];
+    applyI18n();
+    render(currentState);
+  }
+}
+initBoot();

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1] - 2026-09-18
+
+### Fixed & Enhanced
+- **Live Typography Metrics on Websites**: Connected font scale and line height directly to content scripts across all supported platforms (ChatGPT, Claude, Gemini, DeepSeek, Google Notebook). Dynamic CSS custom properties (`--rc-font-size`, `--rc-line-height`) now immediately scale RTL paragraphs, lists, blockquotes, user messages, inputs, and proportional headings without reload.
+- **Quick Font Scale Stepper in Popup**: Added compact stepper controls (`[−] 15px [+]`) directly beside the font picker in the popup for instant 1-click resizing without leaving the chat.
+- **State Preservation Across Contexts**: Fixed state synchronization between popup, options studio, and content scripts so typography metrics are never reset or overwritten when toggling sites or switching fonts.
+- **Bidirectional Live Synchronization**: Sliders in the options studio and steppers in the popup now stay in sync across storage updates and active tabs.
+
 ## [1.2.0] - 2026-09-13
 
 ### Added
