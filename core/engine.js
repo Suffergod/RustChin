@@ -145,6 +145,7 @@
       var dir = getDirection(text);
 
       el.setAttribute("dir", dir);
+      el.style.setProperty("direction", dir, "important");
       el.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
       el.classList.add("rc-done");
 
@@ -159,7 +160,6 @@
       // sit inside the sentence where they belong.
       if (config.fixMode === "notebooklm") {
         if (dir === "rtl") {
-          el.style.setProperty("direction", "rtl", "important");
           var msgWrapper = el.closest(
             '.to-user-container, .from-user-container, [class*="message-container"], [class*="message-card"], [class*="chat-message"], labs-tailwind-doc-viewer, element-list-renderer'
           );
@@ -182,12 +182,11 @@
               depth++;
             }
           }
-        } else {
-          el.style.setProperty("direction", "ltr", "important");
         }
         var parentList = el.closest("ul, ol");
         if (parentList) {
           parentList.setAttribute("dir", dir);
+          parentList.style.setProperty("direction", dir, "important");
           parentList.classList.add("bidi-scope-list");
         }
       }
@@ -211,20 +210,57 @@
       // Text-bearing tags inside a message root.
       container.querySelectorAll(LEAF_TAGS).forEach(fixElement);
 
-      // Ordered lists: set their dir so Persian numbering applies.
+      // If container contains no LEAF_TAGS, it may be a direct text bubble (e.g. user prompt card)
+      if (!container.querySelector(LEAF_TAGS)) {
+        var ct = container.textContent || "";
+        if (ct.trim() && /[؀-ۿ]/.test(ct)) {
+          fixElement(container);
+        }
+      }
+
+      // Direct text divs inside the container that act as paragraphs (e.g. Claude or DeepSeek prompt bubbles)
+      container.querySelectorAll("div").forEach(function (d) {
+        if (d.closest && d.closest("pre, code, [class*='not-prose']")) return;
+        if (d.querySelector(LEAF_TAGS)) return;
+        var dt = d.textContent || "";
+        if (dt.trim() && /[؀-ۿ]/.test(dt)) {
+          fixElement(d);
+        }
+      });
+
+      // Ordered lists: set direction and numbering
       if (config.numberedLists !== false) {
         container.querySelectorAll("ol").forEach(function (ol) {
           var t = ol.textContent || "";
-          ol.setAttribute("dir", getDirection(t));
+          var dir = getDirection(t);
+          ol.setAttribute("dir", dir);
+          ol.style.setProperty("direction", dir, "important");
+          ol.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
+          ol.classList.add("bidi-scope-list");
         });
       }
+
+      // Unordered lists in RTL
+      container.querySelectorAll("ul").forEach(function (ul) {
+        var t = ul.textContent || "";
+        var dir = getDirection(t);
+        if (dir === "rtl") {
+          ul.setAttribute("dir", "rtl");
+          ul.style.setProperty("direction", "rtl", "important");
+          ul.style.setProperty("text-align", "right", "important");
+          ul.classList.add("bidi-scope-list");
+        }
+      });
 
       // Tables: detect direction from their content. If Persian text is
       // present, the table itself becomes RTL so the first column starts
       // on the right. English/code tables stay safely LTR.
       container.querySelectorAll("table").forEach(function (table) {
         var tableText = table.textContent || "";
-        table.setAttribute("dir", getDirection(tableText));
+        var tDir = getDirection(tableText);
+        table.setAttribute("dir", tDir);
+        table.style.setProperty("direction", tDir, "important");
+        table.style.setProperty("text-align", tDir === "rtl" ? "right" : "left", "important");
         table.querySelectorAll("th, td").forEach(fixElement);
       });
     }
@@ -538,8 +574,10 @@
       });
 
       // 4. Revert tables and lists where dir was set.
-      document.querySelectorAll("table[dir], ol[dir]").forEach(function (el) {
+      document.querySelectorAll("table[dir], ol[dir], ul[dir]").forEach(function (el) {
         el.removeAttribute("dir");
+        el.style.removeProperty("direction");
+        el.style.removeProperty("text-align");
       });
 
       // 5. Remove font preference attribute and typography metrics from root.
@@ -568,7 +606,7 @@
 
       if (customFont) {
         var sanitizedFont = customFont.replace(/['";\\]/g, "");
-        document.documentElement.style.setProperty("--rc-custom-font", "'" + sanitizedFont + "', sans-serif");
+        document.documentElement.style.setProperty("--rc-custom-font", "'" + sanitizedFont + "', 'Vazirmatn', sans-serif");
       } else {
         document.documentElement.style.removeProperty("--rc-custom-font");
       }

@@ -167,7 +167,7 @@ function saveState(state) {
 function applyFont(fontKey) {
   let family = "'Vazirmatn', sans-serif";
   if (fontKey === "custom" && currentState.customFont) {
-    family = `'${currentState.customFont.replace(/['";\\]/g, "")}', sans-serif`;
+    family = `'${currentState.customFont.replace(/['";\\]/g, "")}', 'Vazirmatn', sans-serif`;
   } else if (FONTS[fontKey]) {
     family = FONTS[fontKey].family;
   }
@@ -550,6 +550,12 @@ function init() {
   if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get("state", (data) => {
       currentState = data.state || defaultState();
+      if (!currentState.sites) currentState.sites = {};
+      SITES.forEach((s) => {
+        if (currentState.sites[s.host] === undefined) {
+          currentState.sites[s.host] = true;
+        }
+      });
       finishInit();
     });
   } else {

@@ -7,7 +7,7 @@ RustChin.start({
   siteId: "chatgpt",
   host: "chatgpt.com",
   containers:
-    ".markdown, .message-content, [data-message-author-role='user'], nav a, nav li, [data-testid^='history-item']",
+    "article[data-message-author-role], article, .prose, [class*='prose']:not([class*='not-prose']):not(pre):not(code), .markdown, [class*='message-content'], [data-message-author-role='user'], nav a, nav li, [data-testid^='history-item']",
   extraSelector:
     "[data-message-author-role='user'] [class*='whitespace-pre-wrap'], nav a span, [data-testid^='history-item'] span",
   exclude:
@@ -195,18 +195,49 @@ RustChin.start({
     }
 
     /* Persian numbering only for RTL ordered lists; leave <ul> as disc. */
-    .bidi-scope ol[dir="rtl"] { list-style-type: persian !important; }
+    .bidi-scope ol[dir="rtl"],
+    ol.bidi-scope-list[dir="rtl"],
+    ol[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ol[dir="rtl"] li,
+    ol.bidi-scope-list[dir="rtl"] li,
+    ol[dir="rtl"] li {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ul[dir="rtl"],
+    ul.bidi-scope-list[dir="rtl"],
+    ul[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
     .bidi-scope ul { list-style-type: disc !important; }
 
-    /* unicode-bidi: isolate lets the dir="rtl"/dir="ltr" attribute we set in
-       JS (getDirection, based on actual character counts) decide the order.
-       The previous "direction: auto" + "unicode-bidi: plaintext" combo
-       re-detected direction from the FIRST character instead, so a sentence
-       starting with a bold English word ('HTML این ...' ) got misread as an
-       LTR paragraph and the English word was pushed to the end. */
+    .bidi-scope blockquote[dir="rtl"],
+    blockquote.rc-done[dir="rtl"] {
+      border-inline-start: 4px solid rgba(150,150,150,0.5) !important;
+      border-inline-end: none !important;
+      padding-inline-start: 16px !important;
+      padding-inline-end: 0 !important;
+      direction: rtl !important;
+      text-align: right !important;
+    }
+
+    .bidi-scope [dir="rtl"],
+    .rc-done[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
+    .bidi-scope [dir="ltr"] {
+      direction: ltr !important;
+      text-align: left !important;
+    }
     .bidi-scope p, .bidi-scope li, .bidi-scope blockquote {
       unicode-bidi: isolate !important;
-      text-align: start !important;
     }
     .bidi-scope pre, .bidi-scope code {
       direction: ltr !important;

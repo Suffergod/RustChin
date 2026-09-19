@@ -313,7 +313,7 @@ function renderPrefs(state) {
   const fontPref = state.font || "vazirmatn";
   let fontData = FONTS[fontPref] || FONTS.vazirmatn;
   if (fontPref === "custom" && state.customFont) {
-    fontData = { nameFa: state.customFont, cls: "font-custom", family: `'${state.customFont}', sans-serif` };
+    fontData = { nameFa: state.customFont, cls: "font-custom", family: `'${state.customFont}', 'Vazirmatn', sans-serif` };
   }
   document.documentElement.style.setProperty("--rc-font", fontData.family || "'Vazirmatn', sans-serif");
   if (fontPickerCurrent) {
@@ -612,6 +612,12 @@ function initBoot() {
   if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get("state", (data) => {
       currentState = data.state || defaultState();
+      if (!currentState.sites) currentState.sites = {};
+      SITES.forEach((s) => {
+        if (currentState.sites[s.host] === undefined) {
+          currentState.sites[s.host] = true;
+        }
+      });
       applyTheme(currentState.theme || "auto");
       lang = resolveLang(currentState.lang || "auto");
       t = I18N[lang];

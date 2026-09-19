@@ -8,7 +8,7 @@ RustChin.start({
   siteId: "gemini",
   host: "gemini.google.com",
   containers:
-    "message-content, user-query, .model-response-text, side-panel .markdown, side-panel .model-response-text, [class*='side-panel' i] .markdown, [class*='side-panel' i] .model-response-text, [class*='panel' i] .markdown, [class*='panel' i] .model-response-text",
+    "message-content, user-query, .model-response-text, .response-container, [class*='response'], [class*='query'], side-panel .markdown, side-panel .model-response-text, [class*='side-panel' i] .markdown, [class*='side-panel' i] .model-response-text, [class*='panel' i] .markdown, [class*='panel' i] .model-response-text",
   exclude:
     "pre, code, .katex, .math, [class*='math' i], mat-icon, gem-icon, code-block",
   editableSelector:
@@ -179,14 +179,44 @@ RustChin.start({
       display: inline-block;
     }
 
+    .bidi-scope [dir="rtl"],
+    .rc-done[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
+
+    .bidi-scope ol[dir="rtl"],
+    ol.bidi-scope-list[dir="rtl"],
+    ol[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ol[dir="rtl"] li,
+    ol.bidi-scope-list[dir="rtl"] li,
+    ol[dir="rtl"] li {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ul[dir="rtl"],
+    ul.bidi-scope-list[dir="rtl"],
+    ul[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
+
+    .bidi-scope blockquote[dir="rtl"],
+    blockquote.rc-done[dir="rtl"],
     .bidi-scope blockquote {
-      border-left: none !important;
-      border-right: none !important;
       border-inline-start: 4px solid rgba(150,150,150,0.5) !important;
+      border-inline-end: none !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
       padding-inline-start: 16px !important;
       margin-inline-start: 0 !important;
+      direction: rtl !important;
+      text-align: right !important;
     }
 
     .bidi-scope ul, .bidi-scope ol {

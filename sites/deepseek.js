@@ -149,25 +149,48 @@ RustChin.start({
     }
 
     /* Persian numbering for RTL ordered lists; <ul> stays disc. */
-    .bidi-scope ol[dir="rtl"] { list-style-type: persian !important; }
+    .bidi-scope ol[dir="rtl"],
+    ol.bidi-scope-list[dir="rtl"],
+    ol[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ol[dir="rtl"] li,
+    ol.bidi-scope-list[dir="rtl"] li,
+    ol[dir="rtl"] li {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ul[dir="rtl"],
+    ul.bidi-scope-list[dir="rtl"],
+    ul[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
     .bidi-scope ul { list-style-type: disc !important; }
 
-    /* unicode-bidi: isolate honors the dir="rtl"/"ltr" attribute our JS
-       already set from a real character count (getDirection). The previous
-       "direction: auto" + "unicode-bidi: plaintext" re-guessed direction
-       from the first character instead, which broke sentences that open
-       with an English word. */
+    .bidi-scope [dir="rtl"],
+    .rc-done[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
     .bidi-scope p.rc-done[dir="rtl"],
     .bidi-scope li.rc-done[dir="rtl"],
     .bidi-scope blockquote.rc-done[dir="rtl"] {
       unicode-bidi: isolate !important;
-      text-align: start !important;
+      direction: rtl !important;
+      text-align: right !important;
     }
+    .bidi-scope blockquote[dir="rtl"],
+    blockquote.rc-done[dir="rtl"],
     .bidi-scope blockquote {
       border-inline-start: 4px solid rgba(150,150,150,0.5) !important;
+      border-inline-end: none !important;
       padding-inline-start: 16px !important;
-      border-left: none !important;
-      border-right: none !important;
+      direction: rtl !important;
+      text-align: right !important;
     }
     .bidi-scope pre, .bidi-scope code,
     .bidi-scope pre *, .bidi-scope code * {

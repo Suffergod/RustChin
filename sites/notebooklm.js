@@ -12,10 +12,12 @@ RustChin.start({
   // NotebookLM has no clean message-root selector, so we scan the body.
   scanBody: true,
   scanSelector:
-    "p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th, span.ng-star-inserted, b, strong, em, i",
+    "p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th, div.paragraph, span.project-button-title, span.ng-star-inserted, b, strong, em, i",
   // Broad exclusion list: NotebookLM's UI chrome must NOT get flipped.
   exclude:
     "button, nav, header, footer, [role='toolbar'], pre, code, .katex, .math, mat-icon, svg, [class*='icon' i]",
+  extraSelector:
+    "span.project-button-title, div.paragraph, .title-input",
   editableSelector:
     'textarea, input, [contenteditable="true"]',
   numberedLists: true,
@@ -111,7 +113,7 @@ RustChin.start({
        Do NOT override its font-family: KaTeX picks its own size variants
        per symbol; forcing one font breaks large operators like ∫. */
 
-    p, li, blockquote, td, th {
+    p, li, blockquote, td, th, div.paragraph {
       font-size: var(--rc-font-size) !important;
       line-height: var(--rc-line-height) !important;
     }
@@ -119,17 +121,19 @@ RustChin.start({
     h2 { font-size: calc(var(--rc-font-size) * 1.35) !important; line-height: 1.4 !important; }
     h3 { font-size: calc(var(--rc-font-size) * 1.2) !important; line-height: 1.45 !important; }
 
-    /* The paragraph wrapper (div.paragraph) is not in the scan list, so it
-       stays LTR even when all its inner RTL spans get dir="rtl". Without
-       this, an inline bold Persian phrase between two RTL spans would sit
-       at the LEFT edge of its own line because the parent's inline flow is
-       still LTR. Flip any paragraph div that contains an RTL-detected child
-       to RTL so the inline flow runs right-to-left, putting bold words at
-       the start (right) of the line beside their preceding span. Uses :has()
-       (Chrome 112+, fine for our MV3 Chrome-only target). */
+    /* The paragraph wrapper (div.paragraph) in NotebookLM */
+    div.paragraph[dir="rtl"],
+    div.paragraph.rc-done[dir="rtl"],
     div.paragraph:has(> .rc-done[dir="rtl"]) {
       direction: rtl !important;
       text-align: right !important;
+    }
+
+    span.project-button-title[dir="rtl"],
+    span.project-button-title.rc-done[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+      display: block !important;
     }
 
     /* Break RTL width walls on up to 6 ancestor layers. */
@@ -165,17 +169,25 @@ RustChin.start({
       box-sizing: border-box !important;
     }
 
-    blockquote {
+    blockquote[dir="rtl"], blockquote {
       border-inline-start: 4px solid rgba(150,150,150,0.5) !important;
+      border-inline-end: none !important;
       padding-inline-start: 16px !important;
-      border-left: none !important;
-      border-right: none !important;
+      direction: rtl !important;
+      text-align: right !important;
     }
 
     /* Persian numbering for RTL ordered lists. */
     ol.bidi-scope-list[dir="rtl"],
     ol.bidi-scope-list[dir="rtl"] li {
+      direction: rtl !important;
+      text-align: right !important;
       list-style-type: persian !important;
+    }
+    ul.bidi-scope-list[dir="rtl"],
+    ul.bidi-scope-list[dir="rtl"] li {
+      direction: rtl !important;
+      text-align: right !important;
     }
     ul.bidi-scope-list {
       list-style-type: disc !important;

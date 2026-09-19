@@ -52,15 +52,18 @@ function syncActionIcon() {
   });
 }
 
-// Seed storage on install so first-run state is predictable.
+// Seed storage on install or upgrade so state always includes newly added sites.
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.get("state", (data) => {
-    const state = data.state || defaultState();
-    if (!data.state) {
-      chrome.storage.local.set({ state }, () => updateActionIcon(state));
-      return;
-    }
-    updateActionIcon(state);
+    const base = defaultState();
+    const state = data.state || base;
+    if (!state.sites) state.sites = {};
+    SUPPORTED_SITES.forEach((host) => {
+      if (state.sites[host] === undefined) {
+        state.sites[host] = true;
+      }
+    });
+    chrome.storage.local.set({ state }, () => updateActionIcon(state));
   });
 });
 

@@ -142,6 +142,43 @@ RustChin.start({
       display: inline-block;
     }
 
+    .bidi-scope [dir="rtl"],
+    .rc-done[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
+
+    .bidi-scope ol[dir="rtl"],
+    ol.bidi-scope-list[dir="rtl"],
+    ol[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ol[dir="rtl"] li,
+    ol.bidi-scope-list[dir="rtl"] li,
+    ol[dir="rtl"] li {
+      direction: rtl !important;
+      text-align: right !important;
+      list-style-type: persian !important;
+    }
+    .bidi-scope ul[dir="rtl"],
+    ul.bidi-scope-list[dir="rtl"],
+    ul[dir="rtl"] {
+      direction: rtl !important;
+      text-align: right !important;
+    }
+
+    .bidi-scope blockquote[dir="rtl"],
+    blockquote.rc-done[dir="rtl"] {
+      border-inline-start: 4px solid rgba(150,150,150,0.5) !important;
+      border-inline-end: none !important;
+      padding-inline-start: 16px !important;
+      padding-inline-end: 0 !important;
+      direction: rtl !important;
+      text-align: right !important;
+    }
+
     ol[dir="rtl"] {
       list-style-type: persian !important;
     }
