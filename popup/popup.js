@@ -12,7 +12,7 @@ const SITES = [
   { host: "gemini.google.com",     name: "Gemini",     nameFa: "جمنای",      color: "#8E75B2", logo: "../icons/gemini.svg",     siteId: "gemini" },
   { host: "notebook.google.com",   name: "Gemini Notebook", nameFa: "جمنای نوت‌بوک", color: "#3186FF", logo: "../icons/notebooklm.svg", siteId: "notebooklm", altHost: "notebooklm.google.com" },
   { host: "chat.deepseek.com",     name: "DeepSeek",   nameFa: "دیپ سیک",    color: "#4D6BFE", logo: "../icons/deepseek.svg",   siteId: "deepseek" },
-  { host: "copilot.microsoft.com", name: "Copilot",    nameFa: "کوپایلوت",  color: "#0078D4", logo: "../icons/copilot.svg",    siteId: "copilot" },
+  { host: "copilot.microsoft.com", name: "Copilot",    nameFa: "کوپایلت",   color: "#0078D4", logo: "../icons/copilot.svg",    siteId: "copilot" },
   { host: "perplexity.ai",         name: "Perplexity", nameFa: "پرپلکسیتی", color: "#1FB8CD", logo: "../icons/perplexity.svg", siteId: "perplexity" },
   { host: "poe.com",               name: "Poe",        nameFa: "پو",        color: "#5D5CDE", logo: "../icons/poe.svg",        siteId: "poe" },
 ];
