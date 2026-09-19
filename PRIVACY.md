@@ -24,8 +24,9 @@ source code is open under the MIT license.
 
 ## What RustChin does
 
-RustChin fixes right-to-left (RTL) text rendering and applies the Vazirmatn
-font on supported AI chat websites. To do this it:
+RustChin fixes right-to-left (RTL) text rendering and applies high-quality
+Persian variable fonts (Vazirmatn, Estedad, Sahel, Arad, Mikhak, or user-selected
+local fonts) on supported AI chat websites. To do this it:
 
 1. **Reads the text of message elements in the page** (locally, in your
    browser) to decide whether each paragraph should be right- or
@@ -57,11 +58,16 @@ The extension does **not** request `tabs`, `history`, `cookies`,
 The minimal permission footprint is itself a privacy guarantee: the extension
 has no API access that would let it read or transmit your data.
 
-## The bundled font
+## The bundled fonts
 
-RustChin ships with the [Vazirmatn](https://github.com/rastikerdar/vazirmatn)
-font (an open-source Persian typeface). It is loaded locally from the
-extension package, never fetched over the network.
+RustChin ships with five open-source variable Persian fonts:
+- [Vazirmatn](https://github.com/rastikerdar/vazirmatn) (by Saber Rastikerdar / Saeed Bahmanabad)
+- [Estedad](https://github.com/aminabedi68/Estedad) (by Amin Abedi)
+- [Sahel](https://github.com/rastikerdar/sahel-font) (by Saber Rastikerdar)
+- [Arad](https://github.com/rastikerdar/arad-font) (by Saber Rastikerdar)
+- [Mikhak](https://github.com/aminabedi68/mikhak) (by Amin Abedi)
+
+All fonts are loaded locally from the extension package, never fetched over the network. When a user selects a custom local font file, it is processed entirely inside the browser's local memory and stays on the device.
 
 ## Verifying it yourself
 
@@ -86,4 +92,9 @@ https://github.com/suffergod/RustChin/issues
 ## Credits
 
 - **Logo** designed by [MahanCN](https://www.linkedin.com/in/mahancn/)
-- **Font**: [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saeed Bahmanabad
+- **Fonts**:
+  - [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saber Rastikerdar / Saeed Bahmanabad
+  - [Estedad](https://github.com/aminabedi68/Estedad) by Amin Abedi
+  - [Sahel](https://github.com/rastikerdar/sahel-font) by Saber Rastikerdar
+  - [Arad](https://github.com/rastikerdar/arad-font) by Saber Rastikerdar
+  - [Mikhak](https://github.com/aminabedi68/mikhak) by Amin Abedi
