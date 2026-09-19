@@ -495,7 +495,8 @@ function makeToggleDraggable(toggleEl) {
   const input = toggleEl.querySelector('input[type="checkbox"]');
   if (!input) return;
 
-  const TRAVEL = 18; // 42px width - 20px knob - 4px horizontal padding (2px left + 2px right)
+  const isMaster = !!toggleEl.closest(".master");
+  const TRAVEL = isMaster ? 18 : 16;
   let isDown = false;
   let isDragging = false;
   let hasMoved = false;
