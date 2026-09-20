@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "RustChin: Persian Fonts & RTL for ChatGPT, Gemini, Claude",
+    "message": "RustChin: Persian Fonts & RTL for ChatGPT, Gemini, Claude and more...",
     "description": "The name of the extension."
   },
   "appDesc": {
-    "message": "Smart RTL direction, 5 variable Persian fonts, zero typing lag and code protection for ChatGPT, Gemini, and Claude. 100% private.",
+    "message": "Smart RTL direction, 5 variable Persian fonts, zero typing lag, code protection for ChatGPT, Gemini, Claude, and more. 100% private.",
     "description": "The short description of the extension."
   }
 }
