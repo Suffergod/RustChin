@@ -50,6 +50,7 @@ const I18N = {
     fontSize: "Font Scale",
     lineHeight: "Line Height",
     resetDefaults: "Default",
+    defaultBadge: "Default",
     platformsHeading: "Supported AI Platforms",
     platformsSub: "Toggle extension behavior independently per service or control all simultaneously via the master switch.",
     activeN: (n, t) => `${n}/${t} sites enabled`,
@@ -83,6 +84,7 @@ const I18N = {
     fontSize: "اندازه قلم",
     lineHeight: "فاصله خطوط",
     resetDefaults: "پیش‌فرض",
+    defaultBadge: "پیش‌فرض",
     platformsHeading: "پلتفرم‌های پشتیبانی‌شده",
     platformsSub: "فعال‌سازی اختصاصی در هر سایت یا کنترل کلیه سرویس‌ها از طریق کلید اصلی.",
     activeN: (n, t) => `${n}/${t} سایت فعال`,
@@ -195,13 +197,21 @@ function applyFont(fontKey) {
   }
 }
 
-function updateSliderProgress(slider) {
+function pulseBadge(badgeEl) {
+  if (!badgeEl) return;
+  badgeEl.classList.remove("badge-pop");
+  void badgeEl.offsetWidth; // trigger DOM reflow for CSS animation
+  badgeEl.classList.add("badge-pop");
+  setTimeout(() => badgeEl.classList.remove("badge-pop"), 180);
+}
+
+function updateSliderProgress(slider, explicitVal) {
   if (!slider) return;
   const min = parseFloat(slider.min) || 0;
   const max = parseFloat(slider.max) || 100;
-  const val = parseFloat(slider.value) || 0;
+  const val = explicitVal !== undefined ? parseFloat(explicitVal) : (parseFloat(slider.value) || 0);
   const pct = Math.min(100, Math.max(0, ((val - min) / (max - min)) * 100));
-  slider.style.setProperty("--slider-fill", `${pct.toFixed(1)}%`);
+  slider.style.setProperty("--slider-fill", `${pct.toFixed(2)}%`);
 }
 
 function applyMetrics(size, lh) {
@@ -210,14 +220,14 @@ function applyMetrics(size, lh) {
     sandboxView.style.setProperty("--preview-line-height", lh);
   }
   if (fontSizeVal) fontSizeVal.textContent = size + "px";
-  if (lineHeightVal) lineHeightVal.textContent = String(lh);
+  if (lineHeightVal) lineHeightVal.textContent = (lh % 1 === 0) ? lh.toFixed(1) : String(lh);
   if (fontSizeSlider) {
     fontSizeSlider.value = size;
-    updateSliderProgress(fontSizeSlider);
+    updateSliderProgress(fontSizeSlider, size);
   }
   if (lineHeightSlider) {
     lineHeightSlider.value = lh;
-    updateSliderProgress(lineHeightSlider);
+    updateSliderProgress(lineHeightSlider, lh);
   }
 }
 
@@ -246,21 +256,66 @@ function initFontGrid() {
   });
 
   if (fontSizeSlider) {
-    fontSizeSlider.addEventListener("input", (e) => {
-      const sz = Number(e.target.value);
-      currentState.fontSize = sz;
-      applyMetrics(sz, currentState.lineHeight || 1.8);
-      saveState(currentState);
+    // 60fps smooth dragging with magnetic auto-snap to discrete integer steps
+    fontSizeSlider.addEventListener("input", () => {
+      const raw = parseFloat(fontSizeSlider.value);
+      const snapped = Math.round(raw);
+      // Magnetic pull when within 0.15px of discrete integer
+      if (Math.abs(raw - snapped) < 0.15) {
+        fontSizeSlider.value = snapped;
+      }
+      updateSliderProgress(fontSizeSlider);
+      if (snapped !== currentState.fontSize) {
+        currentState.fontSize = snapped;
+        if (fontSizeVal) fontSizeVal.textContent = snapped + "px";
+        pulseBadge(fontSizeVal);
+        if (sandboxView) sandboxView.style.setProperty("--preview-size", snapped + "px");
+      }
     });
+
+    // On drag release, snap the slider thumb to the exact discrete position and commit state
+    const snapAndSaveFontSize = () => {
+      const snapped = Math.round(parseFloat(fontSizeSlider.value));
+      fontSizeSlider.value = snapped;
+      updateSliderProgress(fontSizeSlider, snapped);
+      currentState.fontSize = snapped;
+      applyMetrics(snapped, currentState.lineHeight || 1.8);
+      saveState(currentState);
+    };
+    fontSizeSlider.addEventListener("change", snapAndSaveFontSize);
+    fontSizeSlider.addEventListener("pointerup", snapAndSaveFontSize);
   }
 
   if (lineHeightSlider) {
-    lineHeightSlider.addEventListener("input", (e) => {
-      const lh = Number(e.target.value);
-      currentState.lineHeight = lh;
-      applyMetrics(currentState.fontSize || 15, lh);
-      saveState(currentState);
+    // 60fps smooth dragging with magnetic auto-snap to 0.05 / 0.10 steps
+    lineHeightSlider.addEventListener("input", () => {
+      const raw = parseFloat(lineHeightSlider.value);
+      const snapped = Math.round(raw * 20) / 20; // 0.05 step
+      // Magnetic pull when within 0.012 of discrete step
+      if (Math.abs(raw - snapped) < 0.012) {
+        lineHeightSlider.value = snapped;
+      }
+      updateSliderProgress(lineHeightSlider);
+      if (Math.abs(snapped - (currentState.lineHeight || 1.8)) > 0.001) {
+        currentState.lineHeight = snapped;
+        const formatted = (snapped % 1 === 0) ? snapped.toFixed(1) : String(snapped);
+        if (lineHeightVal) lineHeightVal.textContent = formatted;
+        pulseBadge(lineHeightVal);
+        if (sandboxView) sandboxView.style.setProperty("--preview-line-height", snapped);
+      }
     });
+
+    // On drag release, snap the slider thumb to the exact step position and commit state
+    const snapAndSaveLineHeight = () => {
+      const snapped = Math.round(parseFloat(lineHeightSlider.value) * 20) / 20;
+      lineHeightSlider.value = snapped;
+      updateSliderProgress(lineHeightSlider, snapped);
+      currentState.lineHeight = snapped;
+      applyMetrics(currentState.fontSize || 15, snapped);
+      saveState(currentState);
+    };
+    lineHeightSlider.addEventListener("change", snapAndSaveLineHeight);
+    lineHeightSlider.addEventListener("pointerup", snapAndSaveLineHeight);
   }
 
   if (resetMetricsBtn) {
@@ -268,6 +323,8 @@ function initFontGrid() {
       currentState.fontSize = 15;
       currentState.lineHeight = 1.8;
       applyMetrics(15, 1.8);
+      pulseBadge(fontSizeVal);
+      pulseBadge(lineHeightVal);
       saveState(currentState);
     });
   }

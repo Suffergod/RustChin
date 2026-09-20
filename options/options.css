@@ -121,6 +121,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+button, input, select, textarea {
+  font-family: inherit;
+}
+
 /* ── Container (Fills 94% of Screen, Max 1440px) ── */
 .dashboard-wrapper {
   max-width: 1440px;
@@ -262,6 +266,15 @@ body {
   padding: 0 10px;
   font-size: 11px;
   font-weight: 600;
+  font-family: var(--rc-font), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.1px;
+}
+
+.seg-text .seg-item[data-value="fa"] {
+  font-family: "Vazirmatn", var(--rc-font), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
 }
 
 /* Store Button */
@@ -364,18 +377,21 @@ body {
   gap: 6px;
   cursor: pointer;
   outline: none;
-  transition: transform 0.22s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s ease, box-shadow 0.22s cubic-bezier(0.2, 0, 0, 1);
+  transition: border-color 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+              background-color 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
   user-select: none;
 }
 
 .font-card:hover {
   border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  background: var(--surface-alt);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 .font-card:active {
-  transform: translateY(-1px);
+  background: var(--surface-alt);
+  transform: scale(0.99);
 }
 
 .font-card.active {
@@ -390,6 +406,8 @@ body {
   color: var(--text-1);
   line-height: 1.35;
   margin-bottom: 2px;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
 }
 
 .font-card.active .font-title-specimen {
@@ -561,7 +579,7 @@ body {
 .slider-control {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .slider-header {
@@ -585,14 +603,23 @@ body {
   border: 1px solid var(--border);
   padding: 2px 7px;
   border-radius: 5px;
+  transition: transform 0.15s cubic-bezier(0.25, 0.1, 0.25, 1),
+              border-color 0.15s ease,
+              background-color 0.15s ease;
 }
 
-/* Smooth Slider Styling */
+.slider-value-badge.badge-pop {
+  transform: scale(1.1);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Apple HIG Smooth Slider Styling */
 .smooth-slider {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 7px;
+  height: 6px;
   border-radius: 9999px;
   direction: ltr;
   background: linear-gradient(
@@ -604,10 +631,10 @@ body {
   );
   outline: none;
   cursor: pointer;
-  margin: 6px 0;
+  margin: 8px 0 4px;
   padding: 0;
   border: none;
-  transition: background 0.08s ease;
+  transition: background 0.04s linear;
 }
 
 .smooth-slider::-webkit-slider-thumb {
@@ -617,22 +644,23 @@ body {
   height: 20px;
   border-radius: 50%;
   background: #ffffff;
-  border: 2.5px solid var(--accent);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
   cursor: grab;
-  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+  transition: transform 0.18s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.18s cubic-bezier(0.25, 0.1, 0.25, 1);
   will-change: transform;
 }
 
 .smooth-slider:hover::-webkit-slider-thumb {
-  transform: scale(1.15);
-  box-shadow: 0 0 0 6px var(--accent-soft), 0 2px 8px rgba(0, 0, 0, 0.25);
+  transform: scale(1.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22), 0 4px 10px rgba(0, 0, 0, 0.14);
 }
 
 .smooth-slider:active::-webkit-slider-thumb {
   cursor: grabbing;
-  transform: scale(1.22);
-  box-shadow: 0 0 0 8px var(--accent-soft), 0 3px 10px rgba(0, 0, 0, 0.3);
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 0 0 4px var(--accent-soft);
 }
 
 .smooth-slider::-moz-range-thumb {
@@ -640,10 +668,55 @@ body {
   height: 20px;
   border-radius: 50%;
   background: #ffffff;
-  border: 2.5px solid var(--accent);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
   cursor: grab;
-  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+  transition: transform 0.18s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.18s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+:root[data-theme="dark"] .smooth-slider::-webkit-slider-thumb {
+  background: #ffffff;
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .smooth-slider::-webkit-slider-thumb {
+    background: #ffffff;
+    border: 0.5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.slider-ticks {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px;
+  font-size: 10px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.slider-tick-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.slider-tick-label.tick-default {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tick-tag {
+  font-size: 8.5px;
+  padding: 0.5px 4px;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 /* Custom Text Tester */
@@ -936,7 +1009,7 @@ textarea#liveInput:focus {
   color: var(--accent);
 }
 
-/* ── Toggle Switch (macOS Style with Tactile Spring Bounce & Drag Support) ── */
+/* ── Toggle Switch (macOS / Apple HIG Style, Smooth & Relaxed) ── */
 .toggle-switch {
   position: relative;
   width: 42px;
@@ -963,7 +1036,7 @@ textarea#liveInput:focus {
   cursor: pointer;
   background: var(--toggle-off);
   border-radius: 100px;
-  transition: background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.32s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .toggle-switch .switch-slider::before {
@@ -975,25 +1048,19 @@ textarea#liveInput:focus {
   top: 2px;
   background: #ffffff;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.12);
-  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
-              width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.24s ease;
-  will-change: transform, width;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: transform;
   cursor: grab;
 }
 
 .toggle-switch:hover .switch-slider::before {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
-/* Tactile squash-and-stretch on click/press when not dragging */
 .toggle-switch:active:not(.dragging) .switch-slider::before {
-  width: 23px;
   cursor: grabbing;
-}
-.toggle-switch:active:not(.dragging) input:checked + .switch-slider::before {
-  transform: translate3d(15px, 0, 0) !important;
 }
 
 .toggle-switch input:checked + .switch-slider {
@@ -1006,10 +1073,9 @@ textarea#liveInput:focus {
 
 /* ── ChatGPT: Responsive High-Contrast Monochromatic Toggle (OpenAI Style) ── */
 .platform-card[data-host="chatgpt.com"] .toggle-switch .switch-slider::before {
-  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
-              width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.24s ease,
-              background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.32s cubic-bezier(0.25, 0.1, 0.25, 1),
+              background-color 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* Light Mode: Obsidian Black Track with Crisp White Knob */
