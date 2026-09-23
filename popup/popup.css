@@ -1079,3 +1079,13 @@ body {
 .seg-btn[data-value="auto"]:hover svg g  { transform: rotate(-8deg); }
 .seg-btn[data-value="light"]:hover svg g { transform: rotate(45deg); }
 .seg-btn[data-value="dark"]:hover svg g  { transform: rotate(-15deg); }
+
+/* ── Accessibility: Prefers Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -220,13 +220,18 @@ function applyMetrics(size, lh) {
     sandboxView.style.setProperty("--preview-line-height", lh);
   }
   if (fontSizeVal) fontSizeVal.textContent = size + "px";
-  if (lineHeightVal) lineHeightVal.textContent = (lh % 1 === 0) ? lh.toFixed(1) : String(lh);
+  const formattedLh = (lh % 1 === 0) ? lh.toFixed(1) : String(lh);
+  if (lineHeightVal) lineHeightVal.textContent = formattedLh;
   if (fontSizeSlider) {
     fontSizeSlider.value = size;
+    fontSizeSlider.setAttribute("aria-valuenow", size);
+    fontSizeSlider.setAttribute("aria-valuetext", `${size}px`);
     updateSliderProgress(fontSizeSlider, size);
   }
   if (lineHeightSlider) {
     lineHeightSlider.value = lh;
+    lineHeightSlider.setAttribute("aria-valuenow", formattedLh);
+    lineHeightSlider.setAttribute("aria-valuetext", formattedLh);
     updateSliderProgress(lineHeightSlider, lh);
   }
 }
@@ -256,6 +261,33 @@ function initFontGrid() {
   });
 
   if (fontSizeSlider) {
+    // Keyboard navigation: discrete step control for Arrow, Page, and Home/End keys
+    fontSizeSlider.addEventListener("keydown", (e) => {
+      let nextVal = currentState.fontSize || 15;
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+        nextVal = Math.min(24, nextVal + 1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+        nextVal = Math.max(12, nextVal - 1);
+      } else if (e.key === "PageUp") {
+        nextVal = Math.min(24, nextVal + 2);
+      } else if (e.key === "PageDown") {
+        nextVal = Math.max(12, nextVal - 2);
+      } else if (e.key === "Home") {
+        nextVal = 12;
+      } else if (e.key === "End") {
+        nextVal = 24;
+      } else {
+        return;
+      }
+      e.preventDefault();
+      fontSizeSlider.value = nextVal;
+      updateSliderProgress(fontSizeSlider, nextVal);
+      currentState.fontSize = nextVal;
+      applyMetrics(nextVal, currentState.lineHeight || 1.8);
+      pulseBadge(fontSizeVal);
+      saveState(currentState);
+    });
+
     // 60fps smooth dragging with magnetic auto-snap to discrete integer steps
     fontSizeSlider.addEventListener("input", () => {
       const raw = parseFloat(fontSizeSlider.value);
@@ -268,6 +300,8 @@ function initFontGrid() {
       if (snapped !== currentState.fontSize) {
         currentState.fontSize = snapped;
         if (fontSizeVal) fontSizeVal.textContent = snapped + "px";
+        fontSizeSlider.setAttribute("aria-valuenow", snapped);
+        fontSizeSlider.setAttribute("aria-valuetext", `${snapped}px`);
         pulseBadge(fontSizeVal);
         if (sandboxView) sandboxView.style.setProperty("--preview-size", snapped + "px");
       }
@@ -287,6 +321,33 @@ function initFontGrid() {
   }
 
   if (lineHeightSlider) {
+    // Keyboard navigation: discrete step control for Arrow, Page, and Home/End keys
+    lineHeightSlider.addEventListener("keydown", (e) => {
+      let nextVal = currentState.lineHeight || 1.8;
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+        nextVal = Math.min(2.6, Math.round((nextVal + 0.05) * 20) / 20);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+        nextVal = Math.max(1.4, Math.round((nextVal - 0.05) * 20) / 20);
+      } else if (e.key === "PageUp") {
+        nextVal = Math.min(2.6, Math.round((nextVal + 0.1) * 20) / 20);
+      } else if (e.key === "PageDown") {
+        nextVal = Math.max(1.4, Math.round((nextVal - 0.1) * 20) / 20);
+      } else if (e.key === "Home") {
+        nextVal = 1.4;
+      } else if (e.key === "End") {
+        nextVal = 2.6;
+      } else {
+        return;
+      }
+      e.preventDefault();
+      lineHeightSlider.value = nextVal;
+      updateSliderProgress(lineHeightSlider, nextVal);
+      currentState.lineHeight = nextVal;
+      applyMetrics(currentState.fontSize || 15, nextVal);
+      pulseBadge(lineHeightVal);
+      saveState(currentState);
+    });
+
     // 60fps smooth dragging with magnetic auto-snap to 0.05 / 0.10 steps
     lineHeightSlider.addEventListener("input", () => {
       const raw = parseFloat(lineHeightSlider.value);
@@ -300,6 +361,8 @@ function initFontGrid() {
         currentState.lineHeight = snapped;
         const formatted = (snapped % 1 === 0) ? snapped.toFixed(1) : String(snapped);
         if (lineHeightVal) lineHeightVal.textContent = formatted;
+        lineHeightSlider.setAttribute("aria-valuenow", formatted);
+        lineHeightSlider.setAttribute("aria-valuetext", formatted);
         pulseBadge(lineHeightVal);
         if (sandboxView) sandboxView.style.setProperty("--preview-line-height", snapped);
       }
