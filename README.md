@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.4.0-blue?style=flat-square" alt="Version 1.4.0">
+  <img src="https://img.shields.io/badge/version-1.3.0-blue?style=flat-square" alt="Version 1.3.0">
   <img src="https://img.shields.io/badge/manifest-v3-orange?style=flat-square" alt="Manifest V3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen?style=flat-square" alt="Zero Data"></a>
