@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.3.0-blue?style=flat-square" alt="Version 1.3.0">
+  <img src="https://img.shields.io/badge/version-1.4.0-blue?style=flat-square" alt="Version 1.4.0">
   <img src="https://img.shields.io/badge/manifest-v3-orange?style=flat-square" alt="Manifest V3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen?style=flat-square" alt="Zero Data"></a>
@@ -240,6 +240,9 @@
 ساده‌ترین روش با دریافت خودکار به‌روزرسانی‌ها:  
 👉 [**صفحه رسمی افزونه راست‌چین در Chrome Web Store**](https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck)
 
+> [!IMPORTANT]
+> نسخه رسمی افزونه فقط از همین صفحه منتشر می‌شود. هر نسخه دیگری که با نام یا نشان «راست‌چین» منتشر شود، از ما نیست و مورد تأیید و پشتیبانی نیست.
+
 ### روش دوم: نصب دستی از سورس‌کد (حالت توسعه‌دهنده)
 
 <details>
@@ -343,7 +346,7 @@ RustChin/
 
 ## مجوز
 
-این پروژه تحت پروانه [MIT](LICENSE) به‌صورت آزاد و رایگان در دسترس است.
+این پروژه تحت پروانه [MIT](LICENSE) به‌صورت آزاد و رایگان در دسترس است. با این حال، نام و نشان افزونه شرط جداگانه دارد: نام «راست‌چین»، لوگو و آیکون آن دارایی اختصاصی سازنده است و استفاده از آن‌ها در هر نسخه دیگری مجاز نیست. جزئیات در [TRADEMARK.md](TRADEMARK.md) آمده است.
 
 <p align="center">
   توسعه داده شده با ❤️ برای کاربران فارسی‌زبان هوش مصنوعی

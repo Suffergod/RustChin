@@ -267,6 +267,38 @@
 
     /* ---------- Scanning ---------- */
 
+    /**
+     * Has the extension itself gone away?
+     *
+     * Chrome tears down an extension's runtime but leaves every DOM mutation
+     * its content scripts already made: the injected <style>, the marker
+     * classes, the inline direction/alignment, and the typography custom
+     * properties on <html>. Toggling RustChin off from the popup reverts all of
+     * that live, but disabling it from chrome://extensions used to leave the
+     * page restyled until a reload.
+     *
+     * This script keeps running after such a disable (measured, not assumed)
+     * and chrome.runtime.id reads back undefined at that moment without
+     * throwing, so the engine can notice the extension is gone and revert the
+     * page itself. No extra permission is involved.
+     */
+    function extensionGone() {
+      try {
+        return !(chrome && chrome.runtime && chrome.runtime.id);
+      } catch (e) {
+        // Reading from an invalidated runtime throws outright on some Chrome
+        // builds; that is just as conclusive.
+        return true;
+      }
+    }
+
+    function bailIfExtensionGone() {
+      if (!active) return false;
+      if (!extensionGone()) return false;
+      stop();
+      return true;
+    }
+
     function scanAll() {
       if (!active) return;
 
@@ -356,7 +388,7 @@
 
     // [PERF] Throttle to one check per animation frame while typing.
     function handleDynamicInput(e) {
-      if (!active) return;
+      if (bailIfExtensionGone()) return;
       var target = e.target;
       var inputEl = resolveEditable(target);
       if (!inputEl) return;
@@ -455,7 +487,7 @@
     }
 
     function onMutation(mutations) {
-      if (!active) return;
+      if (bailIfExtensionGone()) return;
       for (var i = 0; i < mutations.length; i++) {
         var m = mutations[i];
         if (m.type === "childList") {
@@ -509,7 +541,11 @@
       // changing its height, so that gate silently skipped the recovery
       // scan. Unconditional + memoized is simpler and doesn't regress.
       intervalId = setInterval(function () {
-        if (!active) return;
+        /* This tick is also the extension's own death check: disabling RustChin
+           from chrome://extensions leaves the page restyled because Chrome
+           cannot run cleanup for a script it has just detached. Within two
+           seconds of that happening the engine reverts the page itself. */
+        if (bailIfExtensionGone()) return;
         scanAll();
       }, 2000);
     }

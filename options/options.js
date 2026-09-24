@@ -129,6 +129,16 @@ const dynamicHeading = document.getElementById("dynamicHeading");
 const dynamicParagraph = document.getElementById("dynamicParagraph");
 const resetTextBtn = document.getElementById("resetTextBtn");
 const resetMetricsBtn = document.getElementById("resetMetricsBtn");
+const versionBadge = document.getElementById("versionBadge");
+
+// The badge in options.html is static markup, so it kept saying v1.3.0 on an
+// extension that had moved on, and unlike the popup nothing ever rewrote it.
+// Reading the manifest is the only version string that cannot drift. The
+// markup still carries a version as the no-chrome fallback for a plain file://
+// preview, which is why this only overwrites when the API is actually there.
+if (versionBadge && typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest) {
+  versionBadge.textContent = "v" + chrome.runtime.getManifest().version;
+}
 
 const DEFAULT_PARAGRAPH = "رندر صحیح زبان‌های راست‌چین مانند فارسی در بستر وب نیازمند رعایت چند اصل بنیادی است: محاسبه دقیق نسبت کاراکترهای راست‌به‌چپ، استفاده از فونت متغیر بهینه‌سازی‌شده برای صفحه نمایش و ایزولاسیون کامل کلمات لاتین مانند async / await یا متغیرهای فنی.";
 

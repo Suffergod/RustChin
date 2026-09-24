@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0] - 2026-09-25
+
+### Added
+- **Project Homepage (`homepage_url`)**: Declared `https://rust-chin.ir/` in the manifest, so Chrome's extension details page and the Web Store listing both link to a real site instead of offering nowhere to go. Until now the extension had no homepage at all.
+- **First-Install Setup Guide**: `chrome.runtime.onInstalled` now opens `https://rust-chin.ir/welcome` on an install. The icon lands in Chrome's extensions menu rather than on the toolbar, so a new user has no visible sign the extension is present and no reason to think it is doing anything; a three-step Persian guide with the toolbar labels in both Persian and English is what turns an install into a working install. The tab opens on `details.reason === "install"` only. On an update, re-opening a tab under someone who has used the extension for months is an ambush, not onboarding.
+- **Uninstall Survey Hook (`setUninstallURL`)**: Chrome's own "RustChin has been removed" page now offers `https://rust-chin.ir/goodbye`, a short bilingual survey. It is the only moment an ex-user will ever say why they left, and it was previously being thrown away.
+- **Feedback Page as the Support Channel**: The popup's report button and the Settings Studio's support link now point at `https://rust-chin.ir/feedback` instead of the raw GitHub issue list. The page asks which platform, which layout, and what the text looked like, copies the write-up to the clipboard, and only then opens a prefilled issue. It also serves the visitor who wants to write in Persian but will not create a GitHub account to do it.
+- **Setup Guide Link in Settings Studio**: A second support link beside Send Feedback, for anyone who dismissed the install tab and later wants the pinning steps back.
+
+### Fixed
+- **Page Staying Restyled After Disabling RustChin From `chrome://extensions`**: Chrome tears down an extension's runtime but keeps every DOM mutation its content scripts already made, and it cannot run cleanup for a script it has just detached, so the injected styles, marker classes and typography custom properties survived until a reload. Switching the extension off from the popup had always reverted correctly; only the extensions page was affected. The engine now checks `chrome.runtime.id` on each two second recovery tick and on every mutation and input event. It reads back `undefined` once the extension is gone, without throwing, so the engine reverts the page itself. No additional permission is involved.
+- **Toolbar Icon Reverting to the Square After a Browser Restart**: `chrome.action.setIcon` writes session state, not stored state. Chrome discards it on exit and falls back to `action.default_icon`, which is the square, so a restart silently flipped a running extension's toolbar icon and left it flipped until the user happened to change a setting. `syncActionIcon` existed for exactly this and was never called. It is now wired to `chrome.runtime.onStartup` and also invoked on every service worker wake.
+- **Settings Studio Reporting a Stale Version**: The version pill in `options/options.html` was static markup and never rewritten, so it still read v1.3.0 on later releases. It now reads `chrome.runtime.getManifest().version`, with the markup value kept only as a fallback for a plain `file://` preview. The popup already did this; the two surfaces now agree.
+- **Report Button Labelled as a GitHub Link**: The popup tooltip and the Persian and English strings still described the button as a GitHub issue link after it was repointed at the site, which would have been the first thing a user saw on hover. Both locales updated, and the button's static `title` and `aria-label` no longer contradict the runtime strings.
+
 ## [1.3.0] - 2026-09-18
 
 ### Added

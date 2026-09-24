@@ -53,7 +53,7 @@ function syncActionIcon() {
 }
 
 // Seed storage on install or upgrade so state always includes newly added sites.
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
   chrome.storage.local.get("state", (data) => {
     const base = defaultState();
     const state = data.state || base;
@@ -65,7 +65,40 @@ chrome.runtime.onInstalled.addListener(() => {
     });
     chrome.storage.local.set({ state }, () => updateActionIcon(state));
   });
+
+  // Open the setup guide once, on a first install only. The icon starts in
+  // Chrome's extensions menu rather than on the toolbar, so a brand new user
+  // has no visible sign the extension is there and no reason to believe it is
+  // doing anything; the guide is what turns an install into a working install.
+  // The reason check matters: onInstalled also fires on every update and on
+  // Chrome's own updates, and re-opening a tab under someone who has been
+  // using the extension for months is an ambush, not onboarding. The URL has
+  // no trailing slash to match what Vercel serves (trailingSlash: false); the
+  // slashed form would take a redirect to say the same thing.
+  if (details.reason === "install") {
+    chrome.tabs.create({ url: "https://rust-chin.ir/welcome" });
+  }
 });
+
+// Where the uninstall survey lives. Set on every service worker start rather
+// than stored, because Chrome holds it per profile and drops it on some
+// updates; the call is cheap and idempotent. Chrome opens this on its own
+// "RustChin has been removed" page, which is the only moment an ex-user will
+// ever answer a question about why they left.
+chrome.runtime.setUninstallURL("https://rust-chin.ir/goodbye");
+
+// The action icon is session state, not stored state: Chrome discards what
+
+// The action icon is session state, not stored state: Chrome discards what
+// setIcon wrote when the browser exits and falls back to action.default_icon,
+// which is the square. Nothing put the circle back, so a restart flipped a
+// running extension's toolbar icon from circle to square and left it there
+// until the user happened to change a setting. syncActionIcon was written for
+// exactly this and was never called. Both hooks are here on purpose: onStartup
+// covers a profile launch, and the bare call covers a service worker that
+// wakes on its own mid-session.
+chrome.runtime.onStartup.addListener(syncActionIcon);
+syncActionIcon();
 
 // Keyboard shortcut listener (Alt+Shift+X) to toggle input direction in the active tab.
 chrome.commands.onCommand.addListener((command) => {

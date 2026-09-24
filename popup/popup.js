@@ -28,8 +28,8 @@ const FONTS = {
 
 const VERSION =
   typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest
-    ? chrome.runtime.getManifest()?.version || "1.3.0"
-    : "1.3.0";
+    ? chrome.runtime.getManifest()?.version || "1.4.0"
+    : "1.4.0";
 
 const I18N = {
   en: {
@@ -51,9 +51,9 @@ const I18N = {
     supported: "Supported sites",
     enableMasterFirst: "Enable RustChin to manage individual sites",
     zeroData: "Zero data collected",
-    rate: "Rate", report: "Report",
+    rate: "Rate", report: "Feedback",
     rateTitle: "Rate on Chrome Web Store",
-    reportTitle: "Report Issue on GitHub",
+    reportTitle: "Send feedback to the RustChin team",
     reloadHint: "Reload this tab to activate RustChin on it.",
     pausedOnSite: "Paused here",
     dir: "ltr",
@@ -77,9 +77,9 @@ const I18N = {
     supported: "سایت‌های پشتیبانی‌شده",
     enableMasterFirst: "برای مدیریت سایت‌ها، راست‌چین را فعال کنید",
     zeroData: "هیچ داده‌ای جمع‌آوری نمی‌شود",
-    rate: "امتیاز", report: "گزارش",
+    rate: "امتیاز", report: "بازخورد",
     rateTitle: "ثبت امتیاز در فروشگاه کروم",
-    reportTitle: "گزارش مشکل در گیت‌هاب",
+    reportTitle: "ارسال انتقاد و پیشنهاد",
     reloadHint: "برای فعال‌سازی راست‌چین، این زبانه را بازخوانی کنید.",
     pausedOnSite: "متوقف در این سایت",
     dir: "rtl",
@@ -95,7 +95,12 @@ function resolveLang(pref) {
 }
 
 const STORE_URL = "https://chromewebstore.google.com/detail/rustchin-persian-rtl-vazi/mhmnoojpobfgkpdkdmaaejiimolgagck";
-const REPORT_URL = "https://github.com/Suffergod/RustChin/issues";
+// The site's feedback page, not the raw GitHub issue list. It asks the
+// questions that make a report actionable (which platform, which layout, what
+// the text looked like), copies the write-up to the clipboard, and only then
+// hands off to a prefilled issue. It also catches the visitor who wants to
+// write in Persian but will not sign up for a GitHub account to do it.
+const REPORT_URL = "https://rust-chin.ir/feedback";
 
 function defaultState() {
   const sites = {};
