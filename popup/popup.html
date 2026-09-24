@@ -50,6 +50,11 @@
         <span class="font-label" data-i18n="font">Font</span>
       </div>
       <div class="font-actions">
+        <div class="stepper" id="lineHeightStepper" title="Adjust line height">
+          <button type="button" class="stepper-btn" id="lineHeightDecBtn" aria-label="Decrease line height" title="Tighter lines">−</button>
+          <span class="stepper-val" id="lineHeightVal">1.8</span>
+          <button type="button" class="stepper-btn" id="lineHeightIncBtn" aria-label="Increase line height" title="Airier lines">+</button>
+        </div>
         <div class="font-size-stepper" id="fontSizeStepper" title="Adjust font size">
           <button type="button" class="stepper-btn" id="fontDecBtn" aria-label="Decrease font size" title="Smaller font">−</button>
           <span class="stepper-val" id="fontSizeVal">15px</span>
@@ -126,7 +131,12 @@
     <!-- Sites -->
     <div class="sites">
       <div class="section-title" data-i18n="supported">Supported sites</div>
-      <div id="sitesList"></div>
+      <div class="sites-body">
+        <div id="sitesList"></div>
+        <div class="sites-lock" id="sitesLock" hidden>
+          <span class="sites-lock-text" data-i18n="enableMasterFirst">Enable RustChin to manage individual sites</span>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->

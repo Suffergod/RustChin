@@ -152,6 +152,7 @@ const masterToggle = document.getElementById("masterToggle");
 const masterStatus = document.getElementById("masterStatus");
 const masterLabel = document.getElementById("masterLabel");
 const sitesList = document.getElementById("sitesList");
+const sitesLock = document.getElementById("sitesLock");
 const reloadHint = document.getElementById("reloadHint");
 const fontPicker = document.getElementById("fontPicker");
 const fontPickerBtn = document.getElementById("fontPickerBtn");
@@ -160,6 +161,9 @@ const fontDropdown = document.getElementById("fontDropdown");
 const fontDecBtn = document.getElementById("fontDecBtn");
 const fontIncBtn = document.getElementById("fontIncBtn");
 const fontSizeVal = document.getElementById("fontSizeVal");
+const lineHeightDecBtn = document.getElementById("lineHeightDecBtn");
+const lineHeightIncBtn = document.getElementById("lineHeightIncBtn");
+const lineHeightVal = document.getElementById("lineHeightVal");
 const themeSeg = document.getElementById("themeSeg");
 const langSeg = document.getElementById("langSeg");
 const dashboardLink = document.getElementById("dashboardLink");
@@ -170,13 +174,17 @@ const versionBadge = document.getElementById("versionBadge");
 function buildSites(state) {
   sitesList.replaceChildren();
 
-  if (!state.masterEnabled) {
-    const msg = document.createElement("div");
-    msg.className = "disabled-msg";
-    msg.textContent = t.enableMasterFirst;
-    sitesList.appendChild(msg);
-    return;
+  // With the master switch off the grid stays rendered so the popup keeps a
+  // stable height, and gets blurred behind an overlay instead of collapsing.
+  // Keeping the checkboxes in the DOM also means getStateFromUI() reads the
+  // real per-site values rather than wiping them to {} on a master toggle.
+  const locked = !state.masterEnabled;
+  if (locked) {
+    sitesList.setAttribute("inert", "");
+  } else {
+    sitesList.removeAttribute("inert");
   }
+  if (sitesLock) sitesLock.hidden = !locked;
 
   SITES.forEach((site) => {
     const enabled = state.sites[site.host] !== false;
@@ -233,6 +241,7 @@ function buildSites(state) {
     input.dataset.host = site.host;
     if (site.altHost) input.dataset.altHost = site.altHost;
     input.checked = enabled;
+    input.disabled = locked;
 
     const slider = document.createElement("span");
     slider.className = "slider";
@@ -332,6 +341,7 @@ function renderPrefs(state) {
     });
   }
   updateFontSizeUI(state.fontSize || 15);
+  updateLineHeightUI(state.lineHeight || 1.8);
 }
 
 function updateFontSizeUI(size) {
@@ -357,6 +367,35 @@ if (fontIncBtn) {
     updateFontSizeUI(sz);
     saveState(currentState, { render: false });
   });
+}
+
+function formatLineHeight(lh) {
+  return lh % 1 === 0 ? lh.toFixed(1) : String(lh);
+}
+
+function updateLineHeightUI(value) {
+  const lh = Number(value) || 1.8;
+  if (lineHeightVal) lineHeightVal.textContent = formatLineHeight(lh);
+  if (lineHeightDecBtn) lineHeightDecBtn.disabled = lh <= 1.4;
+  if (lineHeightIncBtn) lineHeightIncBtn.disabled = lh >= 2.6;
+}
+
+/* 0.1 per click keeps the popup quick, while rounding onto a 1/20 grid lands
+   on the same values as the dashboard slider and kills float drift. */
+function stepLineHeight(delta) {
+  const raw = (currentState.lineHeight || 1.8) + delta;
+  const lh = Math.min(2.6, Math.max(1.4, Math.round(raw * 20) / 20));
+  currentState.lineHeight = lh;
+  updateLineHeightUI(lh);
+  saveState(currentState, { render: false });
+}
+
+if (lineHeightDecBtn) {
+  lineHeightDecBtn.addEventListener("click", () => stepLineHeight(-0.1));
+}
+
+if (lineHeightIncBtn) {
+  lineHeightIncBtn.addEventListener("click", () => stepLineHeight(0.1));
 }
 
 function render(state) {

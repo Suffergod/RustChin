@@ -328,7 +328,8 @@ body {
   gap: 8px;
 }
 
-.font-size-stepper {
+.font-size-stepper,
+.stepper {
   display: inline-flex;
   align-items: center;
   background: var(--hairline);
@@ -808,11 +809,69 @@ body {
   font-weight: 700;
 }
 
+/* Wraps the grid so the locked-state overlay can cover it. */
+.sites-body { position: relative; }
+
 #sitesList {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 6px;
   padding: 0 10px;
+}
+
+/* Master off: the grid stays rendered so the popup keeps its height, blurred
+   and desaturated so it reads as switched off. `inert` is set on the grid from
+   JS, which handles pointer, focus, and screen-reader exposure in one go, and
+   doubles as the styling hook here.
+   This blurs the grid itself rather than using backdrop-filter on the overlay:
+   .panel already carries a backdrop-filter, which makes it a backdrop root, and
+   a backdrop-filter nested inside one renders at a small fraction of its
+   requested radius. Asking for blur(24px) there looked like blur(2px), so the
+   rows stayed readable. An element filter is not subject to backdrop roots. */
+#sitesList[inert] {
+  filter: blur(4px) grayscale(1);
+  opacity: 0.5;
+}
+
+/* Scrim and hint text over the blurred grid. No backdrop-filter here; see the
+   note above. The overlay feathers into the panel on every edge so it
+   dissolves instead of ending on the grid's hard bounding box. The grid's own
+   10px side padding gives the horizontal fade somewhere to land, so the rows
+   stay covered. The fallback keeps only the side fades; Chrome then adds the
+   top and bottom ones by intersecting both layers. */
+.sites-lock {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  background: color-mix(in srgb, var(--bg-ambient-1) 30%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+@supports (mask-composite: intersect) {
+  .sites-lock {
+    -webkit-mask-image:
+      linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent),
+      linear-gradient(to bottom, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+    mask-image:
+      linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent),
+      linear-gradient(to bottom, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+}
+.sites-lock[hidden] { display: none; }
+.sites-lock-text {
+  max-width: 240px;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
 .site-row {
@@ -964,15 +1023,6 @@ body {
 }
 
 .site-row.dim { opacity: 0.45; }
-
-.disabled-msg {
-  grid-column: 1 / -1;
-  padding: 18px 16px;
-  text-align: center;
-  color: var(--text-3);
-  font-size: 11.5px;
-  line-height: 1.5;
-}
 
 .reload-hint {
   margin: 4px 12px 6px;
