@@ -20,6 +20,7 @@
 </p>
 
 <p align="center">
+  <a href="https://rust-chin.ir/"><img src="https://img.shields.io/badge/website-rust--chin.ir-blueviolet?style=flat-square" alt="Official Website"></a>
   <img src="https://img.shields.io/badge/version-1.3.0-blue?style=flat-square" alt="Version 1.3.0">
   <img src="https://img.shields.io/badge/manifest-v3-orange?style=flat-square" alt="Manifest V3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>
@@ -35,7 +36,8 @@
 
 **راست‌چین** این مشکلات رو بدون دستکاری یا شکستن ساختار صفحات برطرف می‌کنه:
 - **جهت‌دهی هوشمند:** هر پاراگراف یا پیام بر اساس محتوای خودش به‌طور دقیق راست‌چین می‌شه.
-- **ایزوله‌سازی کد و ریاضی:** بلوک‌های کد (`pre` و `code`) و فرمول‌های ریاضی (KaTeX و Math) دست‌نخورده و کاملاً چپ‌به‌راست (LTR) باقی می‌مونن.
+- **چیدمان صحیح جدول و فهرست:** جدول‌ها با ساختار راست‌چین و عناوین خوانا مرتب شده و لیست‌های ترتیبی به صورت خودکار ارقام فارسی می‌گیرند.
+- **ایزوله‌سازی کد و متون فنی:** بلوک‌های کد (`pre` و `code`) دست‌نخورده و کاملاً چپ‌به‌راست (LTR) باقی می‌مونن.
 - **تایپوگرافی اصیل:** ۵ قلم متغیر فارسی مستقیماً درون افزونه قرار دارن تا متن‌ها با خوانایی بالا نمایش داده بشن.
 
 <table>

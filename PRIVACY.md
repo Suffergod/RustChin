@@ -37,6 +37,11 @@ local fonts) on supported AI chat websites. To do this it:
    extension off.
 3. **Stores your on/off preferences** (which sites are enabled) using Chrome's
    local storage. This stays on your device.
+4. **First-run setup and feedback links:** Upon first install only, the
+   extension opens `https://rust-chin.ir/welcome` to guide you through pinning
+   the toolbar icon. If uninstalled, Chrome offers an optional survey at
+   `https://rust-chin.ir/goodbye`. Neither page receives any user data,
+   conversations, or device identifiers.
 
 ## What RustChin does NOT do
 
@@ -85,9 +90,9 @@ the project's GitHub repository.
 
 ## Contact
 
-To report a privacy concern or ask a question, please open an issue on the
-project's GitHub repository:
-https://github.com/suffergod/RustChin/issues
+To report a privacy concern, submit feedback, or ask a question, please use:
+- Official Feedback form: https://rust-chin.ir/feedback
+- GitHub Repository issues: https://github.com/suffergod/RustChin/issues
 
 ## Credits
 
