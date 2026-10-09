@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.1] - 2026-10-09
+
+### Added
+- **Direction Mode Segmented Toggle (Smart vs Always)**: Added a segmented control directly in the popup preferences row (`Smart | Always` in English, `هوشمند | همیشه` in Persian). Smart mode uses balanced ratio and token stripping for natural mixed prose, while Always mode forces RTL on any paragraph containing Persian characters, ideal for developer prompts with heavy English technical jargon. Live re-evaluation resets memoization caches and updates open chat tabs instantly.
+
+### Enhanced & Fixed
+- **Gemini Blockquote Centering & Dotted Indicator Restored**: Eliminated destructive `margin-inline-start: 0` that pushed quotes 528px across the screen. Preserved Gemini's native dotted line indicator (`blockquote::before` with `inset-inline-start: 0.1875rem`) and 32.5px inline padding, while applying direction and text alignment strictly per content.
+- **Uploaded File Preview & Carousel Protection**: Excluded `user-query-file-preview`, `user-query-file-carousel`, and file upload previews from direction mutations, keeping uploaded file cards locked in place above prompt bubbles.
+- **Persian Font Ubiquity via Unicode-Range**: Removed the `[dir="rtl"]` gating on font-family rules. Embedded Persian words in predominantly English sentences now render in the active Persian variable font without disturbing English typography.
+- **List Item Alignment & Counter Isolation**: Ensured list item text stays anchored to list markers (`ol` and `ul`), preventing Persian items in English lists from flying to the opposite side of the screen. Added counter direction isolation for Gemini list numbers to prevent `.2` digit inversion.
+
 ## [1.3.0] - 2026-09-25
 
 ### Added

@@ -105,7 +105,7 @@ function resolveLang(pref) {
 function defaultState() {
   const sites = {};
   SITES.forEach((s) => { sites[s.host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "" };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "", dirMode: "smart" };
 }
 
 let currentState = defaultState();

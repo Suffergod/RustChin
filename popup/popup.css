@@ -231,6 +231,14 @@ body {
   font-weight: 600;
   line-height: 1;
 }
+#dirModeSeg .seg-btn {
+  padding: 0 8px;
+  font-size: 11px;
+}
+html[lang="fa"] #dirModeSeg .seg-btn {
+  font-family: "Vazirmatn", var(--rc-font), sans-serif;
+  font-size: 11px;
+}
 .header h1 {
   font-size: 15px;
   font-weight: 650;

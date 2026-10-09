@@ -26,9 +26,10 @@
    * Decide paragraph direction from text content.
    * Strips URLs and inline code so technical tokens do not invert Persian sentences.
    * Uses first-strong character detection combined with balanced character ratio.
+   * In "always" mode, any detected Persian content triggers RTL.
    * Pure function, deterministic.
    */
-  function getDirection(text) {
+  function getDirection(text, dirMode) {
     if (!text) return "ltr";
 
     // Strip URLs and inline code/backticks from consideration so English identifiers or URLs
@@ -42,6 +43,9 @@
     var pMatches = cleaned.match(RTL_RE);
     var pCount = pMatches ? pMatches.length : 0;
     if (pCount === 0) return "ltr";
+
+    // In "always" mode, any Persian presence triggers RTL immediately
+    if (dirMode === "always") return "rtl";
 
     var eMatches = cleaned.match(LATIN_RE);
     var eCount = eMatches ? eMatches.length : 0;
@@ -92,6 +96,7 @@
     var observer = null;
     var intervalId = null;
     var rafQueued = false;
+    var currentDirMode = "smart";
 
     // [PERF] Memoization: remember which elements we already styled and the
     // text length we styled them for. Re-style only when the content changed.
@@ -142,11 +147,30 @@
       processed.add(el);
       processedLen.set(el, len);
 
-      var dir = getDirection(text);
+      var parentList = el.closest ? el.closest("ol, ul") : null;
+      var listDir = parentList ? (parentList.getAttribute("dir") || getDirection(parentList.textContent || "", currentDirMode)) : null;
+
+      var dir = getDirection(text, currentDirMode);
+
+      // If this element is a list item or inside one, preserve list marker alignment
+      // so items never separate from their bullets or numbers with awkward gaps.
+      if (parentList && listDir) {
+        if (el.matches && el.matches("li")) {
+          dir = listDir;
+        }
+      }
 
       el.setAttribute("dir", dir);
       el.style.setProperty("direction", dir, "important");
-      el.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
+
+      var textAlign = dir === "rtl" ? "right" : "left";
+      if (parentList && listDir) {
+        textAlign = listDir === "rtl" ? "right" : "left";
+        if (el.matches && el.matches("p") && dir !== listDir) {
+          el.style.setProperty("display", "inline-block", "important");
+        }
+      }
+      el.style.setProperty("text-align", textAlign, "important");
       el.classList.add("rc-done");
 
       // NotebookLM-specific: expand ancestors so RTL content has width.
@@ -232,7 +256,7 @@
       if (config.numberedLists !== false) {
         container.querySelectorAll("ol").forEach(function (ol) {
           var t = ol.textContent || "";
-          var dir = getDirection(t);
+          var dir = getDirection(t, currentDirMode);
           ol.setAttribute("dir", dir);
           ol.style.setProperty("direction", dir, "important");
           ol.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
@@ -240,16 +264,14 @@
         });
       }
 
-      // Unordered lists in RTL
+      // Unordered lists: set direction and alignment
       container.querySelectorAll("ul").forEach(function (ul) {
         var t = ul.textContent || "";
-        var dir = getDirection(t);
-        if (dir === "rtl") {
-          ul.setAttribute("dir", "rtl");
-          ul.style.setProperty("direction", "rtl", "important");
-          ul.style.setProperty("text-align", "right", "important");
-          ul.classList.add("bidi-scope-list");
-        }
+        var dir = getDirection(t, currentDirMode);
+        ul.setAttribute("dir", dir);
+        ul.style.setProperty("direction", dir, "important");
+        ul.style.setProperty("text-align", dir === "rtl" ? "right" : "left", "important");
+        ul.classList.add("bidi-scope-list");
       });
 
       // Tables: detect direction from their content. If Persian text is
@@ -257,7 +279,7 @@
       // on the right. English/code tables stay safely LTR.
       container.querySelectorAll("table").forEach(function (table) {
         var tableText = table.textContent || "";
-        var tDir = getDirection(tableText);
+        var tDir = getDirection(tableText, currentDirMode);
         table.setAttribute("dir", tDir);
         table.style.setProperty("direction", tDir, "important");
         table.style.setProperty("text-align", tDir === "rtl" ? "right" : "left", "important");
@@ -353,7 +375,7 @@
             node.querySelectorAll(LEAF_TAGS).forEach(fixElement);
             if (node.matches("table")) {
               var tt = node.textContent || "";
-              node.setAttribute("dir", getDirection(tt));
+              node.setAttribute("dir", getDirection(tt, currentDirMode));
               node.querySelectorAll("th, td").forEach(fixElement);
             }
           }
@@ -398,7 +420,7 @@
       var update = function () {
         rafQueued = false;
         var text = inputEl.value || inputEl.innerText || inputEl.textContent || "";
-        var dir = getDirection(text);
+        var dir = getDirection(text, currentDirMode);
 
         // Always set dir, text-align, and direction to guarantee right alignment
         // even if host site or Quill already set dir="rtl" without text-align.
@@ -626,6 +648,9 @@
     /* ---------- Boot: load font, read state, maybe start ---------- */
 
     function applyState(state) {
+      var prevDirMode = currentDirMode;
+      currentDirMode = (state && state.dirMode) || "smart";
+
       var fontPref = (state && state.font) || "vazirmatn";
       if (fontPref && fontPref !== "vazirmatn") {
         document.documentElement.setAttribute("data-rc-font", fontPref);
@@ -656,8 +681,18 @@
         }
       }
       var on = state && state.masterEnabled !== false && siteEnabled;
-      if (on) start();
-      else stop();
+      if (on) {
+        if (active && prevDirMode !== currentDirMode) {
+          // Re-evaluate direction across the entire page when direction mode changes
+          processed = new WeakSet();
+          processedLen = new WeakMap();
+          scanAll();
+        } else {
+          start();
+        }
+      } else {
+        stop();
+      }
     }
 
     function boot() {

@@ -21,7 +21,7 @@
 
 <p align="center">
   <a href="https://rust-chin.ir/"><img src="https://img.shields.io/badge/website-rust--chin.ir-blueviolet?style=flat-square" alt="Official Website"></a>
-  <img src="https://img.shields.io/badge/version-1.3.0-blue?style=flat-square" alt="Version 1.3.0">
+  <img src="https://img.shields.io/badge/version-1.3.1-blue?style=flat-square" alt="Version 1.3.1">
   <img src="https://img.shields.io/badge/manifest-v3-orange?style=flat-square" alt="Manifest V3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>
   <a href="PRIVACY.md"><img src="https://img.shields.io/badge/privacy-zero%20data-brightgreen?style=flat-square" alt="Zero Data"></a>

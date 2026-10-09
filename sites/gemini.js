@@ -10,10 +10,9 @@ RustChin.start({
   containers:
     "message-content, user-query, .model-response-text, .response-container, [class*='response'], [class*='query'], side-panel .markdown, side-panel .model-response-text, [class*='side-panel' i] .markdown, [class*='side-panel' i] .model-response-text, [class*='panel' i] .markdown, [class*='panel' i] .model-response-text",
   exclude:
-    "pre, code, .katex, .math, [class*='math' i], mat-icon, gem-icon, code-block",
+    "pre, code, .katex, .math, [class*='math' i], mat-icon, gem-icon, code-block, user-query-file-preview, user-query-file-carousel, [class*='file-preview'], [class*='file-carousel']",
   editableSelector:
     'textarea, input, [contenteditable="true"], rich-textarea',
-  numberedLists: false,
   // Sidebar chat-title text and opened side-panel direct text nodes.
   // getDirection() only flips Persian text, so English labels are left untouched.
   extraSelector:
@@ -73,24 +72,24 @@ RustChin.start({
     }
 
     :root {
-      --rc-font: 'Vazirmatn', 'Google Sans', system-ui, sans-serif;
+      --rc-font: 'Vazirmatn', 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
       --rc-font-size: 15px;
       --rc-line-height: 1.8;
     }
     :root[data-rc-font="estedad"] {
-      --rc-font: 'Estedad', 'Google Sans', system-ui, sans-serif;
+      --rc-font: 'Estedad', 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
     }
     :root[data-rc-font="sahel"] {
-      --rc-font: 'Sahel', 'Google Sans', system-ui, sans-serif;
+      --rc-font: 'Sahel', 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
     }
     :root[data-rc-font="arad"] {
-      --rc-font: 'Arad', 'Google Sans', system-ui, sans-serif;
+      --rc-font: 'Arad', 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
     }
     :root[data-rc-font="mikhak"] {
-      --rc-font: 'Mikhak', 'Google Sans', system-ui, sans-serif;
+      --rc-font: 'Mikhak', 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
     }
     :root[data-rc-font="custom"] {
-      --rc-font: var(--rc-custom-font, 'Vazirmatn'), 'Google Sans', system-ui, sans-serif;
+      --rc-font: var(--rc-custom-font, 'Vazirmatn'), 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
     }
 
     .bidi-scope code:not(pre code) {
@@ -99,16 +98,14 @@ RustChin.start({
       display: inline-block;
     }
 
-    /* Apply active font only to text that RustChin actually detected as RTL.
-       This preserves Gemini's original Latin/UI typography (including
-       weight/optical rendering) so English text no longer looks bolder or
-       bigger after enabling. A second arm catches RTL-detected text outside
-       any .bidi-scope (e.g. sidebar conversation titles), which the engine
-       fixes via extraSelector and would otherwise keep Gemini's Latin font. */
-    .bidi-scope .rc-done[dir="rtl"]:not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math),
-    .bidi-scope .rc-done[dir="rtl"] :not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math),
-    .rc-done[dir="rtl"]:not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math),
-    .rc-done[dir="rtl"] :not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math) {
+    /* Apply active font (--rc-font) to all processed content.
+       Since Vazirmatn/Estedad define unicode-range strictly for Persian/Arabic
+       code points (U+0600-06FF, etc.), Latin characters naturally fall through
+       to Google Sans Flex without distorting English typography. */
+    .bidi-scope .rc-done:not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math),
+    .bidi-scope .rc-done :not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math),
+    .rc-done:not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math),
+    .rc-done :not(mat-icon):not(gem-icon):not(.mat-icon):not([class*="icon"]):not([class*="symbol"]):not(svg):not(i):not(code):not(pre):not(.katex):not(.katex *):not(.math):not(math) {
       font-family: var(--rc-font) !important;
     }
 
@@ -206,17 +203,32 @@ RustChin.start({
       text-align: right !important;
     }
 
-    .bidi-scope blockquote[dir="rtl"],
-    blockquote.rc-done[dir="rtl"],
-    .bidi-scope blockquote {
-      border-inline-start: 4px solid rgba(150,150,150,0.5) !important;
-      border-inline-end: none !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-      padding-inline-start: 16px !important;
-      margin-inline-start: 0 !important;
+    /* Gemini numbered list counter isolation: prevents Latin digit + dot inversion (.2 -> 2.) */
+    .bidi-scope ol li::before {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+    }
+
+    /* Gemini blockquotes: keep native dotted ::before border and centered margins intact.
+       Only apply direction and alignment to content based on detected direction. */
+    .bidi-scope blockquote.rc-done[dir="rtl"],
+    blockquote.rc-done[dir="rtl"] {
       direction: rtl !important;
       text-align: right !important;
+    }
+    .bidi-scope blockquote.rc-done[dir="ltr"],
+    blockquote.rc-done[dir="ltr"] {
+      direction: ltr !important;
+      text-align: left !important;
+    }
+
+    /* Keep file upload previews and carousels strictly LTR */
+    user-query-file-preview,
+    user-query-file-carousel,
+    [class*='file-preview'],
+    [class*='file-carousel'] {
+      direction: ltr !important;
+      text-align: left !important;
     }
 
     .bidi-scope ul, .bidi-scope ol {

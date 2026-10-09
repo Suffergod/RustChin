@@ -35,7 +35,7 @@ const ICONS = {
 function defaultState() {
   const sites = {};
   SUPPORTED_SITES.forEach((host) => { sites[host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "" };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "", dirMode: "smart" };
 }
 
 function isEnabled(state) {

@@ -28,8 +28,8 @@ const FONTS = {
 
 const VERSION =
   typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest
-    ? chrome.runtime.getManifest()?.version || "1.3.0"
-    : "1.3.0";
+    ? chrome.runtime.getManifest()?.version || "1.3.1"
+    : "1.3.1";
 
 const I18N = {
   en: {
@@ -43,6 +43,10 @@ const I18N = {
     badgeCasual: "Casual",
     badgeCustom: "Custom",
     customFontPrompt: "Enter font name (e.g. Shabnam, IRANSans, Tahoma):",
+    modeSmart: "Smart",
+    modeAlways: "Always",
+    modeSmartTitle: "Smart: Balanced RTL for mixed text",
+    modeAlwaysTitle: "Always RTL: Force RTL on any Persian text",
     enable: "Enabled",
     labelOn: "On",
     labelOff: "Off",
@@ -69,6 +73,10 @@ const I18N = {
     badgeCasual: "صمیمی",
     badgeCustom: "شخصی",
     customFontPrompt: "نام فونت دلخواه را وارد کنید (مانند شبنم، ایران‌سنس):",
+    modeSmart: "هوشمند",
+    modeAlways: "همیشه",
+    modeSmartTitle: "هوشمند: تشخیص متعادل جهت متن",
+    modeAlwaysTitle: "همیشه: راست‌چین کردن هر متنی که فارسی دارد",
     enable: "فعال",
     labelOn: "روشن",
     labelOff: "خاموش",
@@ -105,7 +113,7 @@ const REPORT_URL = "https://rust-chin.ir/feedback";
 function defaultState() {
   const sites = {};
   SITES.forEach((s) => { sites[s.host] = true; });
-  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "" };
+  return { masterEnabled: true, sites, theme: "auto", lang: "auto", font: "vazirmatn", fontSize: 15, lineHeight: 1.8, customFont: "", dirMode: "smart" };
 }
 
 let currentState = defaultState();
@@ -120,6 +128,7 @@ function getStateFromUI() {
     fontSize: currentState.fontSize || 15,
     lineHeight: currentState.lineHeight || 1.8,
     customFont: currentState.customFont || "",
+    dirMode: currentState.dirMode || "smart",
   };
   sitesList.querySelectorAll("input[data-host]").forEach((cb) => {
     state.sites[cb.dataset.host] = cb.checked;
@@ -170,6 +179,7 @@ const lineHeightDecBtn = document.getElementById("lineHeightDecBtn");
 const lineHeightIncBtn = document.getElementById("lineHeightIncBtn");
 const lineHeightVal = document.getElementById("lineHeightVal");
 const themeSeg = document.getElementById("themeSeg");
+const dirModeSeg = document.getElementById("dirModeSeg");
 const langSeg = document.getElementById("langSeg");
 const dashboardLink = document.getElementById("dashboardLink");
 const rateLink = document.getElementById("rateLink");
@@ -311,6 +321,10 @@ function applyI18n() {
     reportLink.setAttribute("title", t.reportTitle || t.report);
     reportLink.setAttribute("aria-label", t.reportTitle || t.report);
   }
+  const smartBtn = dirModeSeg ? dirModeSeg.querySelector('[data-value="smart"]') : null;
+  const alwaysBtn = dirModeSeg ? dirModeSeg.querySelector('[data-value="always"]') : null;
+  if (smartBtn) smartBtn.title = t.modeSmartTitle || "";
+  if (alwaysBtn) alwaysBtn.title = t.modeAlwaysTitle || "";
   if (masterLabel && currentState) updateStatus(currentState);
 }
 
@@ -319,6 +333,12 @@ function renderPrefs(state) {
   themeSeg.querySelectorAll(".seg-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.value === theme);
   });
+  const dirModePref = state.dirMode || "smart";
+  if (dirModeSeg) {
+    dirModeSeg.querySelectorAll(".seg-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.value === dirModePref);
+    });
+  }
   const langPref = state.lang || "auto";
   langSeg.querySelectorAll(".seg-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.value === langPref);
@@ -470,6 +490,11 @@ function setupSeg(segEl, onPick) {
 setupSeg(themeSeg, (value) => {
   applyTheme(value);
   currentState.theme = value;
+  saveState(currentState);
+});
+
+setupSeg(dirModeSeg, (value) => {
+  currentState.dirMode = value;
   saveState(currentState);
 });
 
