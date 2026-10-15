@@ -12,7 +12,7 @@ RustChin.start({
   // NotebookLM has no clean message-root selector, so we scan the body.
   scanBody: true,
   scanSelector:
-    "p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th, div.paragraph, span.project-button-title, span.ng-star-inserted, b, strong, em, i",
+    "p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th, div.paragraph, span.project-button-title",
   // Broad exclusion list: NotebookLM's UI chrome must NOT get flipped.
   exclude:
     "button, nav, header, footer, [role='toolbar'], pre, code, .katex, .math, mat-icon, svg, [class*='icon' i]",
@@ -185,7 +185,10 @@ RustChin.start({
       list-style-type: persian !important;
     }
     ul.bidi-scope-list[dir="rtl"],
-    ul.bidi-scope-list[dir="rtl"] li {
+    ul.bidi-scope-list[dir="rtl"] li,
+    .paragraph.list-item[dir="rtl"],
+    li.paragraph.list-item[dir="rtl"],
+    li.rc-done[dir="rtl"] {
       direction: rtl !important;
       text-align: right !important;
     }

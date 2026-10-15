@@ -156,7 +156,9 @@
       // so items never separate from their bullets or numbers with awkward gaps.
       if (parentList && listDir) {
         if (el.matches && el.matches("li")) {
-          dir = listDir;
+          if (dir === "rtl" || listDir === "rtl") {
+            dir = "rtl";
+          }
         }
       }
 
@@ -164,7 +166,7 @@
       el.style.setProperty("direction", dir, "important");
 
       var textAlign = dir === "rtl" ? "right" : "left";
-      if (parentList && listDir) {
+      if (parentList && listDir && !(el.matches && el.matches("li"))) {
         textAlign = listDir === "rtl" ? "right" : "left";
         if (el.matches && el.matches("p") && dir !== listDir) {
           el.style.setProperty("display", "inline-block", "important");
@@ -207,11 +209,12 @@
             }
           }
         }
-        var parentList = el.closest("ul, ol");
-        if (parentList) {
-          parentList.setAttribute("dir", dir);
-          parentList.style.setProperty("direction", dir, "important");
-          parentList.classList.add("bidi-scope-list");
+        var pList = el.closest ? el.closest("ul, ol") : null;
+        if (pList) {
+          var pListDir = getDirection(pList.textContent || "", currentDirMode);
+          pList.setAttribute("dir", pListDir);
+          pList.style.setProperty("direction", pListDir, "important");
+          pList.classList.add("bidi-scope-list");
         }
       }
     }

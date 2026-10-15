@@ -7,6 +7,7 @@
 - **Gemini Canvas Interactive Card Header and Toolbar**: Protected .inline-preview-container, immersive-entry-chip, inline-preview, and gem-processing-card from flexbox row inversion. Action buttons (Close, Expand, Share, Export) and view toggle tabs (Code / Preview) remain properly spaced without clipping or overlapping.
 - **Gemini Canvas Document Editor (ProseMirror)**: Added unicode-bidi plaintext and font styling to .immersive-editor .ProseMirror blocks, resolving bidirectional paragraph alignment and preventing inverted trailing punctuation (such as colons jumping to the beginning of lines) without mutating the active contentEditable DOM tree.
 - **DeepSeek & Claude Unicode-Range Font Harmonization**: Extended font-family declarations to all processed content in DeepSeek and Claude, enabling Persian words embedded in English technical sentences to render in the active variable font without distorting English typography.
+- **Gemini Notebook (NotebookLM) List Item Alignment and Citation Flow**: Fixed an issue where child citation spans or numbers inside list items could corrupt parent list direction to LTR, causing the first list item's text to align to the left and leaving bullets and citation brackets stranded across lines. Enforced self-determined RTL alignment on Persian list items and stabilized list container direction detection.
 
 ## [1.3.1] - 2026-10-09
 
