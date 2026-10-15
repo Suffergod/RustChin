@@ -6,7 +6,7 @@
 - **Gemini Ordered List Numbering Anchor**: Fixed horizontal list marker detachment where direction on li::before caused Gemini native inset-inline-start to compute to the left, leaving list numbers stranded on the far left edge away from right-aligned Persian text. Scoped RTL direction and explicit right positioning to RTL list items while preserving LTR digit isolation for English lists.
 - **Gemini Canvas Interactive Card Header and Toolbar**: Protected .inline-preview-container, immersive-entry-chip, inline-preview, and gem-processing-card from flexbox row inversion. Action buttons (Close, Expand, Share, Export) and view toggle tabs (Code / Preview) remain properly spaced without clipping or overlapping.
 - **Gemini Canvas Document Editor (ProseMirror)**: Added unicode-bidi plaintext and font styling to .immersive-editor .ProseMirror blocks, resolving bidirectional paragraph alignment and preventing inverted trailing punctuation (such as colons jumping to the beginning of lines) without mutating the active contentEditable DOM tree.
-- **DeepSeek Unicode-Range Font Harmonization**: Extended font-family declarations to all processed content in DeepSeek, enabling Persian words embedded in English technical sentences to render in the active variable font without distorting English typography.
+- **DeepSeek & Claude Unicode-Range Font Harmonization**: Extended font-family declarations to all processed content in DeepSeek and Claude, enabling Persian words embedded in English technical sentences to render in the active variable font without distorting English typography.
 
 ## [1.3.1] - 2026-10-09
 

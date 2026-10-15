@@ -99,13 +99,13 @@ RustChin.start({
       display: inline-block;
     }
 
-    /* Active font only on RTL-detected text. English paragraphs, headings, UI
-       chrome, and sidebar titles keep Claude's native font ('Söhne' / system).
-       Preserves Claude's icon font (Anthropicons), code, and math. */
-    .rc-done[dir="rtl"]:not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math),
-    .rc-done[dir="rtl"] :not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math),
-    .bidi-scope [dir="rtl"]:not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math),
-    .bidi-scope [dir="rtl"] :not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math) {
+    /* Active font on all processed content. English paragraphs, headings, UI
+       chrome, and sidebar titles keep Claude's native font ('Söhne' / system)
+       via unicode-range fallthrough. Preserves Claude's icon font (Anthropicons), code, and math. */
+    .rc-done:not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math),
+    .rc-done :not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math),
+    .bidi-scope .rc-done:not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math),
+    .bidi-scope .rc-done :not(svg):not(code):not(pre):not(pre *):not(code *):not([data-cds="Icon"]):not([data-cds="Icon"] *):not(.katex):not(.katex *):not(.math):not(math) {
       font-family: var(--rc-font) !important;
     }
 
