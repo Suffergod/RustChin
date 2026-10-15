@@ -10,7 +10,7 @@ RustChin.start({
   containers:
     "message-content, user-query, .model-response-text, .response-container, [class*='response'], [class*='query'], side-panel .markdown, side-panel .model-response-text, [class*='side-panel' i] .markdown, [class*='side-panel' i] .model-response-text, [class*='panel' i] .markdown, [class*='panel' i] .model-response-text",
   exclude:
-    "pre, code, .katex, .math, [class*='math' i], mat-icon, gem-icon, code-block, user-query-file-preview, user-query-file-carousel, [class*='file-preview'], [class*='file-carousel']",
+    "pre, code, .katex, .math, [class*='math' i], mat-icon, gem-icon, code-block, user-query-file-preview, user-query-file-carousel, [class*='file-preview'], [class*='file-carousel'], inline-preview, [class*='inline-preview'], immersive-entry-chip, gem-processing-card, [class*='attachment-container'], .inline-preview-container",
   editableSelector:
     'textarea, input, [contenteditable="true"], rich-textarea',
   // Sidebar chat-title text and opened side-panel direct text nodes.
@@ -203,10 +203,46 @@ RustChin.start({
       text-align: right !important;
     }
 
-    /* Gemini numbered list counter isolation: prevents Latin digit + dot inversion (.2 -> 2.) */
-    .bidi-scope ol li::before {
+    /* Gemini numbered list counter isolation:
+       For LTR lists, keep LTR isolate so Latin digits (.2 -> 2.) don't invert.
+       For RTL lists, keep RTL and anchor right so inset-inline-start:0 stays at right:0 */
+    .bidi-scope ol:not([dir="rtl"]) li::before,
+    .bidi-scope ol li:not([dir="rtl"])::before {
       direction: ltr !important;
       unicode-bidi: isolate !important;
+    }
+    .bidi-scope ol[dir="rtl"] li::before,
+    .bidi-scope ol.bidi-scope-list[dir="rtl"] li::before,
+    .bidi-scope ol li.rc-done[dir="rtl"]::before {
+      direction: rtl !important;
+      inset-inline-start: 0 !important;
+      right: 0 !important;
+      left: auto !important;
+      text-align: right !important;
+    }
+
+    /* Gemini Canvas (interactive preview cards): keep toolbar, flex headers, and buttons LTR */
+    .inline-preview-container,
+    .inline-preview-container .title-container,
+    immersive-entry-chip,
+    inline-preview,
+    gem-processing-card,
+    [class*='attachment-container']:has(inline-preview),
+    response-element:has(inline-preview) {
+      direction: ltr !important;
+      text-align: left !important;
+    }
+
+    /* Gemini Canvas document editor (ProseMirror): dynamically resolve paragraph direction
+       and apply active font without mutating the editable DOM tree, preventing inverted punctuation (. : etc.) */
+    .immersive-editor .ProseMirror,
+    .immersive-editor .ProseMirror p,
+    .immersive-editor .ProseMirror h1,
+    .immersive-editor .ProseMirror h2,
+    .immersive-editor .ProseMirror h3,
+    .immersive-editor .ProseMirror li {
+      font-family: var(--rc-font) !important;
+      unicode-bidi: plaintext !important;
     }
 
     /* Gemini blockquotes: keep native dotted ::before border and centered margins intact.

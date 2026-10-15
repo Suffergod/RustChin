@@ -98,10 +98,14 @@ RustChin.start({
       display: inline-block;
     }
 
-    /* Apply active font only to text that RustChin actually detected as RTL.
-       This preserves DeepSeek's original Latin/UI typography. */
-    .rc-done[dir="rtl"]:not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math),
-    .rc-done[dir="rtl"] :not(svg):not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math) {
+    /* Apply active font (--rc-font) to all processed content.
+       Since Vazirmatn/Estedad define unicode-range strictly for Persian/Arabic
+       code points (U+0600-06FF, etc.), Latin characters naturally fall through
+       without distorting English typography. */
+    .bidi-scope .rc-done:not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math),
+    .bidi-scope .rc-done :not(svg):not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math),
+    .rc-done:not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math),
+    .rc-done :not(svg):not(code):not(pre):not(.ds-icon):not(.ds-icon *):not(.katex):not(.katex *):not(.math):not(.math) {
       font-family: var(--rc-font) !important;
     }
 

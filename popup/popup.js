@@ -28,8 +28,8 @@ const FONTS = {
 
 const VERSION =
   typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest
-    ? chrome.runtime.getManifest()?.version || "1.3.1"
-    : "1.3.1";
+    ? chrome.runtime.getManifest()?.version || "1.3.2"
+    : "1.3.2";
 
 const I18N = {
   en: {
