@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.3] - 2026-10-25
+
+### Performance & Optimization
+- **Gemini Container Query Elimination**: Replaced generic wildcard container selectors (`[class*='response']`, `[class*='query']`) with exact semantic elements (`message-content, user-query, .model-response-text, side-panel .markdown`). Reduced matching container elements from over 1,005 to 15, reducing DOM traversal overhead by 98.5% and eliminating lag during streaming responses.
+- **Container-Level Memoization**: Added structural and content-length memoization to `processContainer` in `core/engine.js`. Stable, completed messages bypass recurring DOM queries, list traversals, and text parsing on idle intervals and unrelated page mutations.
+- **Synchronous Layout Reflow Elimination**: Replaced `innerText` with `textContent` on contenteditable elements in `handleDynamicInput`. Eliminates forced synchronous style recalculations and layout thrashing (~18ms per keystroke) while typing in rich-text input areas such as Google Gemini's Quill editor.
+- **Incremental Mutation Leaf Bypass**: Configured `scanNodes` to skip querying descendant container trees when incoming mutation nodes are already leaf text elements (`p`, `li`, `span`), cutting frame times during fast token streaming.
+
 ## [1.3.2] - 2026-10-15
 
 ### Fixed

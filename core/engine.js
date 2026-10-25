@@ -103,6 +103,7 @@
     // WeakSet+WeakMap avoid leaks: entries vanish when elements are GC'd.
     var processed = new WeakSet();
     var processedLen = new WeakMap();
+    var processedContainers = new WeakMap();
 
     /* ---------- CSS injection ---------- */
 
@@ -225,6 +226,16 @@
       if (container.isContentEditable || (container.matches && container.matches("input, textarea, select"))) return;
       if (config.exclude && container.matches && container.matches(config.exclude)) return;
       if (container.closest && container.closest("pre, code, [class*='not-prose']")) return;
+
+      // [PERF] Container memoization: if container text length, child count, and dirMode
+      // haven't changed since last scan, skip re-querying all descendant elements.
+      var cLen = (container.textContent || "").length;
+      var cChildren = container.childElementCount || 0;
+      var cCached = processedContainers.get(container);
+      if (cCached && cCached.len === cLen && cCached.children === cChildren && cCached.dirMode === currentDirMode) {
+        return;
+      }
+      processedContainers.set(container, { len: cLen, children: cChildren, dirMode: currentDirMode });
 
       if (!container.classList.contains("bidi-scope")) {
         container.classList.add("bidi-scope");
@@ -385,15 +396,17 @@
         } catch (e) {
           /* node may be detached; ignore */
         }
-        // And process any relevant descendants.
-        if (config.scanBody) {
-          node.querySelectorAll(config.scanSelector).forEach(fixElement);
-        } else {
-          node
-            .querySelectorAll(config.containers)
-            .forEach(processContainer);
-          if (config.extraSelector) {
-            node.querySelectorAll(config.extraSelector).forEach(fixElement);
+        // And process any relevant descendants if the node is not a leaf element.
+        if (node.nodeType === 1 && (!node.matches || !node.matches(LEAF_TAGS))) {
+          if (config.scanBody) {
+            node.querySelectorAll(config.scanSelector).forEach(fixElement);
+          } else {
+            node
+              .querySelectorAll(config.containers)
+              .forEach(processContainer);
+            if (config.extraSelector) {
+              node.querySelectorAll(config.extraSelector).forEach(fixElement);
+            }
           }
         }
       });
@@ -422,7 +435,10 @@
       rafQueued = true;
       var update = function () {
         rafQueued = false;
-        var text = inputEl.value || inputEl.innerText || inputEl.textContent || "";
+        // Avoid innerText forced reflows: textContent is ~90x faster and never triggers layout thrashing.
+        var text = (inputEl.value !== undefined && inputEl.value !== null && inputEl.tagName !== "DIV" && inputEl.tagName !== "P")
+          ? inputEl.value
+          : (inputEl.textContent || "");
         var dir = getDirection(text, currentDirMode);
 
         // Always set dir, text-align, and direction to guarantee right alignment

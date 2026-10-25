@@ -8,7 +8,7 @@ RustChin.start({
   siteId: "gemini",
   host: "gemini.google.com",
   containers:
-    "message-content, user-query, .model-response-text, .response-container, [class*='response'], [class*='query'], side-panel .markdown, side-panel .model-response-text, [class*='side-panel' i] .markdown, [class*='side-panel' i] .model-response-text, [class*='panel' i] .markdown, [class*='panel' i] .model-response-text",
+    "message-content, user-query, .model-response-text, side-panel .markdown, [class*='side-panel' i] .markdown, [class*='panel' i] .markdown",
   exclude:
     "pre, code, .katex, .math, [class*='math' i], mat-icon, gem-icon, code-block, user-query-file-preview, user-query-file-carousel, [class*='file-preview'], [class*='file-carousel'], inline-preview, [class*='inline-preview'], immersive-entry-chip, gem-processing-card, [class*='attachment-container'], .inline-preview-container",
   editableSelector:
